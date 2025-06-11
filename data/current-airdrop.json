@@ -1,0 +1,16 @@
+[
+  {
+    "token": "HOME",
+    "amount": 2500,
+    "points": 236,
+    "startTime": "2025-06-10 19:00 (UTC+8)",
+    "endTime": "2025-06-11 19:00 (UTC+8)"
+  },
+  {
+    "token": "RESOLV",
+    "amount": 400,
+    "points": 239,
+    "startTime": "2025-06-10 21:00 (UTC+8)",
+    "endTime": "2025-06-11 21:00 (UTC+8)"  
+  }
+] 
