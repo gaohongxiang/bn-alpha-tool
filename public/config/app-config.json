@@ -1,0 +1,92 @@
+{
+  "_meta": {
+    "description": "Binance Alpha空投工具配置文件",
+    "lastUpdated": "2025-06-12"
+  },
+  
+  "networks": {
+    "bsc": {
+      "name": "BSC Mainnet",
+      "chainId": 56,
+      "rpcUrls": [
+        "https://bsc-dataseed1.defibit.io/",
+        "https://bsc-dataseed1.binance.org/",
+        "https://rpc.ankr.com/bsc"
+      ],
+      "blockExplorerUrl": "https://bscscan.com",
+      
+      "tokens": [
+        {
+          "symbol": "USDT",
+          "name": "Tether USD",
+          "aliases": ["BSC-USD", "USDT-BSC", "TETHER"],
+          "isStableCoin": true,
+          "basePrice": 1,
+          "address": "0x55d398326f99059fF775485246999027B3197955"
+        },
+        {
+          "symbol": "ZKJ",
+          "name": "ZkJump",
+          "address": "0xc71b5f631354be6853efe9c3ab6b9590f8302e81"
+        },
+        {
+          "symbol": "KOGE", 
+          "name": "Koge",
+          "address": "0xe6DF05CE8C8301223373CF5B969AFCb1498c5528"
+        },
+        {
+          "symbol": "BNB",
+          "name": "Binance Coin",
+          "aliases": ["WBNB", "BNB-BSC"],
+          "address": "native"
+        },
+        {
+          "symbol": "USDC",
+          "name": "USD Coin",
+          "aliases": ["USDC-BSC"], 
+          "isStableCoin": true,
+          "basePrice": 1,
+          "address": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d"
+        }
+      ],
+      
+      "pairs": [
+        { "from": "USDT", "to": "ZKJ", "description": "USDT买入ZKJ" },
+        { "from": "ZKJ", "to": "USDT", "description": "ZKJ卖出换USDT" },
+        { "from": "USDT", "to": "KOGE", "description": "USDT买入KOGE" },
+        { "from": "KOGE", "to": "USDT", "description": "KOGE卖出换USDT" },
+        { "from": "ZKJ", "to": "KOGE", "description": "ZKJ兑换KOGE" },
+        { "from": "KOGE", "to": "ZKJ", "description": "KOGE兑换ZKJ" }
+      ],
+      
+      "rules": {
+        "bscVolumeMultiplier": 2,
+        "defaultGasPrice": "5000000000",
+        "defaultGasLimit": 21000
+      },
+
+      "api": {
+        "baseUrl": "https://api.bscscan.com/api",
+        "keys": [
+          {
+            "key": "U4ZMDNTCZKSMHX2671VGQPF8HRWGEUTE5H",
+            "name": "默认API Key 1",
+            "active": true
+          },
+          {
+            "key": "ZT3FC731X39KGXRGTPQ3MF3IMGXDZIX2JZ", 
+            "name": "默认API Key 2",
+            "active": true
+          },
+          {
+            "key": "A5168UYQIS4I1HBVM3WX8URQJ7Z45WYSCH",
+            "name": "默认API Key 3", 
+            "active": true
+          }
+        ]
+      }
+    }
+  },
+  
+  "defaultNetwork": "bsc"
+} 

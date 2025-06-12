@@ -31,6 +31,8 @@ interface WalletData {
   estimatedPoints: number
   revenue: number
   gasUsed: number
+  tradingLoss: number
+  gasLoss: number
   isLoading?: boolean
   error?: string
 }

@@ -60,6 +60,121 @@ pnpm dev
 3. **监控空投**：实时关注当前进行中的空投活动
 4. **分析钱包**：导入钱包地址，分析收益情况
 
+## ⚙️ 配置管理
+
+本工具采用按网络组织的配置架构，配置文件位于：`/config/app-config.json`
+
+### 配置结构说明
+
+```json
+{
+  "networks": {
+    "bsc": {
+      "name": "BSC Mainnet",
+      "chainId": 56,
+      "rpcUrls": [
+        "https://bsc-dataseed1.binance.org/",
+        "https://rpc.ankr.com/bsc"
+      ],
+      "blockExplorerUrl": "https://bscscan.com",
+      
+      "tokens": [
+        {
+          "symbol": "USDT",
+          "name": "Tether USD",
+          "aliases": ["BSC-USD", "USDT-BSC"],
+          "isStableCoin": true,
+          "basePrice": 1,
+          "address": "0x55d398326f99059fF775485246999027B3197955"
+        }
+      ],
+      
+      "pairs": [
+        { "from": "USDT", "to": "ZKJ", "description": "USDT买入ZKJ" },
+        { "from": "ZKJ", "to": "USDT", "description": "ZKJ卖出换USDT" }
+      ],
+      
+      "rules": {
+        "bscVolumeMultiplier": 2,
+        "defaultGasPrice": "5000000000"
+      },
+
+      "api": {
+        "baseUrl": "https://api.bscscan.com/api",
+        "keys": [
+          { "key": "YOUR_API_KEY", "name": "我的Key", "active": true }
+        ]
+      }
+    }
+  },
+  
+  "defaultNetwork": "bsc"
+}
+```
+
+### 配置说明
+
+1. **网络配置 (networks)**
+   - 按网络ID组织（如 `bsc`、`eth`）
+   - 每个网络包含完整的配置信息
+   - 支持多链扩展
+
+2. **代币配置 (tokens)**
+   - `symbol`: 代币符号
+   - `name`: 代币名称  
+   - `aliases`: 别名数组（处理不同命名）
+   - `isStableCoin`: 是否为稳定币
+   - `address`: 合约地址（BNB用"native"）
+
+3. **交易对配置 (pairs)**
+   - 列出所有支持的交易方向
+   - 系统自动判断是否计入交易量
+
+4. **规则配置 (rules)**
+   - `bscVolumeMultiplier`: BSC链交易量倍数
+   - Gas费用相关设置
+
+### 如何修改配置
+
+1. **添加新代币**（在对应网络下）：
+   ```json
+   {
+     "symbol": "NEW_TOKEN",
+     "name": "New Token",
+     "address": "0x1234...5678"
+   }
+   ```
+
+2. **添加新交易对**：
+   ```json
+   { "from": "USDT", "to": "NEW_TOKEN", "description": "USDT买入新代币" }
+   ```
+
+3. **添加API密钥**：
+   ```json
+   { "key": "YOUR_API_KEY", "name": "我的API Key", "active": true }
+   ```
+
+4. **添加新网络**：
+   ```json
+   "eth": {
+     "name": "Ethereum Mainnet",
+     "chainId": 1,
+     "tokens": [...],
+     "pairs": [...],
+     "api": {...}
+   }
+   ```
+
+### 配置特性
+
+- ✅ **网络隔离**：每个网络的配置独立，避免混淆
+- ✅ **一次配置**：代币信息（基本信息+合约地址）只需配置一次
+- ✅ **可扩展**：支持添加多个区块链网络
+- ✅ **智能判断**：自动识别有效交易对和是否计入交易量
+- ✅ **别名支持**：自动处理代币的不同命名方式
+- ✅ **动态生效**：修改配置文件后刷新页面即可生效
+
 ---
 
 > 让每一次空投都物超所值 💎 

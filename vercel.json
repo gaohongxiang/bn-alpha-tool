@@ -1,0 +1,10 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install",
+  "functions": {
+    "app/**": {
+      "maxDuration": 30
+    }
+  }
+} 
