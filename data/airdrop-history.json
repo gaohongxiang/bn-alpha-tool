@@ -379,5 +379,49 @@
     "currentPrice": "$0.156",
     "type": "alpha",
     "pointsConsumed": false
+  },
+  {
+    "date": "2025年06月10日",
+    "token": "RESOLV",
+    "points": 239,
+    "participants": 24750,
+    "amount": 400,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.217",
+    "type": "alpha",
+    "pointsConsumed": false
+  },
+  {
+    "date": "2025年06月10日",
+    "token": "HOME",
+    "points": 236,
+    "participants": 32000,
+    "amount": 2500,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.024",
+    "type": "alpha",
+    "pointsConsumed": false
+  },
+  {
+    "date": "2025年06月11日",
+    "token": "IDOL",
+    "points": 229,
+    "participants": 19959,
+    "amount": 4993,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.017",
+    "type": "tge",
+    "pointsConsumed": false
+  },
+  {
+    "date": "2025年06月12日",
+    "token": "PUNDIAI",
+    "points": 237,
+    "participants": 23750,
+    "amount": 8,
+    "supplementaryToken": 0,
+    "currentPrice": "$8.4",
+    "type": "alpha",
+    "pointsConsumed": false
   }
 ] 
