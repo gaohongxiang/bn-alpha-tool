@@ -388,8 +388,7 @@
     "amount": 400,
     "supplementaryToken": 0,
     "currentPrice": "$0.217",
-    "type": "alpha",
-    "pointsConsumed": false
+    "type": "alpha"
   },
   {
     "date": "2025年06月10日",
@@ -399,8 +398,7 @@
     "amount": 2500,
     "supplementaryToken": 0,
     "currentPrice": "$0.024",
-    "type": "alpha",
-    "pointsConsumed": false
+    "type": "alpha"
   },
   {
     "date": "2025年06月11日",
@@ -410,8 +408,7 @@
     "amount": 4993,
     "supplementaryToken": 0,
     "currentPrice": "$0.017",
-    "type": "tge",
-    "pointsConsumed": false
+    "type": "tge"
   },
   {
     "date": "2025年06月12日",
@@ -421,7 +418,6 @@
     "amount": 8,
     "supplementaryToken": 0,
     "currentPrice": "$8.4",
-    "type": "alpha",
-    "pointsConsumed": false
+    "type": "alpha"
   }
 ] 

@@ -163,11 +163,15 @@ export function AirdropHistory() {
 
   // 简单的SVG图表组件 - 添加悬停功能
   const SimpleChart = () => {
-    const width = 800
+    const width = 900
     const height = 400
-    const padding = 80
-    const chartWidth = width - padding * 2
-    const xStep = chartWidth / (airdropHistoryData.length - 1) // 直接用chartWidth除以数据点数量
+    const paddingLeft = 60
+    const paddingRight = 60
+    const paddingTop = 20
+    const paddingBottom = 40
+    const chartWidth = width - paddingLeft - paddingRight
+    const chartHeight = height - paddingTop - paddingBottom
+    const xStep = chartWidth / (airdropHistoryData.length - 1) // 数据点间距
 
     // 按照要求设置刻度范围
     // 积分门槛：以60为一档，最高235，整到240就够了
@@ -179,29 +183,27 @@ export function AirdropHistory() {
     const thresholdTicks = [0, 60, 120, 180, 240]
     const revenueTicks = [0, 120, 240, 360, 480, 600]
 
-    // 生成路径 - 从x=0开始到x=chartWidth结束
+    // 生成路径 - 在图表区域内绘制
     const thresholdPath = airdropHistoryData
       .map((d, i) => {
-        const x = i * xStep
-        // Y轴计算：从底部开始，向上递减
-        const y = height - 40 - ((height - 60) * d.points) / maxThreshold
+        const x = paddingLeft + i * xStep
+        const y = paddingTop + (chartHeight * (maxThreshold - d.points)) / maxThreshold
         return `${i === 0 ? "M" : "L"} ${x} ${y}`
       })
       .join(" ")
 
     const revenuePath = airdropHistoryData
       .map((d, i) => {
-        const x = i * xStep
-        // Y轴计算：从底部开始，向上递减
-        const y = height - 40 - ((height - 60) * d.revenue) / maxRevenue
+        const x = paddingLeft + i * xStep
+        const y = paddingTop + (chartHeight * (maxRevenue - d.revenue)) / maxRevenue
         return `${i === 0 ? "M" : "L"} ${x} ${y}`
       })
       .join(" ")
 
     const handleMouseEnter = (event: React.MouseEvent, data: any, index: number) => {
-      const x = index * xStep
-      const thresholdY = height - 40 - ((height - 60) * data.points) / maxThreshold
-      const revenueY = height - 40 - ((height - 60) * data.revenue) / maxRevenue
+      const x = paddingLeft + index * xStep
+      const thresholdY = paddingTop + (chartHeight * (maxThreshold - data.points)) / maxThreshold
+      const revenueY = paddingTop + (chartHeight * (maxRevenue - data.revenue)) / maxRevenue
 
       setHoveredPoint({
         x: x + 20, // 减小偏移，避免覆盖鼠标
@@ -224,28 +226,30 @@ export function AirdropHistory() {
         className="w-full relative" 
         onMouseLeave={handleChartMouseLeave}
       >
-        <svg width="100%" height={height} viewBox={`0 0 ${chartWidth} ${height}`}>
+        <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`}>
           {/* Y轴标签 - 积分门槛 (左侧) - 按60为一档显示 */}
-          {thresholdTicks.reverse().map((tick, index) => {
-            const y = 20 + (index * (height - 60)) / (thresholdTicks.length - 1)
+          {thresholdTicks.map((tick, index) => {
+            // 从底部开始，0在最下面
+            const y = paddingTop + chartHeight - (index * chartHeight) / (thresholdTicks.length - 1)
             return (
-              <text key={`threshold-tick-${tick}`} x="-30" y={y + 5} fontSize="12" fill="#666" textAnchor="middle">
+              <text key={`threshold-tick-${tick}`} x={paddingLeft - 10} y={y + 5} fontSize="12" fill="#3b82f6" textAnchor="end">
                 {tick}
               </text>
             )
           })}
 
           {/* Y轴标签 - 单号收益 (右侧) - 按120为一档显示 */}
-          {revenueTicks.reverse().map((tick, index) => {
-            const y = 20 + (index * (height - 60)) / (revenueTicks.length - 1)
+          {revenueTicks.map((tick, index) => {
+            // 从底部开始，0在最下面
+            const y = paddingTop + chartHeight - (index * chartHeight) / (revenueTicks.length - 1)
             return (
               <text
                 key={`revenue-tick-${tick}`}
-                x={chartWidth + 30}
+                x={paddingLeft + chartWidth + 10}
                 y={y + 5}
                 fontSize="12"
-                fill="#666"
-                textAnchor="middle"
+                fill="#10b981"
+                textAnchor="start"
               >
                 {tick}
               </text>
@@ -255,10 +259,10 @@ export function AirdropHistory() {
           {/* 悬停时的连接线 - 贯穿上下 */}
           {hoveredPoint && (
             <line
-              x1={hoveredPoint.index * xStep}
-              y1={20}
-              x2={hoveredPoint.index * xStep}
-              y2={height - 20}
+              x1={paddingLeft + hoveredPoint.index * xStep}
+              y1={paddingTop}
+              x2={paddingLeft + hoveredPoint.index * xStep}
+              y2={paddingTop + chartHeight}
               stroke="#999"
               strokeWidth="1"
               strokeDasharray="3,3"
@@ -274,18 +278,18 @@ export function AirdropHistory() {
 
           {/* 数据点和悬停区域 */}
           {airdropHistoryData.map((d, i) => {
-            const x = i * xStep
-            const thresholdY = height - 40 - ((height - 60) * d.points) / maxThreshold
-            const revenueY = height - 40 - ((height - 60) * d.revenue) / maxRevenue
+            const x = paddingLeft + i * xStep
+            const thresholdY = paddingTop + (chartHeight * (maxThreshold - d.points)) / maxThreshold
+            const revenueY = paddingTop + (chartHeight * (maxRevenue - d.revenue)) / maxRevenue
             
             return (
               <g key={`point-group-${i}`}>
                 {/* 更大的透明悬停区域 - 覆盖整个列区域 */}
                 <rect
-                  x={x - 30}
-                  y={20}
-                  width="60"
-                  height={height - 60}
+                  x={x - 20}
+                  y={paddingTop}
+                  width="40"
+                  height={chartHeight}
                   fill="transparent"
                   className="cursor-pointer"
                   onMouseEnter={(e) => handleMouseEnter(e, d, i)}
@@ -312,42 +316,33 @@ export function AirdropHistory() {
             )
           })}
 
-          {/* X轴标签 */}
-          {airdropHistoryData.map((d, i) => {
-            if (i % 5 === 0) {
-              const x = i * xStep
-              return (
-                <text key={`label-${i}`} x={x} y={height - 1} fontSize="10" fill="#666" textAnchor="middle">
-                  {d.date}
-                </text>
-              )
-            }
-            return null
-          })}
+          {/* X轴标签 - 动态显示5个标签 */}
+          {(() => {
+            const totalPoints = airdropHistoryData.length
+            const labelCount = 5
+            const step = Math.floor((totalPoints - 1) / (labelCount - 1))
+            
+            return airdropHistoryData.map((d, i) => {
+              // 计算要显示的标签位置：0, step, 2*step, 3*step, 最后一个
+              const shouldShow = i === 0 || 
+                                i === step || 
+                                i === step * 2 || 
+                                i === step * 3 || 
+                                i === totalPoints - 1
+              
+              if (shouldShow) {
+                const x = paddingLeft + i * xStep
+                return (
+                  <text key={`label-${i}`} x={x} y={height - 10} fontSize="9" fill="#666" textAnchor="middle">
+                    {d.date}
+                  </text>
+                )
+              }
+              return null
+            })
+          })()}
 
-          {/* Y轴标题 - 左侧 - 移到更远的位置 */}
-          <text
-            x="-30"
-            y={height / 2.3}
-            fontSize="12"
-            fill="#3b82f6"
-            textAnchor="middle"
-            transform={`rotate(-90, -30, ${height / 2})`}
-          >
-            积分门槛
-          </text>
 
-          {/* Y轴标题 - 右侧 - 移到更远的位置 */}
-          <text
-            x={chartWidth + 30}
-            y={height / 2.3}
-            fontSize="12"
-            fill="#10b981"
-            textAnchor="middle"
-            transform={`rotate(90, ${chartWidth + 30}, ${height / 2})`}
-          >
-            单号收益
-          </text>
         </svg>
 
         {/* 悬停提示框 - 改进显示位置和响应 */}
