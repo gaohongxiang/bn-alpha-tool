@@ -419,5 +419,15 @@
     "supplementaryToken": 0,
     "currentPrice": "$8.4",
     "type": "alpha"
+  },
+  {
+    "date": "2025年06月13日",
+    "token": "SGC",
+    "points": 240,
+    "participants": null,
+    "amount": 9886,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.0065",
+    "type": "tge"
   }
 ] 

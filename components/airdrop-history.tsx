@@ -6,35 +6,35 @@ import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Clock, TrendingUp, Award, BarChart3 } from "lucide-react"
-import airdropHistoryRawData from "@/data/airdrop-history.json"
-import currentAirdropData from "@/data/current-airdrop.json"
+import airdropAllData from "@/data/airdrop-history.json"
 
-// 定义数据类型
-interface AirdropHistoryItem {
+// 定义统一的空投数据类型
+interface AirdropItem {
   date: string
   token: string
   points: number
-  participants: number
+  participants: number | null
   amount: number
   supplementaryToken: number
-  currentPrice: string
+  currentPrice: string | null
   type: "alpha" | "tge"
   pointsConsumed?: boolean  // 可选字段，默认为true
-  // 计算字段
+  // 时间字段（可选，有则为当前空投）
+  startTime?: string // 格式: "2025-06-11 10:00 (UTC+8)"
+  endTime?: string   // 格式: "2025-06-12 10:00 (UTC+8)"
+  description?: string
+}
+
+// 历史数据类型（带计算字段）
+interface AirdropHistoryItem extends AirdropItem {
   currentValue: string
   revenue: number
 }
 
-// 定义当前空投数据类型
-interface CurrentAirdropItem {
-  token: string
-  amount: number
-  points: number
-  type: "alpha" | "tge"
-  startTime: string // 格式: "2025-06-11 10:00 (UTC+8)"
-  endTime: string   // 格式: "2025-06-12 10:00 (UTC+8)"
-  description?: string
-  pointsConsumed?: boolean  // 可选字段，默认为true
+// 当前空投数据类型
+interface CurrentAirdropItem extends AirdropItem {
+  startTime: string // 必需字段
+  endTime: string   // 必需字段
 }
 
 // 计算总价值的辅助函数
@@ -65,8 +65,14 @@ export function AirdropHistory() {
   // 实时倒计时状态
   const [countdowns, setCountdowns] = useState<{[key: string]: any}>({})
 
-  // 从JSON文件读取当前空投信息 - 支持多个空投
-  const currentAirdrops: CurrentAirdropItem[] = currentAirdropData as CurrentAirdropItem[]
+  // 从合并的数据中分离当前空投和历史数据
+  const allData = airdropAllData as AirdropItem[]
+  const currentAirdrops: CurrentAirdropItem[] = allData.filter(item => 
+    item.startTime && item.endTime
+  ) as CurrentAirdropItem[]
+  const historyRawData: AirdropItem[] = allData.filter(item => 
+    !item.startTime || !item.endTime
+  )
 
   // 将UTC+8时间字符串转换为Date对象
   const parseUTC8Time = (timeStr: string): Date => {
@@ -143,13 +149,14 @@ export function AirdropHistory() {
 
   // 使用 useMemo 处理数据，添加revenue计算字段
   const airdropHistoryData: AirdropHistoryItem[] = useMemo(() => {
-    return airdropHistoryRawData.map(item => ({
-      ...item,
-      type: item.type as "alpha" | "tge", // 类型断言
-      currentValue: calculateCurrentValue(item.amount, item.supplementaryToken, item.currentPrice),
-      revenue: calculateRevenue(item.amount, item.supplementaryToken, item.currentPrice)
-    }))
-  }, [])
+    return historyRawData
+      .filter(item => item.currentPrice) // 只处理有价格的历史数据
+      .map(item => ({
+        ...item,
+        currentValue: calculateCurrentValue(item.amount, item.supplementaryToken, item.currentPrice!),
+        revenue: calculateRevenue(item.amount, item.supplementaryToken, item.currentPrice!)
+      }))
+  }, [historyRawData])
 
   // 计算平均值用于显示在图表中
   const averagePoints = useMemo(() => {
@@ -387,7 +394,7 @@ export function AirdropHistory() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-500">参与人数:</span>
-                  <span className="text-xs font-medium text-gray-700">{hoveredPoint.data.participants.toLocaleString()}</span>
+                  <span className="text-xs font-medium text-gray-700">{hoveredPoint.data.participants?.toLocaleString() || '-'}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-500">类型:</span>
@@ -421,8 +428,23 @@ export function AirdropHistory() {
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
-            <div className="space-y-4">
-              {currentAirdrops.map((airdrop, index) => {
+            {currentAirdrops.length === 0 ? (
+              <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-blue-100/50 min-h-[160px] flex items-center justify-center">
+                <div className="text-center">
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                      <Clock className="w-6 h-6 text-gray-400" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-base font-medium text-gray-600">暂无进行中的空投</h3>
+                      <p className="text-sm text-gray-500">请关注最新空投信息，及时参与领取</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {currentAirdrops.map((airdrop, index) => {
                 const statusInfo = countdowns[airdrop.token] || getAirdropStatus(airdrop)
                 return (
                   <div key={index} className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-blue-100/50 hover:shadow-xl transition-all duration-300">
@@ -487,7 +509,8 @@ export function AirdropHistory() {
                   </div>
                 )
               })}
-            </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -556,7 +579,7 @@ export function AirdropHistory() {
                             </span>
                           </div>
                         </td>
-                        <td className="py-3 px-4 font-light">{item.participants.toLocaleString()}</td>
+                        <td className="py-3 px-4 font-light">{item.participants?.toLocaleString() || '-'}</td>
                         <td className="py-3 px-4">
                           <span className="text-blue-600 font-light">{item.amount.toLocaleString()}</span>
                         </td>
