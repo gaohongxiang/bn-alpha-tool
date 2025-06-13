@@ -18,6 +18,7 @@ interface AirdropItem {
   supplementaryToken: number
   currentPrice: string | null
   type: "alpha" | "tge"
+  cost?: number  // TGE项目的成本（可选）
   pointsConsumed?: boolean  // 可选字段，默认为true
   // 时间字段（可选，有则为当前空投）
   startTime?: string // 格式: "2025-06-11 10:00 (UTC+8)"
@@ -46,11 +47,12 @@ function calculateCurrentValue(amount: number, supplementaryToken: number, curre
 }
 
 // 计算单号收益的辅助函数
-function calculateRevenue(amount: number, supplementaryToken: number, currentPrice: string): number {
+function calculateRevenue(amount: number, supplementaryToken: number, currentPrice: string, cost?: number): number {
   const price = parseFloat(currentPrice.replace('$', ''))
   const totalAmount = amount + supplementaryToken
   const totalValue = totalAmount * price
-  return parseFloat(totalValue.toFixed(2))
+  const netRevenue = totalValue - (cost || 0)
+  return parseFloat(netRevenue.toFixed(2))
 }
 
 export function AirdropHistory() {
@@ -154,7 +156,7 @@ export function AirdropHistory() {
       .map(item => ({
         ...item,
         currentValue: calculateCurrentValue(item.amount, item.supplementaryToken, item.currentPrice!),
-        revenue: calculateRevenue(item.amount, item.supplementaryToken, item.currentPrice!)
+        revenue: calculateRevenue(item.amount, item.supplementaryToken, item.currentPrice!, item.cost)
       }))
   }, [historyRawData])
 
@@ -392,6 +394,12 @@ export function AirdropHistory() {
                   <span className="text-xs text-gray-500">单号收益:</span>
                   <span className="text-xs font-medium text-green-600">${hoveredPoint.data.revenue.toFixed(2)}</span>
                 </div>
+                {hoveredPoint.data.cost && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">成本:</span>
+                    <span className="text-xs font-medium text-red-600">${hoveredPoint.data.cost}</span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-500">参与人数:</span>
                   <span className="text-xs font-medium text-gray-700">{hoveredPoint.data.participants?.toLocaleString() || '-'}</span>

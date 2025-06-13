@@ -428,6 +428,7 @@
     "amount": 9886,
     "supplementaryToken": 0,
     "currentPrice": "$0.0065",
-    "type": "tge"
+    "type": "tge",
+    "cost": 10
   }
 ] 
