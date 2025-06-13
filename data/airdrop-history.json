@@ -430,5 +430,17 @@
     "currentPrice": "$0.0065",
     "type": "tge",
     "cost": 10
+  },
+  {
+    "date": "2025年06月13日",
+    "token": "ROAM",
+    "points": 247,
+    "participants": null,
+    "amount": 372,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.173",
+    "type": "alpha",
+    "startTime": "2025-06-13 21:00 (UTC+8)",
+    "endTime": "2025-06-14 21:00 (UTC+8)"
   }
 ] 
