@@ -509,6 +509,53 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
     }
   }, [walletTransactionsCache, selectedDate, setWalletTransactionsCache])
 
+  // 重新查询单个钱包
+  const handleRetryWallet = useCallback(async (walletAddress: string) => {
+    const walletIndex = wallets.findIndex(w => w.address === walletAddress)
+    if (walletIndex === -1) return
+
+    const wallet = wallets[walletIndex]
+    
+    // 更新该钱包状态为加载中
+    setWalletData(prev => prev.map(w => 
+      w.address === walletAddress 
+        ? { ...w, isLoading: true, error: undefined }
+        : w
+    ))
+
+    try {
+      LogManager.addLog('重试', `重新查询钱包: ${walletAddress}`)
+      const result = await queryWalletDataWithAPI(wallet, walletIndex)
+      
+      // 更新该钱包的数据
+      setWalletData(prev => prev.map(w => 
+        w.address === walletAddress ? result : w
+      ))
+      
+      // 清除该钱包的交易缓存，强制重新获取
+      setWalletTransactionsCache(prev => {
+        const newCache = { ...prev }
+        delete newCache[walletAddress]
+        return newCache
+      })
+      
+      LogManager.addLog('重试', `钱包 ${walletAddress} 重新查询成功`)
+    } catch (error) {
+      LogManager.addLog('错误', `钱包 ${walletAddress} 重新查询失败: ${error}`)
+      
+      // 更新错误状态
+      setWalletData(prev => prev.map(w => 
+        w.address === walletAddress 
+          ? { 
+              ...w, 
+              isLoading: false, 
+              error: error instanceof Error ? error.message : "重新查询失败" 
+            }
+          : w
+      ))
+    }
+  }, [wallets, queryWalletDataWithAPI, setWalletData, setWalletTransactionsCache])
+
   // 计算总计数据
   const totalStats = useMemo(() => {
     return {
@@ -1180,16 +1227,22 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                             </td>
                             <td className="py-3 px-4">
                               {wallet.isLoading ? (
-                                <div className="flex items-center gap-2">
-                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                  <span className="text-sm text-gray-500">查询中</span>
+                                <div className="flex items-center gap-2 bg-green-50 px-3 py-2 rounded-lg border border-green-200">
+                                  <Loader2 className="w-4 h-4 animate-spin text-green-500" />
+                                  <span className="text-sm text-green-600 font-medium">查询中</span>
                                 </div>
                               ) : wallet.error ? (
-                                <span className="text-red-500 text-sm">查询失败</span>
+                                <Button
+                                  size="sm"
+                                  className="bg-red-500 hover:bg-red-600 text-white font-light"
+                                  onClick={() => handleRetryWallet(wallet.address)}
+                                >
+                                  查询失败重试
+                                </Button>
                               ) : (
                                 <Button
                                   size="sm"
-                                  className="bg-blue-500 hover:bg-blue-600 text-white font-light"
+                                  className="bg-green-500 hover:bg-green-600 text-white font-light"
                                   onClick={() => handleViewTransactionDetails(wallet.address)}
                                 >
                                   查看有效交易
@@ -1276,12 +1329,20 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
 
                       <div className="mt-3 pt-3 border-t">
                         {wallet.isLoading ? (
-                          <div className="flex items-center justify-center gap-2 py-2">
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span className="text-sm text-gray-500">查询中...</span>
+                          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                            <div className="flex items-center justify-center gap-2">
+                              <Loader2 className="w-4 h-4 animate-spin text-green-500" />
+                              <span className="text-sm text-green-600 font-medium">查询中...</span>
+                            </div>
                           </div>
                         ) : wallet.error ? (
-                          <div className="text-red-500 text-sm text-center py-2">查询失败: {wallet.error}</div>
+                          <Button
+                            size="sm"
+                            className="w-full bg-red-500 hover:bg-red-600 text-white font-light"
+                            onClick={() => handleRetryWallet(wallet.address)}
+                          >
+                            查询失败重试
+                          </Button>
                         ) : (
                           <Button
                             size="sm"
