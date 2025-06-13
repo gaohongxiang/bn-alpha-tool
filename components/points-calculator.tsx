@@ -108,12 +108,19 @@ export function PointsCalculator() {
     setter([value])
   }
 
-  // 创建滑动块逻辑
-  const createSliderLogic = (presets: number[]) => {
+  // 数字格式化函数：1位小数，整数时不显示小数点
+  const formatNumber = (num: number): string => {
+    if (Number.isInteger(num)) {
+      return num.toString()
+    }
+    return num.toFixed(1)
+  }
+
+  // 修改createSliderLogic函数，增加forceInteger参数
+  const createSliderLogic = (presets: number[], forceInteger = false) => {
     return {
-      // 将实际值转换为滑动块位置（0-100）
       valueToSliderPosition: (value: number): number => {
-        // 如果值在预设范围内，计算对应的滑动块位置
+        if (forceInteger) value = Math.round(value)
         for (let i = 0; i < presets.length - 1; i++) {
           if (value >= presets[i] && value <= presets[i + 1]) {
             const ratio = (value - presets[i]) / (presets[i + 1] - presets[i])
@@ -121,13 +128,7 @@ export function PointsCalculator() {
             return i * segmentSize + ratio * segmentSize
           }
         }
-        
-        // 如果值小于最小预设值
-        if (value < presets[0]) {
-          return 0
-        }
-        
-        // 如果值大于最大预设值，允许超出范围
+        if (value < presets[0]) return 0
         if (value > presets[presets.length - 1]) {
           const lastSegmentLength = presets[presets.length - 1] - presets[presets.length - 2]
           const overshoot = value - presets[presets.length - 1]
@@ -135,26 +136,18 @@ export function PointsCalculator() {
           const segmentSize = 100 / (presets.length - 1)
           return Math.min(100, 100 - segmentSize + segmentSize * (1 + extraRatio))
         }
-        
-        // 默认返回值（不应该到达这里）
         return 0
       },
-     
-      // 将滑动块位置转换为对应的实际值（支持连续值）
       sliderPositionToValue: (position: number) => {
         const index = (position / 100) * (presets.length - 1)
         const lowerIndex = Math.floor(index)
         const upperIndex = Math.ceil(index)
-        
         if (lowerIndex === upperIndex) {
-          return presets[lowerIndex]
+          return forceInteger ? Math.round(presets[lowerIndex]) : presets[lowerIndex]
         }
-        
         const ratio = index - lowerIndex
-        const value = presets[lowerIndex] + (presets[upperIndex] - presets[lowerIndex]) * ratio
-        
-        // 返回插值后的连续值，四舍五入到整数
-        return Math.round(value)
+        let value = presets[lowerIndex] + (presets[upperIndex] - presets[lowerIndex]) * ratio
+        return forceInteger ? Math.round(value) : value
       }
     }
   }
@@ -162,9 +155,14 @@ export function PointsCalculator() {
   // 为每个参数创建滑动块逻辑
   const balanceSlider = createSliderLogic(balancePresets)
   const tradingVolumeSlider = createSliderLogic(tradingVolumePresets)
-  const thresholdSlider = createSliderLogic(thresholdPresets)
+  // 门槛使用线性映射：50-500分，实现真正的1分步进
+  const thresholdSlider = {
+    valueToSliderPosition: (value: number) => ((value - 50) / (500 - 50)) * 100,
+    sliderPositionToValue: (position: number) => Math.round(50 + (position / 100) * (500 - 50))
+  }
   const airdropValueSlider = createSliderLogic(airdropValuePresets)
-  const wearValueSlider = createSliderLogic(wearValuePresets)
+  // 每日磨损：使用预设值映射，整数步进
+  const wearValueSlider = createSliderLogic(wearValuePresets, true)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-amber-50">
@@ -360,7 +358,7 @@ export function PointsCalculator() {
                       onBlur={() => {
                         const value = Number(tempThreshold)
                         if (!isNaN(value) && value >= 50) {
-                          setAirdropThreshold([value])
+                          setAirdropThreshold([Math.round(value)])
                         }
                         setEditingThreshold(false)
                       }}
@@ -368,11 +366,12 @@ export function PointsCalculator() {
                         if (e.key === "Enter") {
                           const value = Number(tempThreshold)
                           if (!isNaN(value) && value >= 50) {
-                            setAirdropThreshold([value])
+                            setAirdropThreshold([Math.round(value)])
                           }
                           setEditingThreshold(false)
                         }
                       }}
+                      step={1}
                       className="text-2xl font-light bg-transparent border-b-2 border-blue-400 outline-none w-32"
                       autoFocus
                     />
@@ -391,11 +390,11 @@ export function PointsCalculator() {
                     value={[thresholdSlider.valueToSliderPosition(airdropThreshold[0])]}
                     onValueChange={(values) => {
                       const newValue = thresholdSlider.sliderPositionToValue(values[0])
-                      setAirdropThreshold([newValue])
+                      setAirdropThreshold([Math.round(newValue)])
                     }}
                     max={100}
                     min={0}
-                    step={0.5}
+                    step={0.22}
                     className="w-full"
                   />
                   <div className="flex justify-between text-sm text-gray-500 font-light">
@@ -460,7 +459,7 @@ export function PointsCalculator() {
                     value={[airdropValueSlider.valueToSliderPosition(airdropValue[0])]}
                     onValueChange={(values) => {
                       const newValue = airdropValueSlider.sliderPositionToValue(values[0])
-                      setAirdropValue([newValue])
+                      setAirdropValue([Math.round(newValue)])
                     }}
                     max={100}
                     min={0}
@@ -492,13 +491,29 @@ export function PointsCalculator() {
                 <div className="space-y-3">
                   {editingWearValue ? (
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="decimal"
                       value={tempWearValue}
-                      onChange={(e) => setTempWearValue(e.target.value)}
+                      onChange={(e) => {
+                        // 处理全角半角小数点，并去除空格
+                        const val = e.target.value
+                          .replace(/．/g, '.') // 全角转半角
+                          .replace(/。/g, '.') // 句号转半角
+                          .replace(/\s/g, '')  // 去除所有空格
+                        setTempWearValue(val)
+                      }}
+                      onFocus={(e) => {
+                        // 将光标移到末尾，方便追加输入
+                        setTimeout(() => {
+                          e.target.setSelectionRange(e.target.value.length, e.target.value.length)
+                        }, 0)
+                      }}
                       onBlur={() => {
                         const value = Number(tempWearValue)
                         if (!isNaN(value) && value >= 0) {
-                          setDailyWearValue([value])
+                          // 限制到1位小数
+                          const rounded = Math.round(value * 10) / 10
+                          setDailyWearValue([rounded])
                         }
                         setEditingWearValue(false)
                       }}
@@ -506,7 +521,9 @@ export function PointsCalculator() {
                         if (e.key === "Enter") {
                           const value = Number(tempWearValue)
                           if (!isNaN(value) && value >= 0) {
-                            setDailyWearValue([value])
+                            // 限制到1位小数
+                            const rounded = Math.round(value * 10) / 10
+                            setDailyWearValue([rounded])
                           }
                           setEditingWearValue(false)
                         }
@@ -529,7 +546,7 @@ export function PointsCalculator() {
                     value={[wearValueSlider.valueToSliderPosition(dailyWearValue[0])]}
                     onValueChange={(values) => {
                       const newValue = wearValueSlider.sliderPositionToValue(values[0])
-                      setDailyWearValue([newValue])
+                      setDailyWearValue([Math.round(newValue)])
                     }}
                     max={100}
                     min={0}
@@ -614,19 +631,19 @@ export function PointsCalculator() {
                   <div className="text-xs text-purple-700 font-light">30天月度</div>
                   
                   <div className="text-sm text-gray-600 font-light">空投收入</div>
-                  <div className="font-light text-green-600">+${calculations.cycleAirdropIncome}</div>
-                  <div className="font-light text-green-600">+${calculations.monthlyAirdropIncome}</div>
+                  <div className="font-light text-green-600">+${formatNumber(calculations.cycleAirdropIncome)}</div>
+                  <div className="font-light text-green-600">+${formatNumber(calculations.monthlyAirdropIncome)}</div>
                   
                   <div className="text-sm text-gray-600 font-light">磨损成本</div>
-                  <div className="font-light text-red-500">-${calculations.cycleWearCost}</div>
-                  <div className="font-light text-red-500">-${calculations.monthlyWearCost}</div>
+                  <div className="font-light text-red-500">-${formatNumber(calculations.cycleWearCost)}</div>
+                  <div className="font-light text-red-500">-${formatNumber(calculations.monthlyWearCost)}</div>
                   
                   <div className="text-sm font-medium text-gray-700 border-t pt-2">净收益</div>
                   <div className={`font-medium text-lg border-t pt-2 ${calculations.cycleNetIncome >= 0 ? "text-green-600" : "text-red-600"}`}>
-                    ${calculations.cycleNetIncome}
+                    ${formatNumber(calculations.cycleNetIncome)}
                   </div>
                   <div className={`font-medium text-xl border-t pt-2 ${calculations.monthlyNetIncome >= 0 ? "text-green-600" : "text-red-600"}`}>
-                    ${calculations.monthlyNetIncome}
+                    ${formatNumber(calculations.monthlyNetIncome)}
                   </div>
                 </div>
               </div>
