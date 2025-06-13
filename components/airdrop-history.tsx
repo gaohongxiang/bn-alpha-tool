@@ -30,6 +30,7 @@ interface CurrentAirdropItem {
   token: string
   amount: number
   points: number
+  type: "alpha" | "tge"
   startTime: string // 格式: "2025-06-11 10:00 (UTC+8)"
   endTime: string   // 格式: "2025-06-12 10:00 (UTC+8)"
   description?: string
@@ -428,7 +429,16 @@ export function AirdropHistory() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* 左侧 */}
                       <div className="space-y-2">
-                        <div className="text-lg font-bold text-gray-800">{airdrop.token}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="text-lg font-bold text-gray-800">{airdrop.token}</div>
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              airdrop.type === "alpha" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"
+                            }`}
+                          >
+                            {airdrop.type.toUpperCase()}
+                          </span>
+                        </div>
                         <div className="space-y-1">
                           <div className="text-gray-600 text-sm">空投数量（枚）：<span className="text-blue-600 font-medium">{airdrop.amount}</span></div>
                           <div className="text-gray-600 text-sm">

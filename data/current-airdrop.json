@@ -1,9 +1,10 @@
 [
   {
-    "token": "PUNDIAI",
+    "token": "SGC",
     "amount": 8,
-    "points": 237,
-    "startTime": "2025-06-12 14:00 (UTC+8)",
-    "endTime": "2025-06-13 14:00 (UTC+8)"
+    "points": 1111111111111,
+    "type": "tge",
+    "startTime": "2025-06-13 16:00 (UTC+8)",
+    "endTime": "2025-06-13 18:00 (UTC+8)"
   }
 ] 
