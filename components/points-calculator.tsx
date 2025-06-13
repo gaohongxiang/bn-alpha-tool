@@ -428,7 +428,7 @@ export function PointsCalculator() {
                       onBlur={() => {
                         const value = Number(tempAirdropValue)
                         if (!isNaN(value) && value >= 10) {
-                          setAirdropValue([value])
+                          setAirdropValue([Math.round(value)])
                         }
                         setEditingAirdropValue(false)
                       }}
@@ -436,7 +436,7 @@ export function PointsCalculator() {
                         if (e.key === "Enter") {
                           const value = Number(tempAirdropValue)
                           if (!isNaN(value) && value >= 10) {
-                            setAirdropValue([value])
+                            setAirdropValue([Math.round(value)])
                           }
                           setEditingAirdropValue(false)
                         }
