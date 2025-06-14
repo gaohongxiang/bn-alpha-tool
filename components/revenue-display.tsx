@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Copy, X, ArrowUpDown, Loader2, AlertCircle, Settings, CheckCircle, ExternalLink } from "lucide-react"
+import { Copy, X, ArrowUpDown, Loader2, AlertCircle, Settings, CheckCircle, ExternalLink, Edit2, Save, XCircle } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
@@ -109,6 +109,19 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
   const [walletInput, setWalletInput] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedWallets, setSelectedWallets] = useState<string[]>([])
+  
+  // 复制成功提示状态
+  const [copyToast, setCopyToast] = useState<{
+    show: boolean;
+    message: string;
+    type: 'success' | 'error';
+    position: { x: number; y: number };
+  }>({ show: false, message: '', type: 'success', position: { x: 0, y: 0 } })
+  
+  // 编辑状态
+  const [editingWallet, setEditingWallet] = useState<string | null>(null)
+  const [editingAddress, setEditingAddress] = useState('')
+  const [editingNote, setEditingNote] = useState('')
 
   // 查询相关状态
   const [isQuerying, setIsQuerying] = useState(false)
@@ -183,7 +196,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
       if (savedWallets) {
         const parsedWallets = JSON.parse(savedWallets) as Wallet[]
         if (!props.wallets) { // 只有在没有外部传入时才从localStorage恢复
-          setInternalWallets(parsedWallets)
+          setWallets(parsedWallets)
         }
         LogManager.addLog('系统', `从localStorage恢复了 ${parsedWallets.length} 个钱包`)
       }
@@ -580,11 +593,33 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
   }
 
-  const copyToClipboard = useCallback(async (text: string) => {
+  const copyToClipboard = useCallback(async (text: string, event?: React.MouseEvent) => {
     try {
+      // 获取按钮位置
+      let position = { x: 0, y: 0 }
+      if (event && event.currentTarget) {
+        const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+        position = {
+          x: rect.left + rect.width / 2,
+          y: rect.top - 10
+        }
+      }
+
       if (navigator.clipboard && window.isSecureContext) {
         // 使用现代 Clipboard API
         await navigator.clipboard.writeText(text)
+        LogManager.addLog('操作', `地址已复制到剪贴板: ${text.substring(0, 10)}...`)
+        
+        // 显示成功提示
+        setCopyToast({
+          show: true,
+          message: '已复制',
+          type: 'success',
+          position
+        })
+        setTimeout(() => {
+          setCopyToast(prev => ({ ...prev, show: false }))
+        }, 2000)
       } else {
         // 降级方案：使用传统方法
         const textArea = document.createElement("textarea")
@@ -595,30 +630,54 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
         document.body.appendChild(textArea)
         textArea.focus()
         textArea.select()
-        document.execCommand("copy")
+        const success = document.execCommand("copy")
         document.body.removeChild(textArea)
+        
+        if (success) {
+          LogManager.addLog('操作', `地址已复制到剪贴板(降级方案): ${text.substring(0, 10)}...`)
+          
+          // 显示成功提示
+          setCopyToast({
+            show: true,
+            message: '已复制',
+            type: 'success',
+            position
+          })
+          setTimeout(() => {
+            setCopyToast(prev => ({ ...prev, show: false }))
+          }, 2000)
+        } else {
+          throw new Error('降级复制方案失败')
+        }
       }
-
-      // 可以添加成功提示（可选）
-      LogManager.addLog('操作', `地址已复制到剪贴板: ${text.substring(0, 10)}...`)
     } catch (err) {
       LogManager.addLog('错误', `复制失败: ${err}`)
-      // 降级方案
-      const textArea = document.createElement("textarea")
-      textArea.value = text
-      textArea.style.position = "fixed"
-      textArea.style.left = "-999999px"
-      textArea.style.top = "-999999px"
-      document.body.appendChild(textArea)
-      textArea.focus()
-      textArea.select()
-      try {
-        document.execCommand("copy")
-        LogManager.addLog('操作', '使用降级方案复制成功')
-      } catch (fallbackErr) {
-        LogManager.addLog('错误', `降级方案也失败了: ${fallbackErr}`)
+      
+      // 获取按钮位置
+      let position = { x: 0, y: 0 }
+      if (event && event.currentTarget) {
+        const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+        position = {
+          x: rect.left + rect.width / 2,
+          y: rect.top - 10
+        }
       }
-      document.body.removeChild(textArea)
+      
+      // 显示错误提示
+      setCopyToast({
+        show: true,
+        message: '复制失败',
+        type: 'error',
+        position
+      })
+      setTimeout(() => {
+        setCopyToast(prev => ({ ...prev, show: false }))
+      }, 2000)
+      
+      // 弹出提示框显示完整地址
+      setTimeout(() => {
+        alert(`复制失败，请手动复制以下地址：\n\n${text}`)
+      }, 100)
     }
   }, [])
 
@@ -725,6 +784,77 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
       setHasQueried(false)
     }
   }, [wallets, walletData, selectedWallets, setWallets, setWalletData, setHasQueried, setSelectedWallets])
+
+  // 编辑钱包
+  const handleEditWallet = useCallback((wallet: Wallet) => {
+    setEditingWallet(wallet.address)
+    setEditingAddress(wallet.address)
+    setEditingNote(wallet.note)
+  }, [])
+
+  // 保存编辑
+  const handleSaveEdit = useCallback(() => {
+    if (!editingWallet || !editingAddress.trim()) return
+
+    // 验证地址格式
+    if (!ethers.isAddress(editingAddress.trim())) {
+      LogManager.addLog('警告', `无效地址: ${editingAddress}`)
+      return
+    }
+
+    const trimmedAddress = editingAddress.trim()
+    const trimmedNote = editingNote.trim() || '-'
+
+    // 检查是否与其他钱包地址重复（除了当前编辑的钱包）
+    const isDuplicate = wallets.some(
+      (wallet) => wallet.address !== editingWallet && wallet.address === trimmedAddress
+    )
+
+    if (isDuplicate) {
+      LogManager.addLog('警告', `地址已存在: ${trimmedAddress}`)
+      return
+    }
+
+    // 更新钱包列表
+    const updatedWallets = wallets.map((wallet) =>
+      wallet.address === editingWallet
+        ? { address: trimmedAddress, note: trimmedNote }
+        : wallet
+    )
+    setWallets(updatedWallets)
+
+    // 如果地址发生变化，需要更新钱包数据
+    if (editingWallet !== trimmedAddress) {
+      const updatedWalletData = walletData.map((data) =>
+        data.address === editingWallet
+          ? { ...data, address: trimmedAddress, note: trimmedNote }
+          : data
+      )
+      setWalletData(updatedWalletData)
+
+      // 更新选中状态
+      if (selectedWallets.includes(editingWallet)) {
+        const updatedSelected = selectedWallets.map((addr) =>
+          addr === editingWallet ? trimmedAddress : addr
+        )
+        setSelectedWallets(updatedSelected)
+      }
+    }
+
+    // 重置编辑状态
+    setEditingWallet(null)
+    setEditingAddress('')
+    setEditingNote('')
+
+    LogManager.addLog('操作', `钱包信息已更新: ${trimmedAddress}`)
+  }, [editingWallet, editingAddress, editingNote, wallets, walletData, selectedWallets, setWallets, setWalletData, setSelectedWallets])
+
+  // 取消编辑
+  const handleCancelEdit = useCallback(() => {
+    setEditingWallet(null)
+    setEditingAddress('')
+    setEditingNote('')
+  }, [])
 
   const getNetworkStatusBadge = () => {
     switch (networkStatus) {
@@ -1181,7 +1311,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                                   onClick={(e) => {
                                     e.preventDefault()
                                     e.stopPropagation()
-                                    copyToClipboard(wallet.address)
+                                    copyToClipboard(wallet.address, e)
                                   }}
                                   className="h-6 w-6 p-0 hover:bg-blue-100"
                                   title="复制完整地址"
@@ -1271,7 +1401,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                             onClick={(e) => {
                               e.preventDefault()
                               e.stopPropagation()
-                              copyToClipboard(wallet.address)
+                              copyToClipboard(wallet.address, e)
                             }}
                             className="h-6 w-6 p-0 hover:bg-blue-100"
                             title="复制完整地址"
@@ -1788,34 +1918,88 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                           />
                         </td>
                         <td className="p-3">
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono font-light">{truncateAddress(wallet.address)}</span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-6 w-6 p-0 hover:bg-blue-100"
-                              onClick={(e) => {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                copyToClipboard(wallet.address)
-                              }}
-                              title="复制完整地址"
-                            >
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                          </div>
+                          {editingWallet === wallet.address ? (
+                            <Input
+                              value={editingAddress}
+                              onChange={(e) => setEditingAddress(e.target.value)}
+                              className="font-mono text-sm"
+                              placeholder="钱包地址"
+                            />
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-light">{truncateAddress(wallet.address)}</span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 hover:bg-blue-100"
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  copyToClipboard(wallet.address, e)
+                                }}
+                                title="复制完整地址"
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          )}
                         </td>
-                        <td className="p-3 font-light">{wallet.note}</td>
                         <td className="p-3">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 hover:bg-red-100 text-red-600"
-                            onClick={() => handleRemoveWallet(wallet.address)}
-                            title="删除钱包"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
+                          {editingWallet === wallet.address ? (
+                            <Input
+                              value={editingNote}
+                              onChange={(e) => setEditingNote(e.target.value)}
+                              className="text-sm"
+                              placeholder="备注"
+                            />
+                          ) : (
+                            <span className="font-light">{wallet.note}</span>
+                          )}
+                        </td>
+                        <td className="p-3">
+                          {editingWallet === wallet.address ? (
+                            <div className="flex gap-1">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0 hover:bg-green-100 text-green-600"
+                                onClick={handleSaveEdit}
+                                title="保存"
+                              >
+                                <Save className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0 hover:bg-gray-100 text-gray-600"
+                                onClick={handleCancelEdit}
+                                title="取消"
+                              >
+                                <XCircle className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ) : (
+                            <div className="flex gap-1">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600"
+                                onClick={() => handleEditWallet(wallet)}
+                                title="编辑"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0 hover:bg-red-100 text-red-600"
+                                onClick={() => handleRemoveWallet(wallet.address)}
+                                title="删除钱包"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -1834,6 +2018,40 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
         open={apiConfigOpen}
         onOpenChange={setApiConfigOpen}
       />
+
+      {/* 复制成功/失败提示 */}
+      {copyToast.show && (
+        <div 
+          className={`fixed z-[9999] px-3 py-2 rounded-md shadow-lg text-white text-sm font-medium transition-all duration-300 pointer-events-none ${
+            copyToast.type === 'success' 
+              ? 'bg-green-500' 
+              : 'bg-red-500'
+          }`}
+          style={{
+            left: `${copyToast.position.x}px`,
+            top: `${copyToast.position.y}px`,
+            transform: 'translateX(-50%)',
+            animation: 'fadeInUp 0.2s ease-out'
+          }}
+        >
+          <div className="flex items-center gap-1">
+            {copyToast.type === 'success' ? (
+              <CheckCircle className="w-4 h-4" />
+            ) : (
+              <AlertCircle className="w-4 h-4" />
+            )}
+            <span>{copyToast.message}</span>
+          </div>
+          {/* 小箭头 */}
+          <div 
+            className={`absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${
+              copyToast.type === 'success' 
+                ? 'border-t-green-500' 
+                : 'border-t-red-500'
+            }`}
+          />
+        </div>
+      )}
     </div>
   )
 }

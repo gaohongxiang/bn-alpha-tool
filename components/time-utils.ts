@@ -19,6 +19,7 @@ export interface TransactionTimeInfo {
 }
 
 import { apiManager } from './api-manager'
+import { debugLog, debugWarn, debugError } from '../lib/debug-logger'
 
 export class TimeUtils {
   /**
@@ -66,13 +67,13 @@ export class TimeUtils {
     const isCompleted = now >= endDateTime.getTime()
     if (!isCompleted) {
       endTimestamp = Math.floor(now / 1000)
-      console.log(`📅 时间范围: ${dateStr} 当天进行中，截止到当前时间`)
-      console.log(`   - 开始: ${startDateTime.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'})}`)
-      console.log(`   - 结束: ${new Date(now).toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'})} (当前时间)`)
+      debugLog(`📅 时间范围: ${dateStr} 当天进行中，截止到当前时间`)
+      debugLog(`   - 开始: ${startDateTime.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'})}`)
+      debugLog(`   - 结束: ${new Date(now).toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'})} (当前时间)`)
     } else {
-      console.log(`📅 时间范围: ${dateStr} 完整时间段`)
-      console.log(`   - 开始: ${startDateTime.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'})}`)
-      console.log(`   - 结束: ${endDateTime.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'})}`)
+      debugLog(`📅 时间范围: ${dateStr} 完整时间段`)
+      debugLog(`   - 开始: ${startDateTime.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'})}`)
+      debugLog(`   - 结束: ${endDateTime.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'})}`)
     }
 
     return {
@@ -183,28 +184,28 @@ export class TimeUtils {
    * @param timeInfo 交易时间信息
    */
   static logTimeInfo(timeInfo: TransactionTimeInfo): void {
-    console.log(`\n=== 时间信息统计 ===`)
-    console.log(`📅 查询日期: ${timeInfo.dayRange.dayStr}`)
-    console.log(`⏰ 当天范围: ${this.formatTimestamp(timeInfo.dayRange.startTimestamp)} ~ ${this.formatTimestamp(timeInfo.dayRange.endTimestamp)}`)
-    console.log(`✅ 当天状态: ${timeInfo.dayRange.isCompleted ? '已结束' : '进行中'}`)
+    debugLog(`\n=== 时间信息统计 ===`)
+    debugLog(`📅 查询日期: ${timeInfo.dayRange.dayStr}`)
+    debugLog(`⏰ 当天范围: ${this.formatTimestamp(timeInfo.dayRange.startTimestamp)} ~ ${this.formatTimestamp(timeInfo.dayRange.endTimestamp)}`)
+    debugLog(`✅ 当天状态: ${timeInfo.dayRange.isCompleted ? '已结束' : '进行中'}`)
     
     if (timeInfo.firstTransactionTime) {
-      console.log(`🚀 首笔交易: ${this.formatTimestamp(timeInfo.firstTransactionTime)}`)
+      debugLog(`🚀 首笔交易: ${this.formatTimestamp(timeInfo.firstTransactionTime)}`)
     } else {
-      console.log(`🚀 首笔交易: 无`)
+      debugLog(`🚀 首笔交易: 无`)
     }
     
     if (timeInfo.lastTransactionTime) {
-      console.log(`🏁 末笔交易: ${this.formatTimestamp(timeInfo.lastTransactionTime)}`)
+      debugLog(`🏁 末笔交易: ${this.formatTimestamp(timeInfo.lastTransactionTime)}`)
     } else {
-      console.log(`🏁 末笔交易: 无`)
+      debugLog(`🏁 末笔交易: 无`)
     }
 
     const balanceTime = this.getBalanceQueryTimestamp(timeInfo)
-    console.log(`💰 余额查询时间: ${this.formatTimestamp(balanceTime)}`)
+    debugLog(`💰 余额查询时间: ${this.formatTimestamp(balanceTime)}`)
 
     const { beforeTimestamp, afterTimestamp } = this.getLossCalculationTimestamps(timeInfo)
-    console.log(`📊 磨损计算时间: ${this.formatTimestamp(beforeTimestamp)} ~ ${this.formatTimestamp(afterTimestamp)}`)
+    debugLog(`📊 磨损计算时间: ${this.formatTimestamp(beforeTimestamp)} ~ ${this.formatTimestamp(afterTimestamp)}`)
   }
 
   /**
@@ -224,7 +225,7 @@ export class TimeUtils {
     // 重试3次
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
-        console.log(`🔄 钱包 ${walletIndex + 1}: 获取区块号 - 时间戳 ${timestamp} (${closest}) - 尝试 ${attempt}/3`)
+        debugLog(`🔄 钱包 ${walletIndex + 1}: 获取区块号 - 时间戳 ${timestamp} (${closest}) - 尝试 ${attempt}/3`)
         
         const response = await apiManager.makeRequest('bsc', 'bscscan', '', {
           module: 'block',
@@ -235,14 +236,14 @@ export class TimeUtils {
 
         if (response.success && response.data?.status === '1') {
           const blockNumber = parseInt(response.data.result)
-          console.log(`✅ 钱包 ${walletIndex + 1}: 区块号获取成功 - ${blockNumber} (尝试 ${attempt}/3)`)
+          debugLog(`✅ 钱包 ${walletIndex + 1}: 区块号获取成功 - ${blockNumber} (尝试 ${attempt}/3)`)
           return blockNumber
         }
         
         const errorMsg = response.error || response.data?.message || '未知错误'
         lastError = new Error(`获取区块号失败: ${errorMsg}`)
         
-        console.log(`⚠️ 钱包 ${walletIndex + 1}: 获取区块号失败 (尝试 ${attempt}/3)`, {
+        debugLog(`⚠️ 钱包 ${walletIndex + 1}: 获取区块号失败 (尝试 ${attempt}/3)`, {
           success: response.success,
           status: response.data?.status,
           message: response.data?.message,
@@ -254,12 +255,12 @@ export class TimeUtils {
         // 如果不是最后一次尝试，等待后重试
         if (attempt < 3) {
           const delay = attempt * 1000 // 1秒, 2秒
-          console.log(`⏳ 钱包 ${walletIndex + 1}: 等待 ${delay}ms 后重试...`)
+          debugLog(`⏳ 钱包 ${walletIndex + 1}: 等待 ${delay}ms 后重试...`)
           await new Promise(resolve => setTimeout(resolve, delay))
         }
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error))
-        console.log(`❌ 钱包 ${walletIndex + 1}: 请求异常 (尝试 ${attempt}/3):`, lastError.message)
+        debugLog(`❌ 钱包 ${walletIndex + 1}: 请求异常 (尝试 ${attempt}/3):`, lastError.message)
         
         if (attempt < 3) {
           const delay = attempt * 1000
@@ -281,7 +282,7 @@ export class TimeUtils {
     timeRange: DayTimeRange, 
     walletIndex: number = 0
   ): Promise<BlockRange> {
-    console.log(`📦 钱包 ${walletIndex + 1}: 开始获取区块范围...`)
+    debugLog(`📦 钱包 ${walletIndex + 1}: 开始获取区块范围...`)
     
     try {
       // 并行获取开始和结束区块号
@@ -290,7 +291,7 @@ export class TimeUtils {
         this.getBlockByTimestamp(timeRange.endTimestamp, 'before', walletIndex)
       ])
 
-      console.log(`📦 钱包 ${walletIndex + 1}: 区块范围获取成功 - ${startBlock} ~ ${endBlock}`)
+      debugLog(`📦 钱包 ${walletIndex + 1}: 区块范围获取成功 - ${startBlock} ~ ${endBlock}`)
       
       return {
         startBlock,

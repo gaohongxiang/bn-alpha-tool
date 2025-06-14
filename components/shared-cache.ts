@@ -1,4 +1,5 @@
 import { apiManager } from './api-manager'
+import { debugLog, debugWarn } from '../lib/debug-logger'
 
 interface BlockCache {
   [timestamp: string]: number
@@ -32,7 +33,7 @@ export class SharedCache {
     const cacheKey = `${timestamp}_${closest}`
     
     if (this.blockCache[cacheKey]) {
-      console.log(`📦 使用缓存的区块号: ${timestamp} → ${this.blockCache[cacheKey]}`)
+      debugLog(`📦 使用缓存的区块号: ${timestamp} → ${this.blockCache[cacheKey]}`)
       return this.blockCache[cacheKey]
     }
     
@@ -47,7 +48,7 @@ export class SharedCache {
       if (response.success && response.data?.status === '1') {
         const blockNumber = parseInt(response.data.result)
         this.blockCache[cacheKey] = blockNumber
-        console.log(`🔍 查询区块号: ${timestamp} → ${blockNumber} (已缓存)`)
+        debugLog(`🔍 查询区块号: ${timestamp} → ${blockNumber} (已缓存)`)
         return blockNumber
       } else {
         throw new Error(`API查询失败: ${response.error}`)
@@ -72,7 +73,7 @@ export class SharedCache {
     const cacheKey = Math.floor(timestamp / 3600).toString() // 按小时缓存
     
     if (this.tokenPriceCache[tokenSymbol][cacheKey]) {
-      console.log(`💰 使用缓存的代币价格: ${tokenSymbol} → $${this.tokenPriceCache[tokenSymbol][cacheKey]}`)
+      debugLog(`💰 使用缓存的代币价格: ${tokenSymbol} → $${this.tokenPriceCache[tokenSymbol][cacheKey]}`)
       return this.tokenPriceCache[tokenSymbol][cacheKey]
     }
     
@@ -83,17 +84,17 @@ export class SharedCache {
       
       if (price > 0) {
         this.tokenPriceCache[tokenSymbol][cacheKey] = price
-        console.log(`💲 查询代币价格: ${tokenSymbol} → $${price} (已缓存)`)
+        debugLog(`💲 查询代币价格: ${tokenSymbol} → $${price} (已缓存)`)
         return price
       }
     } catch (error) {
-      console.warn(`⚠️ 代币价格查询失败 ${tokenSymbol}:`, error)
+      debugWarn(`⚠️ 代币价格查询失败 ${tokenSymbol}:`, error)
     }
     
     // 使用备用价格
     if (fallbackPrice > 0) {
       this.tokenPriceCache[tokenSymbol][cacheKey] = fallbackPrice
-      console.log(`🔄 使用备用价格: ${tokenSymbol} → $${fallbackPrice}`)
+      debugLog(`🔄 使用备用价格: ${tokenSymbol} → $${fallbackPrice}`)
       return fallbackPrice
     }
     
@@ -108,7 +109,7 @@ export class SharedCache {
       const cached = this.dayPriceCache[date]
       // 缓存1小时内有效
       if (Date.now() - cached.timestamp < 3600000) {
-        console.log(`🏦 使用缓存的BNB价格: ${date} → $${cached.bnbPrice}`)
+        debugLog(`🏦 使用缓存的BNB价格: ${date} → $${cached.bnbPrice}`)
         return cached.bnbPrice
       }
     }
@@ -126,11 +127,11 @@ export class SharedCache {
           bnbPrice,
           timestamp: Date.now()
         }
-        console.log(`🌟 查询BNB价格: ${date} → $${bnbPrice} (已缓存)`)
+        debugLog(`🌟 查询BNB价格: ${date} → $${bnbPrice} (已缓存)`)
         return bnbPrice
       }
     } catch (error) {
-      console.warn(`⚠️ BNB价格查询失败:`, error)
+      debugWarn(`⚠️ BNB价格查询失败:`, error)
     }
     
     return 600 // 默认备用价格
@@ -157,13 +158,13 @@ export class SharedCache {
         const data = await response.json()
         return data.binancecoin?.usd || 0
       } catch (error) {
-        console.warn("BNB价格查询失败:", error)
+        debugWarn("BNB价格查询失败:", error)
         return 0
       }
     }
     
     // 其他代币暂时返回0，后续可以添加更多价格源
-    console.log(`⚠️ 暂不支持 ${tokenSymbol} 的价格查询`)
+    debugLog(`⚠️ 暂不支持 ${tokenSymbol} 的价格查询`)
     return 0
   }
   
@@ -174,7 +175,7 @@ export class SharedCache {
     this.blockCache = {}
     this.tokenPriceCache = {}
     this.dayPriceCache = {}
-    console.log("🧹 已清除所有共享缓存")
+    debugLog("🧹 已清除所有共享缓存")
   }
   
   /**

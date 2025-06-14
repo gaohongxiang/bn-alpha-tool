@@ -1,3 +1,5 @@
+import { debugLog, debugWarn, debugError } from '../lib/debug-logger'
+
 export interface TokenPriceMap {
     [symbol: string]: number
 }
@@ -47,9 +49,9 @@ export class TokenPriceUtils {
     static buildTokenPriceMap(transactions: Transaction[]): TokenPriceMap {
         const priceMap: TokenPriceMap = { ...this.BASE_PRICES }
 
-        console.log(`\n=== 代币价格推算开始 ===`)
-        console.log(`📊 初始稳定币价格:`, priceMap)
-        console.log(`🔗 分析 ${transactions.length} 笔交易`)
+        debugLog(`\n=== 代币价格推算开始 ===`)
+        debugLog(`📊 初始稳定币价格:`, priceMap)
+        debugLog(`🔗 分析 ${transactions.length} 笔交易`)
 
         // 按时间戳排序交易，确保按顺序推算价格
         const sortedTxs = [...transactions].sort((a, b) => a.timestamp - b.timestamp)
@@ -64,9 +66,9 @@ export class TokenPriceUtils {
                 continue
             }
 
-            console.log(`\n🔍 分析交易 ${index + 1}: ${fromToken}→${toToken} (${this.formatTimestamp(timestamp)})`)
-            console.log(`   数量: ${fromAmount.toFixed(4)} ${fromToken} → ${toAmount.toFixed(4)} ${toToken}`)
-            console.log(`   哈希: ${hash.substring(0, 10)}...`)
+            debugLog(`\n🔍 分析交易 ${index + 1}: ${fromToken}→${toToken} (${this.formatTimestamp(timestamp)})`)
+            debugLog(`   数量: ${fromAmount.toFixed(4)} ${fromToken} → ${toAmount.toFixed(4)} ${toToken}`)
+            debugLog(`   哈希: ${hash.substring(0, 10)}...`)
 
             let discovered = false
 
@@ -77,8 +79,8 @@ export class TokenPriceUtils {
                 priceDiscoveryCount++
                 discovered = true
 
-                console.log(`   ✅ 发现 ${toToken} 价格: $${toTokenPrice.toFixed(6)}`)
-                console.log(`      计算: ${fromAmount.toFixed(4)} × $${priceMap[fromToken].toFixed(6)} ÷ ${toAmount.toFixed(4)} = $${toTokenPrice.toFixed(6)}`)
+                debugLog(`   ✅ 发现 ${toToken} 价格: $${toTokenPrice.toFixed(6)}`)
+                debugLog(`      计算: ${fromAmount.toFixed(4)} × $${priceMap[fromToken].toFixed(6)} ÷ ${toAmount.toFixed(4)} = $${toTokenPrice.toFixed(6)}`)
             }
             // 如果to代币价格已知，from代币价格未知，则推算from代币价格
             else if (priceMap[toToken] && priceMap[toToken] > 0 && (!priceMap[fromToken] || priceMap[fromToken] === 0)) {
@@ -87,8 +89,8 @@ export class TokenPriceUtils {
                 priceDiscoveryCount++
                 discovered = true
 
-                console.log(`   ✅ 发现 ${fromToken} 价格: $${fromTokenPrice.toFixed(6)}`)
-                console.log(`      计算: ${toAmount.toFixed(4)} × $${priceMap[toToken].toFixed(6)} ÷ ${fromAmount.toFixed(4)} = $${fromTokenPrice.toFixed(6)}`)
+                debugLog(`   ✅ 发现 ${fromToken} 价格: $${fromTokenPrice.toFixed(6)}`)
+                debugLog(`      计算: ${toAmount.toFixed(4)} × $${priceMap[toToken].toFixed(6)} ÷ ${fromAmount.toFixed(4)} = $${fromTokenPrice.toFixed(6)}`)
             }
             // 如果两个代币价格都已知，验证价格一致性
             else if (priceMap[fromToken] && priceMap[toToken] && priceMap[fromToken] > 0 && priceMap[toToken] > 0) {
@@ -96,37 +98,37 @@ export class TokenPriceUtils {
                 const priceDifferencePercent = Math.abs(expectedToAmount - toAmount) / toAmount * 100
 
                 if (priceDifferencePercent > 5) { // 5%以上差异给出警告
-                    console.log(`   ⚠️  价格验证警告: ${priceDifferencePercent.toFixed(2)}% 差异`)
-                    console.log(`      预期: ${expectedToAmount.toFixed(4)} ${toToken}, 实际: ${toAmount.toFixed(4)} ${toToken}`)
+                    debugLog(`   ⚠️  价格验证警告: ${priceDifferencePercent.toFixed(2)}% 差异`)
+                    debugLog(`      预期: ${expectedToAmount.toFixed(4)} ${toToken}, 实际: ${toAmount.toFixed(4)} ${toToken}`)
                 } else {
-                    console.log(`   ✓ 价格验证通过: ${priceDifferencePercent.toFixed(2)}% 差异`)
+                    debugLog(`   ✓ 价格验证通过: ${priceDifferencePercent.toFixed(2)}% 差异`)
                 }
             }
             else {
-                console.log(`   ⏭️  跳过: 两个代币价格均未知或均已知`)
+                debugLog(`   ⏭️  跳过: 两个代币价格均未知或均已知`)
             }
 
             // 如果发现了新价格，显示当前价格表状态
             if (discovered) {
-                console.log(`   📊 当前价格表:`)
+                debugLog(`   📊 当前价格表:`)
                 Object.entries(priceMap)
                     .filter(([_, price]) => price > 0)
                     .forEach(([symbol, price]) => {
-                        console.log(`      ${symbol}: $${price.toFixed(6)}`)
+                        debugLog(`      ${symbol}: $${price.toFixed(6)}`)
                     })
             }
         }
 
-        console.log(`\n=== 价格推算完成 ===`)
-        console.log(`🎯 发现 ${priceDiscoveryCount} 个新代币价格`)
-        console.log(`📋 最终价格映射表:`)
+        debugLog(`\n=== 价格推算完成 ===`)
+        debugLog(`🎯 发现 ${priceDiscoveryCount} 个新代币价格`)
+        debugLog(`📋 最终价格映射表:`)
 
         Object.entries(priceMap)
             .filter(([_, price]) => price > 0)
             .sort(([a], [b]) => a.localeCompare(b))
             .forEach(([symbol, price]) => {
                 const isStable = this.BASE_PRICES[symbol] ? '(稳定币)' : ''
-                console.log(`   ${symbol}: $${price.toFixed(6)} ${isStable}`)
+                debugLog(`   ${symbol}: $${price.toFixed(6)} ${isStable}`)
             })
 
         return priceMap
@@ -138,7 +140,7 @@ export class TokenPriceUtils {
      */
     static async getCurrentBNBPrice(): Promise<number> {
         try {
-            console.log('🔍 获取BNB实时价格...')
+            debugLog('🔍 获取BNB实时价格...')
             
             // 使用BSCScan API获取BNB价格
             try {
@@ -155,12 +157,12 @@ export class TokenPriceUtils {
                 if (response.success && response.data?.result) {
                     const bnbPrice = parseFloat(response.data.result.ethusd)
                     if (bnbPrice && bnbPrice > 0) {
-                        console.log(`✅ BSCScan BNB价格: $${bnbPrice}`)
+                        debugLog(`✅ BSCScan BNB价格: $${bnbPrice}`)
                         return bnbPrice
                     }
                 }
             } catch (error) {
-                console.log('⚠️ BSCScan API失败:', error)
+                debugLog('⚠️ BSCScan API失败:', error)
             }
 
             // 备用方法1：Binance API
@@ -169,11 +171,11 @@ export class TokenPriceUtils {
                 const data = await response.json()
                 const price = parseFloat(data.price)
                 if (price && price > 0) {
-                    console.log(`✅ Binance BNB价格: $${price}`)
+                    debugLog(`✅ Binance BNB价格: $${price}`)
                     return price
                 }
             } catch (error) {
-                console.log('⚠️ Binance API失败:', error)
+                debugLog('⚠️ Binance API失败:', error)
             }
 
             // 备用方法2：CoinGecko API
@@ -182,14 +184,14 @@ export class TokenPriceUtils {
                 const data = await response.json()
                 const price = data.binancecoin?.usd
                 if (price && price > 0) {
-                    console.log(`✅ CoinGecko BNB价格: $${price}`)
+                    debugLog(`✅ CoinGecko BNB价格: $${price}`)
                     return price
                 }
             } catch (error) {
-                console.log('⚠️ CoinGecko API失败:', error)
+                debugLog('⚠️ CoinGecko API失败:', error)
             }
 
-            console.log('⚠️ 所有BNB价格API都失败，使用默认价格')
+            debugLog('⚠️ 所有BNB价格API都失败，使用默认价格')
             return 600 // 默认价格
             
         } catch (error) {
@@ -242,7 +244,7 @@ export class TokenPriceUtils {
         let totalValue = 0
         const timeStr = timestamp ? this.formatTimestamp(timestamp) : '当前'
 
-        console.log(`\n💰 计算 ${timeStr} 代币总价值:`)
+        debugLog(`\n💰 计算 ${timeStr} 代币总价值:`)
 
         Object.entries(balances).forEach(([symbol, balance]) => {
             if (balance > 0) {
@@ -250,11 +252,11 @@ export class TokenPriceUtils {
                 const value = balance * price
                 totalValue += value
 
-                console.log(`   ${symbol}: ${balance.toFixed(6)} × $${price.toFixed(6)} = $${value.toFixed(2)}`)
+                debugLog(`   ${symbol}: ${balance.toFixed(6)} × $${price.toFixed(6)} = $${value.toFixed(2)}`)
             }
         })
 
-        console.log(`   💎 总价值: $${totalValue.toFixed(2)}`)
+        debugLog(`   💎 总价值: $${totalValue.toFixed(2)}`)
         return totalValue
     }
 

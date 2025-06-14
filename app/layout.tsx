@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ErrorBoundary } from '../components/error-boundary'
+import { ErrorBoundary } from '@/components/error-boundary'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -44,7 +44,6 @@ export default function RootLayout({
             __html: `
               // 初始化全局错误处理器
               (function() {
-                const isDev = process.env.NODE_ENV === 'development';
                 const ignoredSources = [
                   'chrome-extension://',
                   'moz-extension://',
@@ -52,7 +51,12 @@ export default function RootLayout({
                   'edge-extension://',
                   'injectedScript',
                   'contentScript',
-                  'not found method'
+                  'not found method',
+                  'Cannot set property selectedAddress',
+                  'Cannot redefine property: solana',
+                  'Cannot assign to read only property',
+                  'Failed to inject',
+                  'trying to intercept'
                 ];
                 
                 function shouldIgnoreError(source) {

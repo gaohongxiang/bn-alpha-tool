@@ -442,5 +442,17 @@
     "type": "alpha",
     "startTime": "2025-06-13 21:00 (UTC+8)",
     "endTime": "2025-06-14 21:00 (UTC+8)"
+  },
+  {
+    "date": "2025年06月14日",
+    "token": "DEGEN",
+    "points": 245,
+    "participants": null,
+    "amount": 13862,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.0038",
+    "type": "alpha",
+    "startTime": "2025-06-14 14:00 (UTC+8)",
+    "endTime": "2025-06-15 14:00 (UTC+8)"
   }
 ] 

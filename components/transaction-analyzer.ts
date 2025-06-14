@@ -8,6 +8,7 @@ import { configManager, TradingConfigManager } from "../lib/config-manager"
 import { TokenPriceUtils } from "./token-price-utils"
 import { apiManager } from "./api-manager"
 import { TimeUtils, type BlockRange } from "./time-utils"
+import { debugLog } from '../lib/debug-logger'
 
 export interface RawTransaction {
     hash: string
@@ -90,7 +91,7 @@ export class TradingPairAnalyzer {
     }
 
     private addLog(message: string): void {
-        console.log(message)
+        debugLog(message)
         this.logs.push(message)
     }
 

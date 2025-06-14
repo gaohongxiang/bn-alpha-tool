@@ -3,6 +3,9 @@
  * 整合各个组件的关键打印信息，提供结构化的日志输出
  * 支持控制台输出和文件保存
  */
+
+import { DebugLogger } from '../lib/debug-logger'
+
 export class LogManager {
   private static logs: string[] = []
   private static currentSession: string = ''
@@ -15,12 +18,14 @@ export class LogManager {
   static initialize() {
     this.isClient = typeof window !== 'undefined'
     
-    // 拦截console.log来自动记录日志
-    if (this.isClient && !this.originalConsoleLog) {
+    // 拦截console.log来自动记录日志 - 只在开发环境下拦截
+    if (this.isClient && !this.originalConsoleLog && DebugLogger.isDev) {
       this.originalConsoleLog = console.log
       console.log = (...args: any[]) => {
-        // 调用原始的console.log
-        this.originalConsoleLog.apply(console, args)
+        // 只在开发环境下调用原始的console.log
+        if (DebugLogger.isDev) {
+          this.originalConsoleLog.apply(console, args)
+        }
         
         // 同时记录到我们的日志系统
         if (this.currentSession) {
@@ -49,11 +54,13 @@ export class LogManager {
   }
 
   /**
-   * 安全的console输出方法
+   * 安全的console输出方法 - 只在开发环境下输出
    */
   private static safeLog(...args: any[]) {
-    const outputMethod = this.originalConsoleLog || console.log
-    outputMethod.apply(console, args)
+    if (DebugLogger.isDev) {
+      const outputMethod = this.originalConsoleLog || console.log
+      outputMethod.apply(console, args)
+    }
   }
   
   /**
@@ -93,7 +100,7 @@ export class LogManager {
       // 清理URL对象
       URL.revokeObjectURL(url)
       
-      this.safeLog(`📁 日志已保存到文件: ${fileName}`)
+      if (DebugLogger.isDev) { this.safeLog(`📁 日志已保存到文件: ${fileName}`); }
     } catch (error) {
       console.error('❌ 保存日志文件失败:', error)
     }
@@ -111,7 +118,7 @@ export class LogManager {
     this.logs.push(startLog)
     
     // 使用原始console.log输出，避免重复记录
-    this.safeLog(`\n${startLog}`)
+    if (DebugLogger.isDev) { this.safeLog(`\n${startLog}`); }
   }
   
   /**
@@ -122,35 +129,42 @@ export class LogManager {
     this.logs.push(endLog)
     
     // 使用原始console.log输出，避免重复记录
-    this.safeLog(`\n${endLog}\n`)
+    if (DebugLogger.isDev) { this.safeLog(`\n${endLog}\n`); }
     
     // 会话结束时自动保存日志文件
     try {
       await this.saveToServer()
     } catch (error) {
-      this.safeLog('⚠️ 自动保存到服务器失败，会话结束时仅保存到浏览器')
+      if (DebugLogger.isDev) { this.safeLog('⚠️ 自动保存到服务器失败，会话结束时仅保存到浏览器'); }
     }
     
     this.currentSession = ''
   }
   
   /**
-   * 添加日志
+   * 添加日志 - 只在开发环境下输出到控制台
    */
   static addLog(category: string, message: string, data?: any) {
     const timestamp = new Date().toLocaleTimeString('zh-CN')
     const logMessage = `[${timestamp}] ${category}: ${message}`
     this.logs.push(logMessage)
     
-    // 使用原始console.log输出，避免重复记录
-    const outputMethod = this.originalConsoleLog || console.log
-    
-    if (data) {
-      outputMethod(logMessage, data)
-      // 将数据对象转换为字符串并添加到日志
-      this.logs.push(JSON.stringify(data, null, 2))
+    // 使用原始console.log输出，避免重复记录 - 只在开发环境下
+    if (DebugLogger.isDev) {
+      const outputMethod = this.originalConsoleLog || console.log
+      
+      if (data) {
+        outputMethod(logMessage, data)
+        // 将数据对象转换为字符串并添加到日志
+        this.logs.push(JSON.stringify(data, null, 2))
+      } else {
+        outputMethod(logMessage)
+      }
     } else {
-      outputMethod(logMessage)
+      // 生产环境下只添加到日志数组，不输出到控制台
+      if (data) {
+        this.logs.push(JSON.stringify(data, null, 2))
+      }
     }
   }
   
@@ -169,7 +183,7 @@ export class LogManager {
     
     summaryLines.forEach(line => {
       this.logs.push(line)
-      this.safeLog(line)
+      if (DebugLogger.isDev) { this.safeLog(line); }
     })
   }
   
@@ -188,7 +202,7 @@ export class LogManager {
     
     statusLines.forEach(line => {
       this.logs.push(line)
-      this.safeLog(line)
+      if (DebugLogger.isDev) { this.safeLog(line); }
     })
   }
   
@@ -205,7 +219,7 @@ export class LogManager {
     
     startLines.forEach(line => {
       this.logs.push(line)
-      this.safeLog(line)
+      if (DebugLogger.isDev) { this.safeLog(line); }
     })
   }
   
@@ -231,7 +245,7 @@ export class LogManager {
     
     resultLines.forEach(line => {
       this.logs.push(line)
-      this.safeLog(line)
+      if (DebugLogger.isDev) { this.safeLog(line); }
     })
   }
   
@@ -281,7 +295,7 @@ export class LogManager {
     
     summaryLines.forEach(line => {
       this.logs.push(line)
-      this.safeLog(line)
+      if (DebugLogger.isDev) { this.safeLog(line); }
     })
   }
   
@@ -300,7 +314,7 @@ export class LogManager {
       
     priceLines.forEach(line => {
       this.logs.push(line)
-      this.safeLog(line)
+      if (DebugLogger.isDev) { this.safeLog(line); }
     })
   }
   
@@ -318,7 +332,7 @@ export class LogManager {
     
     timeLines.forEach(line => {
       this.logs.push(line)
-      this.safeLog(line)
+      if (DebugLogger.isDev) { this.safeLog(line); }
     })
   }
   
@@ -335,7 +349,7 @@ export class LogManager {
     
     cacheLines.forEach(line => {
       this.logs.push(line)
-      this.safeLog(line)
+      if (DebugLogger.isDev) { this.safeLog(line); }
     })
   }
   
@@ -359,7 +373,7 @@ export class LogManager {
     
     perfLines.forEach(line => {
       this.logs.push(line)
-      this.safeLog(line)
+      if (DebugLogger.isDev) { this.safeLog(line); }
     })
   }
   
@@ -368,7 +382,7 @@ export class LogManager {
    */
   static async saveLogFile() {
     if (this.logs.length === 0) {
-      this.safeLog('📄 没有日志需要保存')
+      if (DebugLogger.isDev) { this.safeLog('📄 没有日志需要保存'); }
       return
     }
 
@@ -407,7 +421,7 @@ export class LogManager {
       const result = await response.json()
 
       if (response.ok && result.success) {
-        this.safeLog(`📁 日志已保存到服务器: ${result.filePath}`)
+        if (DebugLogger.isDev) { this.safeLog(`📁 日志已保存到服务器: ${result.filePath}`); }
       } else {
         throw new Error(result.error || '服务器保存失败')
       }

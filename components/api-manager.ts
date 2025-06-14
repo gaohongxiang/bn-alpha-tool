@@ -1,55 +1,7 @@
 // API管理器类，支持多API Key轮换和健康监测
 
-// 调试日志工具类
-class DebugLogger {
-  private static isDevelopment = process.env.NODE_ENV === 'development'
-  
-  static log(message: string, ...args: any[]) {
-    if (this.isDevelopment) {
-      console.log(message, ...args)
-    }
-  }
-  
-  static error(message: string, ...args: any[]) {
-    if (this.isDevelopment) {
-      console.error(message, ...args)
-    }
-  }
-  
-  static warn(message: string, ...args: any[]) {
-    if (this.isDevelopment) {
-      console.warn(message, ...args)
-    }
-  }
-}
-
-// 错误边界处理，防止第三方扩展干扰
-function safeExecute<T>(fn: () => T, fallback: T, errorMessage?: string): T {
-  try {
-    return fn()
-  } catch (error) {
-    if (errorMessage) {
-      DebugLogger.error(errorMessage, error)
-    }
-    return fallback
-  }
-}
-
-// 异步错误边界处理
-async function safeExecuteAsync<T>(
-  fn: () => Promise<T>, 
-  fallback: T, 
-  errorMessage?: string
-): Promise<T> {
-  try {
-    return await fn()
-  } catch (error) {
-    if (errorMessage) {
-      DebugLogger.error(errorMessage, error)
-    }
-    return fallback
-  }
-}
+import { DebugLogger } from '../lib/debug-logger'
+import { safeExecute, safeExecuteAsync } from '../lib/error-handler'
 
 interface APIKey {
   key: string
