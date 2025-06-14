@@ -1,3 +1,56 @@
+// API管理器类，支持多API Key轮换和健康监测
+
+// 调试日志工具类
+class DebugLogger {
+  private static isDevelopment = process.env.NODE_ENV === 'development'
+  
+  static log(message: string, ...args: any[]) {
+    if (this.isDevelopment) {
+      console.log(message, ...args)
+    }
+  }
+  
+  static error(message: string, ...args: any[]) {
+    if (this.isDevelopment) {
+      console.error(message, ...args)
+    }
+  }
+  
+  static warn(message: string, ...args: any[]) {
+    if (this.isDevelopment) {
+      console.warn(message, ...args)
+    }
+  }
+}
+
+// 错误边界处理，防止第三方扩展干扰
+function safeExecute<T>(fn: () => T, fallback: T, errorMessage?: string): T {
+  try {
+    return fn()
+  } catch (error) {
+    if (errorMessage) {
+      DebugLogger.error(errorMessage, error)
+    }
+    return fallback
+  }
+}
+
+// 异步错误边界处理
+async function safeExecuteAsync<T>(
+  fn: () => Promise<T>, 
+  fallback: T, 
+  errorMessage?: string
+): Promise<T> {
+  try {
+    return await fn()
+  } catch (error) {
+    if (errorMessage) {
+      DebugLogger.error(errorMessage, error)
+    }
+    return fallback
+  }
+}
+
 interface APIKey {
   key: string
   name: string
@@ -74,16 +127,24 @@ export class APIManager {
   private initializationPromise: Promise<void>
 
   constructor() {
-    // 直接异步加载配置，不设置任何默认配置
-    this.initializationPromise = this.loadNetworkConfig().then(() => {
-      console.log('✅ 网络配置加载完成')
-      this.initializeHealthTracking()
+    // 使用安全执行包装初始化过程
+    this.initializationPromise = safeExecuteAsync(
+      () => this.initializeManager(),
+      undefined,
+      '❌ API管理器初始化失败'
+    ).then(() => {
       this.initializationComplete = true
     }).catch((error) => {
-      console.error('❌ 配置文件加载失败，无法继续:', error)
+      DebugLogger.error('❌ 配置文件加载失败，无法继续:', error)
       this.initializationComplete = true
       throw error
     })
+  }
+
+  private async initializeManager(): Promise<void> {
+    await this.loadNetworkConfig()
+    DebugLogger.log('✅ 网络配置加载完成')
+    this.initializeHealthTracking()
   }
 
   /**
@@ -122,7 +183,7 @@ export class APIManager {
         // 转换配置文件格式以适配api-manager的结构
         this.networks = this.convertConfigFormat(config.networks)
         this.currentNetwork = config.defaultNetwork || 'bsc'
-        console.log('✅ 从配置文件加载网络配置完成')
+        DebugLogger.log('✅ 从配置文件加载网络配置完成')
         
         // 在浏览器环境中保存到localStorage
         if (typeof window !== 'undefined') {
@@ -133,7 +194,7 @@ export class APIManager {
       
       throw new Error('配置文件格式错误，未找到networks配置')
     } catch (error) {
-      console.error('⚠️ 配置文件加载失败:', error)
+      DebugLogger.error('⚠️ 配置文件加载失败:', error)
       throw error
     }
   }
@@ -184,7 +245,7 @@ export class APIManager {
   private saveConfigToStorage() {
     if (typeof window === 'undefined') return
     
-    try {
+    safeExecute(() => {
       const config = {
         networks: this.networks,
         settings: {
@@ -198,49 +259,46 @@ export class APIManager {
         }
       }
       localStorage.setItem('api-manager-config', JSON.stringify(config))
-      console.log('✅ 配置已保存到localStorage')
-    } catch (error) {
-      console.error('❌ 保存配置失败:', error)
-    }
+      DebugLogger.log('✅ 配置已保存到localStorage')
+    }, undefined, '❌ 保存配置失败')
   }
 
   /**
    * 导出配置文件
    */
   exportConfig(): string {
-    const config = {
-      networks: this.networks,
-      settings: {
-        defaultNetwork: this.currentNetwork,
-        apiStrategy: {
-          rotationType: "request",
-          failoverEnabled: true,
-          healthCheckInterval: 300000,
-          retryAttempts: 3
+    return safeExecute(() => {
+      const config = {
+        networks: this.networks,
+        settings: {
+          defaultNetwork: this.currentNetwork,
+          apiStrategy: {
+            rotationType: "request",
+            failoverEnabled: true,
+            healthCheckInterval: 300000,
+            retryAttempts: 3
+          }
         }
       }
-    }
-    return JSON.stringify(config, null, 2)
+      return JSON.stringify(config, null, 2)
+    }, '{}', '❌ 导出配置失败')
   }
 
   /**
    * 导入配置文件
    */
   importConfig(configJson: string): boolean {
-    try {
+    return safeExecute(() => {
       const config = JSON.parse(configJson)
       if (config.networks) {
         this.networks = config.networks
         this.saveConfigToStorage()
         this.initializeHealthTracking()
-        console.log('✅ 配置导入成功')
+        DebugLogger.log('✅ 配置导入成功')
         return true
       }
       return false
-    } catch (error) {
-      console.error('❌ 配置导入失败:', error)
-      return false
-    }
+    }, false, '❌ 配置导入失败')
   }
 
   /**
@@ -249,7 +307,7 @@ export class APIManager {
   private loadUserAPIKeys() {
     if (typeof window === 'undefined') return
     
-    try {
+    safeExecute(() => {
       const userKeys = localStorage.getItem('user-api-keys')
       if (userKeys) {
         const parsedKeys = JSON.parse(userKeys)
@@ -270,11 +328,9 @@ export class APIManager {
           }
         })
         
-        console.log('✅ 用户API Key加载完成')
+        DebugLogger.log('✅ 用户API Key加载完成')
       }
-    } catch (error) {
-      console.warn('⚠️ 用户API Key加载失败:', error)
-    }
+    }, undefined, '⚠️ 用户API Key加载失败')
   }
 
   /**
@@ -311,7 +367,7 @@ export class APIManager {
       const existingKey = api.keys.find(k => k.key === apiKey)
       
       if (existingKey) {
-        console.warn('⚠️ API Key已存在')
+        DebugLogger.warn('⚠️ API Key已存在')
         return false
       }
 
@@ -340,10 +396,10 @@ export class APIManager {
       // 保存用户API Key到单独的存储
       this.saveUserAPIKey(networkId, apiName, newApiKey)
 
-      console.log(`✅ 添加用户API Key成功: ${name}`)
+      DebugLogger.log(`✅ 添加用户API Key成功: ${name}`)
       return true
     } catch (error) {
-      console.error('❌ 添加API Key失败:', error)
+      DebugLogger.error('❌ 添加API Key失败:', error)
       return false
     }
   }
@@ -354,7 +410,7 @@ export class APIManager {
   private saveUserAPIKey(networkId: string, apiName: string, apiKey: APIKey) {
     if (typeof window === 'undefined') return
     
-    try {
+    safeExecute(() => {
       const userKeys = JSON.parse(localStorage.getItem('user-api-keys') || '{}')
       
       if (!userKeys[networkId]) {
@@ -367,10 +423,8 @@ export class APIManager {
       userKeys[networkId][apiName].push(apiKey)
       localStorage.setItem('user-api-keys', JSON.stringify(userKeys))
       
-      console.log('✅ 用户API Key已保存')
-    } catch (error) {
-      console.error('❌ 保存用户API Key失败:', error)
-    }
+      DebugLogger.log('✅ 用户API Key已保存')
+    }, undefined, '❌ 保存用户API Key失败')
   }
 
   /**
@@ -387,13 +441,13 @@ export class APIManager {
       
       // 检查是否为受保护的API Key
       if (targetKey.protected || targetKey.isDefault) {
-        console.warn('⚠️ 不能删除默认提供的API Key')
+        DebugLogger.warn('⚠️ 不能删除默认提供的API Key')
         return false
       }
 
       // 至少保留一个API Key
       if (api.keys.length <= 1) {
-        console.warn('⚠️ 至少需要保留一个API Key')
+        DebugLogger.warn('⚠️ 至少需要保留一个API Key')
         return false
       }
 
@@ -406,10 +460,10 @@ export class APIManager {
       })
 
       this.saveConfigToStorage()
-      console.log(`✅ 删除用户API Key成功: ${targetKey.name}`)
+      DebugLogger.log(`✅ 删除用户API Key成功: ${targetKey.name}`)
       return true
     } catch (error) {
-      console.error('❌ 删除API Key失败:', error)
+      DebugLogger.error('❌ 删除API Key失败:', error)
       return false
     }
   }
@@ -428,23 +482,23 @@ export class APIManager {
       
       // 默认API Key不允许禁用
       if ((targetKey.protected || targetKey.isDefault) && targetKey.active) {
-        console.warn('⚠️ 不能禁用默认提供的API Key')
+        DebugLogger.warn('⚠️ 不能禁用默认提供的API Key')
         return false
       }
 
       const activeKeys = api.keys.filter(k => k.active)
       if (activeKeys.length <= 1 && targetKey.active) {
-        console.warn('⚠️ 至少需要保留一个激活的API Key')
+        DebugLogger.warn('⚠️ 至少需要保留一个激活的API Key')
         return false
       }
 
       targetKey.active = !targetKey.active
       this.saveConfigToStorage()
       
-      console.log(`✅ API Key状态切换: ${targetKey.name} -> ${targetKey.active ? '激活' : '禁用'}`)
+      DebugLogger.log(`✅ API Key状态切换: ${targetKey.name} -> ${targetKey.active ? '激活' : '禁用'}`)
       return true
     } catch (error) {
-      console.error('❌ 切换API Key状态失败:', error)
+      DebugLogger.error('❌ 切换API Key状态失败:', error)
       return false
     }
   }
@@ -487,7 +541,7 @@ export class APIManager {
     }
 
     // 如果所有API都不健康，返回第一个作为最后的选择
-    console.warn('⚠️ 所有API Key都不健康，使用第一个作为备用')
+    DebugLogger.warn('⚠️ 所有API Key都不健康，使用第一个作为备用')
     const firstKeyIndex = api.keys.findIndex(k => k === activeKeys[0])
     return {
       key: activeKeys[0].key,
@@ -524,7 +578,7 @@ export class APIManager {
       const startTime = Date.now()
       
       try {
-        console.log(`🔄 API请求 (尝试${attempt + 1}/${maxRetries}): ${apiKeyInfo.key.substring(0, 8)}...`)
+        DebugLogger.log(`🔄 API请求 (尝试${attempt + 1}/${maxRetries}): ${apiKeyInfo.key.substring(0, 8)}...`)
         
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), timeout)
@@ -545,7 +599,7 @@ export class APIManager {
         // 更新健康状态
         this.updateAPIHealth(networkId, apiName, apiKeyInfo.index, true, responseTime)
         
-        console.log(`✅ API请求成功 (${responseTime}ms): ${apiKeyInfo.key.substring(0, 8)}...`)
+        DebugLogger.log(`✅ API请求成功 (${responseTime}ms): ${apiKeyInfo.key.substring(0, 8)}...`)
         
         return {
           success: true,
@@ -558,7 +612,7 @@ export class APIManager {
         const responseTime = Date.now() - startTime
         this.updateAPIHealth(networkId, apiName, apiKeyInfo.index, false, responseTime)
         
-        console.warn(`⚠️ API请求失败 (尝试${attempt + 1}): ${error}`)
+        DebugLogger.warn(`⚠️ API请求失败 (尝试${attempt + 1}): ${error}`)
         
         // 如果是最后一次尝试，返回错误
         if (attempt === maxRetries - 1) {
@@ -691,10 +745,10 @@ export class APIManager {
     if (this.networks[networkId]) {
       this.currentNetwork = networkId
       this.saveConfigToStorage()
-      console.log(`✅ 切换到网络: ${this.networks[networkId].name}`)
+      DebugLogger.log(`✅ 切换到网络: ${this.networks[networkId].name}`)
       return true
     }
-    console.error(`❌ 网络不存在: ${networkId}`)
+    DebugLogger.error(`❌ 网络不存在: ${networkId}`)
     return false
   }
 

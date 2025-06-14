@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { ErrorBoundary } from '../components/error-boundary'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -38,8 +39,53 @@ export default function RootLayout({
         <link rel="icon" href="/favicon-16x16.svg" type="image/svg+xml" sizes="16x16" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="32x32" />
         <link rel="shortcut icon" href="/favicon-16x16.svg" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // 初始化全局错误处理器
+              (function() {
+                const isDev = process.env.NODE_ENV === 'development';
+                const ignoredSources = [
+                  'chrome-extension://',
+                  'moz-extension://',
+                  'safari-extension://',
+                  'edge-extension://',
+                  'injectedScript',
+                  'contentScript',
+                  'not found method'
+                ];
+                
+                function shouldIgnoreError(source) {
+                  if (!source) return false;
+                  return ignoredSources.some(ignored => source.includes(ignored));
+                }
+                
+                // 捕获未处理的错误
+                window.addEventListener('error', function(event) {
+                  if (shouldIgnoreError(event.filename || event.message)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return false;
+                  }
+                }, true);
+                
+                // 捕获Promise rejection
+                window.addEventListener('unhandledrejection', function(event) {
+                  if (shouldIgnoreError(event.reason?.message || String(event.reason))) {
+                    event.preventDefault();
+                    return false;
+                  }
+                });
+              })();
+            `,
+          }}
+        />
       </head>
-      <body>{children}</body>
+      <body>
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
+      </body>
     </html>
   )
 }
