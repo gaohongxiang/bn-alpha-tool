@@ -96,3 +96,11 @@ pnpm dev
   },
 ]
 ```
+
+## 参考项目
+
+- https://bn-alpha-tool.com
+- https://new.alphabot.cm/
+- https://www.bn-alpha.site
+- https://litangdingzhen.me/
+- https://alpha-nu-self.vercel.app/

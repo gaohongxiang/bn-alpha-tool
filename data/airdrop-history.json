@@ -439,9 +439,7 @@
     "amount": 372,
     "supplementaryToken": 0,
     "currentPrice": "$0.173",
-    "type": "alpha",
-    "startTime": "2025-06-13 21:00 (UTC+8)",
-    "endTime": "2025-06-14 21:00 (UTC+8)"
+    "type": "alpha"
   },
   {
     "date": "2025年06月14日",
@@ -451,8 +449,18 @@
     "amount": 13862,
     "supplementaryToken": 0,
     "currentPrice": "$0.0038",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月15日",
+    "token": "F",
+    "points": 241,
+    "participants": null,
+    "amount": 5000,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.01",
     "type": "alpha",
-    "startTime": "2025-06-14 14:00 (UTC+8)",
-    "endTime": "2025-06-15 14:00 (UTC+8)"
+    "startTime": "2025-06-15 16:00 (UTC+8)",
+    "endTime": "2025-06-15 16:00 (UTC+8)"
   }
 ] 
