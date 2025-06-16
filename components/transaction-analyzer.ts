@@ -502,11 +502,18 @@ export class TradingPairAnalyzer {
      */
     private filterValidTransactions(exchanges: ExchangeTransaction[]): ExchangeTransaction[] {
         const stableCoins = configManager.getStableCoins()
-        const validTransactions = exchanges.filter(tx =>
-            !stableCoins.includes(tx.toToken)
-        )
+        const validTransactions = exchanges.filter(tx => {
+            // 标准化代币符号再进行比较
+            const normalizedToToken = this.normalizeTokenSymbol(tx.toToken)
+            const isStableCoin = stableCoins.includes(normalizedToToken)
+            
+            this.addLog(`   检查交易 ${tx.fromToken}->${tx.toToken}: toToken标准化为${normalizedToToken}, 是否稳定币: ${isStableCoin}`)
+            
+            return !isStableCoin
+        })
 
         this.addLog(`🎯 有效交易过滤:`)
+        this.addLog(`   稳定币列表: ${stableCoins.join(', ')}`)
         this.addLog(`   总兑换交易: ${exchanges.length}`)
         this.addLog(`   排除to为稳定币: ${exchanges.length - validTransactions.length}`)
         this.addLog(`   有效交易: ${validTransactions.length}`)

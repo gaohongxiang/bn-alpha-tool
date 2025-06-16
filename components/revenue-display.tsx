@@ -239,8 +239,8 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
       LogManager.addLog('分析', `钱包 ${walletIndex + 1}: 使用新的交易分析器查询交易数据`)
       const analysisResult = await TradingPairAnalyzer.analyzeByDate(wallet.address, selectedDate)
 
-      // 转换数据格式以兼容原有界面
-      const transactions: Transaction[] = analysisResult.result.allExchanges.transactions.map(tx => ({
+      // 转换数据格式以兼容原有界面 - 只缓存有效交易
+      const transactions: Transaction[] = analysisResult.result.validTransactions.transactions.map(tx => ({
         hash: tx.hash,
         from: wallet.address,
         to: tx.toToken || '',
@@ -257,6 +257,8 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
         fromAmount: tx.fromAmount,
         toAmount: tx.toAmount
       }))
+      
+      LogManager.addLog('缓存', `钱包 ${walletIndex + 1}: 缓存 ${transactions.length} 笔有效交易（已排除to为稳定币的交易）`)
 
       // 缓存交易数据
       setWalletTransactionsCache(prev => ({
@@ -478,49 +480,22 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
       // 首先检查缓存
       const cachedTransactions = walletTransactionsCache[address]
       if (cachedTransactions) {
-        LogManager.addLog('缓存', `使用缓存的交易数据，共 ${cachedTransactions.length} 笔交易`)
+        LogManager.addLog('缓存', `使用缓存的交易数据，共 ${cachedTransactions.length} 笔有效交易`)
         setSelectedWalletTransactions(cachedTransactions)
         setIsLoadingTransactions(false)
         return
       }
 
-      // 如果缓存中没有，重新使用交易分析器查询
-      LogManager.addLog('查询', `缓存中没有数据，重新查询钱包 ${address} 的交易`)
-      const analysisResult = await TradingPairAnalyzer.analyzeByDate(address, selectedDate)
-      
-      // 转换数据格式
-      const transactions: Transaction[] = analysisResult.result.allExchanges.transactions.map(tx => ({
-        hash: tx.hash,
-        from: address,
-        to: tx.toToken || '',
-        value: tx.fromAmount.toString(),
-        tokenSymbol: `${tx.fromToken}→${tx.toToken}`,
-        tokenName: `${tx.fromToken} to ${tx.toToken}`,
-        gasUsed: tx.gasUsed.toString(),
-        gasPrice: '0',
-        blockNumber: tx.blockNumber,
-        timestamp: tx.timestamp,
-        usdValue: tx.fromAmount,
-        fromToken: tx.fromToken,
-        toToken: tx.toToken,
-        fromAmount: tx.fromAmount,
-        toAmount: tx.toAmount
-      }))
-      
-      setSelectedWalletTransactions(transactions)
-      
-      // 同时更新缓存
-      setWalletTransactionsCache(prev => ({
-        ...prev,
-        [address]: transactions
-      }))
+      // 如果缓存中没有，说明还没有进行过批量查询，提示用户先进行批量查询
+      LogManager.addLog('提示', `该钱包还没有交易缓存，请先进行批量查询`)
+      setSelectedWalletTransactions([])
+      setIsLoadingTransactions(false)
     } catch (error) {
       LogManager.addLog('错误', `加载交易数据失败: ${error}`)
       setSelectedWalletTransactions([])
-    } finally {
       setIsLoadingTransactions(false)
     }
-  }, [walletTransactionsCache, selectedDate, setWalletTransactionsCache])
+  }, [walletTransactionsCache])
 
   // 重新查询单个钱包
   const handleRetryWallet = useCallback(async (walletAddress: string) => {
