@@ -35,6 +35,11 @@
           "address": "0xe6DF05CE8C8301223373CF5B969AFCb1498c5528"
         },
         {
+          "symbol": "AB", 
+          "name": "ab",
+          "address": "0x95034f653d5d161890836ad2b6b8cc49d14e029a"
+        },
+        {
           "symbol": "BNB",
           "name": "Binance Coin",
           "aliases": ["WBNB", "BNB-BSC"],
@@ -55,8 +60,8 @@
         { "from": "ZKJ", "to": "USDT", "description": "ZKJ卖出换USDT" },
         { "from": "USDT", "to": "KOGE", "description": "USDT买入KOGE" },
         { "from": "KOGE", "to": "USDT", "description": "KOGE卖出换USDT" },
-        { "from": "ZKJ", "to": "KOGE", "description": "ZKJ兑换KOGE" },
-        { "from": "KOGE", "to": "ZKJ", "description": "KOGE兑换ZKJ" }
+        { "from": "USDT", "to": "AB", "description": "USDT买入AB" },
+        { "from": "AB", "to": "USDT", "description": "AB卖出换USDT" }
       ],
       
       "rules": {
