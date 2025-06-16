@@ -459,8 +459,18 @@
     "amount": 5000,
     "supplementaryToken": 0,
     "currentPrice": "$0.01",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月16日",
+    "token": "VELO",
+    "points": 242,
+    "participants": null,
+    "amount": 5000,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.01",
     "type": "alpha",
-    "startTime": "2025-06-15 16:00 (UTC+8)",
-    "endTime": "2025-06-16 16:00 (UTC+8)"
+    "startTime": "2025-06-16 15:00 (UTC+8)",
+    "endTime": "2025-06-17 15:00 (UTC+8)"
   }
 ] 
