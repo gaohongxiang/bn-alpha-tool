@@ -184,13 +184,13 @@ export function AirdropHistory() {
     const xStep = chartWidth / (airdropHistoryData.length - 1) // 数据点间距
 
     // 按照要求设置刻度范围
-    // 积分门槛：以60为一档，最高235，整到240就够了
-    const maxThreshold = 240
+    // 积分门槛：以50为一档，最高247，整到250就够了
+    const maxThreshold = 250
     // 单号收益：以120为一档，最高520，整到600就够了
     const maxRevenue = 600
 
     // 生成刻度数组
-    const thresholdTicks = [0, 60, 120, 180, 240]
+    const thresholdTicks = [0, 50, 100, 150, 200, 250]
     const revenueTicks = [0, 120, 240, 360, 480, 600]
 
     // 生成路径 - 在图表区域内绘制
@@ -237,7 +237,7 @@ export function AirdropHistory() {
         onMouseLeave={handleChartMouseLeave}
       >
         <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`}>
-          {/* Y轴标签 - 积分门槛 (左侧) - 按60为一档显示 */}
+          {/* Y轴标签 - 积分门槛 (左侧) - 按50为一档显示 */}
           {thresholdTicks.map((tick, index) => {
             // 从底部开始，0在最下面
             const y = paddingTop + chartHeight - (index * chartHeight) / (thresholdTicks.length - 1)
