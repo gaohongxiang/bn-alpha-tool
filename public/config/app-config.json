@@ -40,6 +40,11 @@
           "address": "0x95034f653d5d161890836ad2b6b8cc49d14e029a"
         },
         {
+          "symbol": "BR", 
+          "name": "bedrock",
+          "address": "0xff7d6a96ae471bbcd7713af9cb1feeb16cf56b41"
+        },
+        {
           "symbol": "BNB",
           "name": "Binance Coin",
           "aliases": ["WBNB", "BNB-BSC"],
@@ -61,7 +66,9 @@
         { "from": "USDT", "to": "KOGE", "description": "USDT买入KOGE" },
         { "from": "KOGE", "to": "USDT", "description": "KOGE卖出换USDT" },
         { "from": "USDT", "to": "AB", "description": "USDT买入AB" },
-        { "from": "AB", "to": "USDT", "description": "AB卖出换USDT" }
+        { "from": "AB", "to": "USDT", "description": "AB卖出换USDT" },
+        { "from": "USDT", "to": "BR", "description": "USDT买入BR" },
+        { "from": "BR", "to": "USDT", "description": "BR卖出换USDT" }
       ],
       
       "rules": {

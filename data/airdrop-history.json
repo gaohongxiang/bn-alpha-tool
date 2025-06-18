@@ -465,12 +465,42 @@
     "date": "2025年06月16日",
     "token": "VELO",
     "points": 242,
-    "participants": null,
+    "participants": 71199,
     "amount": 5000,
     "supplementaryToken": 0,
     "currentPrice": "$0.01",
-    "type": "alpha",
-    "startTime": "2025-06-16 15:00 (UTC+8)",
-    "endTime": "2025-06-17 15:00 (UTC+8)"
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月17日",
+    "token": "BOMB",
+    "points": 238,
+    "participants": 26701,
+    "amount": 7620,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.005",
+    "type": "tge",
+    "cost": 10
+  },
+  {
+    "date": "2025年06月17日",
+    "token": "SPK",
+    "points": 240,
+    "participants": 39905,
+    "amount": 2000,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.07",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月18日",
+    "token": "BEE",
+    "points": 234,
+    "participants": null,
+    "amount": 2067,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.02",
+    "type": "tge",
+    "cost": 10
   }
 ] 
