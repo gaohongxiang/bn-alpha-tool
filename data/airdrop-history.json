@@ -473,6 +473,17 @@
   },
   {
     "date": "2025年06月17日",
+    "token": "ULTI",
+    "points": 242,
+    "participants": 77860,
+    "amount": 2543,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.0018",
+    "type": "alpha",
+    "pointsConsumed": false
+  },
+  {
+    "date": "2025年06月17日",
     "token": "BOMB",
     "points": 238,
     "participants": 26701,
@@ -502,5 +513,19 @@
     "currentPrice": "$0.02",
     "type": "tge",
     "cost": 10
+  },
+  {
+    "date": "2025年06月19日",
+    "token": "MAT",
+    "participants": null,
+    "amount": 16,
+    "supplementaryToken": 0,
+    "currentPrice": "$3.5",
+    "phase1Points": 243,
+    "phase2Points": 210,
+    "startTime": "2025-06-19 20:00 (UTC+8)",
+    "phase1EndTime": "2025-06-20 14:00 (UTC+8)",
+    "phase2EndTime": "2025-06-20 20:00 (UTC+8)",
+    "type": "alpha"
   }
 ] 
