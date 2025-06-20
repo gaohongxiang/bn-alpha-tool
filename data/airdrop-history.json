@@ -527,5 +527,19 @@
     "phase1EndTime": "2025-06-20 14:00 (UTC+8)",
     "phase2EndTime": "2025-06-20 20:00 (UTC+8)",
     "type": "alpha"
+  },
+  {
+    "date": "2025年06月20日",
+    "token": "AVAIL",
+    "participants": null,
+    "amount": 2667,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.026",
+    "phase1Points": 243,
+    "phase2Points": 199,
+    "startTime": "2025-06-20 15:00 (UTC+8)",
+    "phase1EndTime": "2025-06-21 09:00 (UTC+8)",
+    "phase2EndTime": "2025-06-21 15:00 (UTC+8)",
+    "type": "alpha"
   }
 ] 
