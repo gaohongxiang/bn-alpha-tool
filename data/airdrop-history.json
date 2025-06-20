@@ -546,7 +546,7 @@
     "date": "2025年06月20日",
     "token": "LOT",
     "participants": null,
-    "amount": 0,
+    "amount": "-",
     "supplementaryToken": 0,
     "currentPrice": "$0",
     "points": 238,

@@ -584,17 +584,26 @@ export function AirdropHistory() {
                             </div>
                           )}
                           <div className="space-y-1">
-                            <div className="text-gray-600 text-sm">空投数量（枚）：<span className="text-blue-600 font-medium">{airdrop.amount}</span></div>
+                            <div className="text-gray-600 text-sm">
+                              {airdrop.type === "tge" ? "分配数量" : "空投数量"}（枚）：
+                              <span className="text-blue-600 font-medium">{airdrop.amount}</span>
+                            </div>
                             
                             {/* 积分门槛信息 */}
-                            {airdrop.phase1Points && (
+                            {airdrop.phase1Points ? (
+                              <>
+                                <div className="text-gray-600 text-sm">
+                                  优先获取积分门槛：<span className="text-blue-600 font-medium">{airdrop.phase1Points}分</span>
+                                </div>
+                                {airdrop.phase2Points && (
+                                  <div className="text-gray-600 text-sm">
+                                    先到先得积分门槛：<span className="text-orange-600 font-medium">{airdrop.phase2Points}分</span>
+                                  </div>
+                                )}
+                              </>
+                            ) : (
                               <div className="text-gray-600 text-sm">
-                                优先获取积分门槛：<span className="text-blue-600 font-medium">{airdrop.phase1Points}分</span>
-                              </div>
-                            )}
-                            {airdrop.phase2Points && (
-                              <div className="text-gray-600 text-sm">
-                                先到先得积分门槛：<span className="text-orange-600 font-medium">{airdrop.phase2Points}分</span>
+                                积分门槛：<span className="text-blue-600 font-medium">{airdrop.points}分</span>
                               </div>
                             )}
                           </div>
@@ -603,22 +612,33 @@ export function AirdropHistory() {
                         {/* 右侧 */}
                         <div className="space-y-2">
                           <div className="text-sm">
-                            <span className="text-gray-600">开始领取时间：</span>
+                            <span className="text-gray-600">
+                            {airdrop.type === "tge" ? "开始时间：" : "开始领取时间："}</span>
                             <span className="text-blue-600 ml-1">{airdrop.startTime}</span>
                           </div>
                           
-                          {/* 两阶段时间信息 */}
-                          {airdrop.phase1EndTime && (
-                            <div className="text-sm">
-                              <span className="text-gray-600">优先获取截止时间：</span>
-                              <span className="text-blue-600 ml-1">{airdrop.phase1EndTime}</span>
-                            </div>
-                          )}
-                          {airdrop.phase2EndTime && (
-                            <div className="text-sm">
-                              <span className="text-gray-600">先到先得截止时间：</span>
-                              <span className="text-orange-600 ml-1">{airdrop.phase2EndTime}</span>
-                            </div>
+                          {/* 时间信息 */}
+                          {airdrop.phase1EndTime ? (
+                            <>
+                              <div className="text-sm">
+                                <span className="text-gray-600">优先获取截止时间：</span>
+                                <span className="text-blue-600 ml-1">{airdrop.phase1EndTime}</span>
+                              </div>
+                              {airdrop.phase2EndTime && (
+                                <div className="text-sm">
+                                  <span className="text-gray-600">先到先得截止时间：</span>
+                                  <span className="text-orange-600 ml-1">{airdrop.phase2EndTime}</span>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            airdrop.endTime && (
+                              <div className="text-sm">
+                                <span className="text-gray-600">
+                                {airdrop.type === "tge" ? "截止时间：" : "截止领取时间："}</span>
+                                <span className="text-orange-600 ml-1">{airdrop.endTime}</span>
+                              </div>
+                            )
                           )}
                           
                                                   <div className="text-sm">
@@ -793,7 +813,7 @@ export function AirdropHistory() {
                         <th className="text-center py-3 px-4 font-medium">代币名称</th>
                         <th className="text-center py-3 px-4 font-medium">积分要求</th>
                         <th className="text-center py-3 px-4 font-medium">参与人数</th>
-                        <th className="text-center py-3 px-4 font-medium">空投数量</th>
+                        <th className="text-center py-3 px-4 font-medium">数量</th>
                         <th className="text-center py-3 px-4 font-medium">补发代币</th>
                         <th className="text-center py-3 px-4 font-medium">当天代币价格</th>
                         <th className="text-center py-3 px-4 font-medium">单号收益</th>
