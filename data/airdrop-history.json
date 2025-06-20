@@ -541,5 +541,18 @@
     "phase1EndTime": "2025-06-21 09:00 (UTC+8)",
     "phase2EndTime": "2025-06-21 15:00 (UTC+8)",
     "type": "alpha"
+  },
+  {
+    "date": "2025年06月20日",
+    "token": "LOT",
+    "participants": null,
+    "amount": 0,
+    "supplementaryToken": 0,
+    "currentPrice": "$0",
+    "points": 238,
+    "startTime": "2025-06-20 15:00 (UTC+8)",
+    "endTime": "2025-06-21 09:00 (UTC+8)",
+    "type": "tge",
+    "cost": 10
   }
 ] 
