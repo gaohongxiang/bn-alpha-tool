@@ -523,9 +523,6 @@
     "currentPrice": "$3.5",
     "phase1Points": 243,
     "phase2Points": 210,
-    "startTime": "2025-06-19 20:00 (UTC+8)",
-    "phase1EndTime": "2025-06-20 14:00 (UTC+8)",
-    "phase2EndTime": "2025-06-20 20:00 (UTC+8)",
     "type": "alpha"
   },
   {
@@ -546,12 +543,10 @@
     "date": "2025年06月20日",
     "token": "LOT",
     "participants": null,
-    "amount": "-",
+    "amount": "2047",
     "supplementaryToken": 0,
-    "currentPrice": "$0",
+    "currentPrice": "$0.0157",
     "points": 238,
-    "startTime": "2025-06-20 16:00 (UTC+8)",
-    "endTime": "2025-06-20 18:00 (UTC+8)",
     "type": "tge",
     "cost": 10
   }
