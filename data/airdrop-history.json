@@ -534,20 +534,31 @@
     "currentPrice": "$0.026",
     "phase1Points": 243,
     "phase2Points": 199,
-    "startTime": "2025-06-20 15:00 (UTC+8)",
-    "phase1EndTime": "2025-06-21 09:00 (UTC+8)",
-    "phase2EndTime": "2025-06-21 15:00 (UTC+8)",
     "type": "alpha"
   },
   {
     "date": "2025年06月20日",
     "token": "LOT",
     "participants": null,
-    "amount": "2047",
+    "amount": 2047,
     "supplementaryToken": 0,
-    "currentPrice": "$0.0157",
+    "currentPrice": "$0.02",
     "points": 238,
     "type": "tge",
     "cost": 10
+  },
+  {
+    "date": "2025年06月21日",
+    "token": "BRIC",
+    "participants": null,
+    "amount": 900,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.03",
+    "phase1Points": 251,
+    "phase2Points": 226,
+    "startTime": "2025-06-21 18:00 (UTC+8)",
+    "phase1EndTime": "2025-06-22 12:00 (UTC+8)",
+    "phase2EndTime": "2025-06-22 18:00 (UTC+8)",
+    "type": "alpha"
   }
 ] 

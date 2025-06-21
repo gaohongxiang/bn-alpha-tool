@@ -14,8 +14,8 @@ interface AirdropItem {
   token: string
   points: number
   participants: number | null
-  amount: number
-  supplementaryToken: number
+  amount: number | string  // 支持字符串和数字类型
+  supplementaryToken: number | string  // 支持字符串和数字类型 | string
   currentPrice: string | null
   type: "alpha" | "tge"
   cost?: number  // TGE项目的成本（可选）
@@ -49,17 +49,21 @@ interface CurrentAirdropItem extends AirdropItem {
 }
 
 // 计算总价值的辅助函数
-function calculateCurrentValue(amount: number, supplementaryToken: number, currentPrice: string): string {
+function calculateCurrentValue(amount: number | string, supplementaryToken: number | string, currentPrice: string): string {
   const price = parseFloat(currentPrice.replace('$', ''))
-  const totalAmount = amount + supplementaryToken
+  const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount
+  const supplementaryTokenNum = typeof supplementaryToken === 'string' ? parseFloat(supplementaryToken) : supplementaryToken
+  const totalAmount = amountNum + supplementaryTokenNum
   const totalValue = totalAmount * price
   return `$${totalValue.toFixed(2)}`
 }
 
 // 计算单号收益的辅助函数
-function calculateRevenue(amount: number, supplementaryToken: number, currentPrice: string, cost?: number): number {
+function calculateRevenue(amount: number | string, supplementaryToken: number | string, currentPrice: string, cost?: number): number {
   const price = parseFloat(currentPrice.replace('$', ''))
-  const totalAmount = amount + supplementaryToken
+  const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount
+  const supplementaryTokenNum = typeof supplementaryToken === 'string' ? parseFloat(supplementaryToken) : supplementaryToken
+  const totalAmount = amountNum + supplementaryTokenNum
   const totalValue = totalAmount * price
   const netRevenue = totalValue - (cost || 0)
   return parseFloat(netRevenue.toFixed(2))
@@ -848,9 +852,13 @@ export function AirdropHistory() {
                           </td>
                           <td className="py-3 px-4 font-light text-center">{item.participants?.toLocaleString() || '-'}</td>
                           <td className="py-3 px-4 text-center">
-                            <span className="text-blue-600 font-light">{item.amount.toLocaleString()}</span>
+                            <span className="text-blue-600 font-light">
+                              {(typeof item.amount === 'string' ? parseFloat(item.amount) : item.amount).toLocaleString()}
+                            </span>
                           </td>
-                          <td className="py-3 px-4 text-orange-600 font-light text-center">{item.supplementaryToken}</td>
+                          <td className="py-3 px-4 text-orange-600 font-light text-center">
+                            {typeof item.supplementaryToken === 'string' ? parseFloat(item.supplementaryToken) : item.supplementaryToken}
+                          </td>
                           <td className="py-3 px-4 font-light text-center">{item.currentPrice}</td>
                           <td className="py-3 px-4 text-green-600 font-normal text-center">${item.revenue.toFixed(2)}</td>
                           <td className="py-3 px-4 text-center">
