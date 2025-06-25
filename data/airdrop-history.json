@@ -599,9 +599,6 @@
     "currentPrice": "$0.007",
     "phase1Points": 248,
     "phase2Points": 210,
-    "startTime": "2025-06-24 17:00 (UTC+8)",
-    "phase1EndTime": "2025-06-25 13:00 (UTC+8)",
-    "phase2EndTime": "2025-06-25 17:00 (UTC+8)",
     "type": "alpha"
   },
   {
@@ -613,9 +610,31 @@
     "currentPrice": "$0.46",
     "phase1Points": 241,
     "phase2Points": 180,
-    "startTime": "2025-06-24 21:00 (UTC+8)",
-    "phase1EndTime": "2025-06-25 15:00 (UTC+8)",
-    "phase2EndTime": "2025-06-25 21:00 (UTC+8)",
     "type": "alpha"
+  },
+  {
+    "date": "2025年06月25日",
+    "token": "H",
+    "participants": null,
+    "amount": 1600,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.05",
+    "phase1Points": 230,
+    "phase2Points": 180,
+    "startTime": "2025-06-25 17:00 (UTC+8)",
+    "phase1EndTime": "2025-06-26 11:00 (UTC+8)",
+    "phase2EndTime": "2025-06-26 17:00 (UTC+8)",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月25日",
+    "token": "XNY",
+    "participants": null,
+    "amount": 11356,
+    "supplementaryToken": 0,
+    "currentPrice": "$0",
+    "points": 218,
+    "type": "tge",
+    "cost": 6
   }
 ] 
