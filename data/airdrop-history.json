@@ -497,7 +497,7 @@
     "date": "2025年06月17日",
     "token": "SPK",
     "points": 240,
-    "participants": 39905,
+    "participants": 61500,
     "amount": 2000,
     "supplementaryToken": 0,
     "currentPrice": "$0.07",
@@ -517,7 +517,7 @@
   {
     "date": "2025年06月19日",
     "token": "MAT",
-    "participants": null,
+    "participants": 28646,
     "amount": 16,
     "supplementaryToken": 0,
     "currentPrice": "$3.5",
@@ -528,7 +528,7 @@
   {
     "date": "2025年06月20日",
     "token": "AVAIL",
-    "participants": null,
+    "participants": 49061,
     "amount": 2667,
     "supplementaryToken": 0,
     "currentPrice": "$0.026",
@@ -556,9 +556,66 @@
     "currentPrice": "$0.03",
     "phase1Points": 251,
     "phase2Points": 226,
-    "startTime": "2025-06-21 18:00 (UTC+8)",
-    "phase1EndTime": "2025-06-22 12:00 (UTC+8)",
-    "phase2EndTime": "2025-06-22 18:00 (UTC+8)",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月22日",
+    "token": "BULLA",
+    "participants": 24400,
+    "amount": 750,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.06",
+    "phase1Points": 247,
+    "phase2Points": 186,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月23日",
+    "token": "CARV",
+    "participants": 39528,
+    "amount": 250,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.23",
+    "phase1Points": 247,
+    "phase2Points": 198,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月24日",
+    "token": "MGO",
+    "participants": null,
+    "amount": 1666,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.017",
+    "points": 210,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月24日",
+    "token": "DMC",
+    "participants": null,
+    "amount": 4800,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.007",
+    "phase1Points": 248,
+    "phase2Points": 210,
+    "startTime": "2025-06-24 17:00 (UTC+8)",
+    "phase1EndTime": "2025-06-25 13:00 (UTC+8)",
+    "phase2EndTime": "2025-06-25 17:00 (UTC+8)",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月24日",
+    "token": "NEWT",
+    "participants": null,
+    "amount": 125,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.46",
+    "phase1Points": 241,
+    "phase2Points": 180,
+    "startTime": "2025-06-24 21:00 (UTC+8)",
+    "phase1EndTime": "2025-06-25 15:00 (UTC+8)",
+    "phase2EndTime": "2025-06-25 21:00 (UTC+8)",
     "type": "alpha"
   }
 ] 
