@@ -621,9 +621,6 @@
     "currentPrice": "$0.05",
     "phase1Points": 230,
     "phase2Points": 180,
-    "startTime": "2025-06-25 17:00 (UTC+8)",
-    "phase1EndTime": "2025-06-26 11:00 (UTC+8)",
-    "phase2EndTime": "2025-06-26 17:00 (UTC+8)",
     "type": "alpha"
   },
   {
@@ -636,5 +633,33 @@
     "points": 218,
     "type": "tge",
     "cost": 6
+  },
+  {
+    "date": "2025年06月26日",
+    "token": "XO",
+    "participants": null,
+    "amount":3125,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.0",
+    "phase1Points": 239,
+    "phase2Points": 198,
+    "startTime": "2025-06-26 17:00 (UTC+8)",
+    "phase1EndTime": "2025-06-27 11:00 (UTC+8)",
+    "phase2EndTime": "2025-06-27 17:00 (UTC+8)",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月26日",
+    "token": "SAHARA",
+    "participants": null,
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.0",
+    "phase1Points": 223,
+    "phase2Points": 180,
+    "startTime": "2025-06-26 18:00 (UTC+8)",
+    "phase1EndTime": "2025-06-27 12:00 (UTC+8)",
+    "phase2EndTime": "2025-06-27 18:00 (UTC+8)",
+    "type": "alpha"
   }
 ] 
