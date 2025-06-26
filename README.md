@@ -129,3 +129,4 @@ pnpm dev
 - https://www.bn-alpha.site
 - https://litangdingzhen.me/
 - https://alpha-nu-self.vercel.app/
+- alpah数据查询：https://dune.com/ethan714/bn-alpha-analysis
