@@ -651,7 +651,7 @@
     "participants": 74950,
     "amount": 1000,
     "supplementaryToken": 0,
-    "currentPrice": "$0.0",
+    "currentPrice": "$0.14",
     "phase1Points": 223,
     "phase2Points": 180,
     "type": "alpha"
@@ -672,7 +672,7 @@
     "participants": null,
     "amount": 400,
     "supplementaryToken": 0,
-    "currentPrice": "$0.1",
+    "currentPrice": "$0.05",
     "points": 170,
     "type": "alpha"
   }
