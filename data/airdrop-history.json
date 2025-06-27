@@ -583,7 +583,7 @@
   {
     "date": "2025年06月24日",
     "token": "MGO",
-    "participants": null,
+    "participants": 16873,
     "amount": 1666,
     "supplementaryToken": 0,
     "currentPrice": "$0.017",
@@ -604,7 +604,7 @@
   {
     "date": "2025年06月24日",
     "token": "NEWT",
-    "participants": null,
+    "participants": 60000,
     "amount": 125,
     "supplementaryToken": 0,
     "currentPrice": "$0.46",
@@ -615,7 +615,7 @@
   {
     "date": "2025年06月25日",
     "token": "H",
-    "participants": null,
+    "participants": 75000,
     "amount": 1600,
     "supplementaryToken": 0,
     "currentPrice": "$0.05",
@@ -640,26 +640,40 @@
     "participants": null,
     "amount":3125,
     "supplementaryToken": 0,
-    "currentPrice": "$0.0",
+    "currentPrice": "$0.01",
     "phase1Points": 239,
     "phase2Points": 198,
-    "startTime": "2025-06-26 17:00 (UTC+8)",
-    "phase1EndTime": "2025-06-27 11:00 (UTC+8)",
-    "phase2EndTime": "2025-06-27 17:00 (UTC+8)",
     "type": "alpha"
   },
   {
     "date": "2025年06月26日",
     "token": "SAHARA",
-    "participants": null,
+    "participants": 74950,
     "amount": 1000,
     "supplementaryToken": 0,
     "currentPrice": "$0.0",
     "phase1Points": 223,
     "phase2Points": 180,
-    "startTime": "2025-06-26 18:00 (UTC+8)",
-    "phase1EndTime": "2025-06-27 12:00 (UTC+8)",
-    "phase2EndTime": "2025-06-27 18:00 (UTC+8)",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月27日",
+    "token": "CESS",
+    "participants": null,
+    "amount": 10000,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.0028",
+    "points": 170,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年06月27日",
+    "token": "MORE",
+    "participants": null,
+    "amount": 400,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.1",
+    "points": 170,
     "type": "alpha"
   }
 ] 
