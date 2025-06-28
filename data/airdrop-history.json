@@ -675,5 +675,15 @@
     "currentPrice": "$0.05",
     "points": 170,
     "type": "alpha"
+  },
+  {
+    "date": "2025年06月29日",
+    "token": "REKT",
+    "participants": null,
+    "amount": 140230000,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.00000025",
+    "points": 170,
+    "type": "alpha"
   }
 ] 
