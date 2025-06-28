@@ -525,7 +525,9 @@ export class APIManager {
       }
 
       const api = this.networks[networkId].apis[apiName]
-      const url = this.buildUrl(api.baseUrl, endpoint, { ...params, apikey: apiKeyInfo.key })
+      
+      // 检测环境并构建相应的URL
+      const url = this.buildRequestUrl(api.baseUrl, endpoint, { ...params, apikey: apiKeyInfo.key })
       
       const startTime = Date.now()
       
@@ -587,7 +589,39 @@ export class APIManager {
   }
 
   /**
-   * 构建请求URL
+   * 构建请求URL (支持浏览器代理和服务器直连)
+   */
+  private buildRequestUrl(baseUrl: string, endpoint: string, params: { [key: string]: any }): string {
+    // 检测是否在浏览器环境
+    const isBrowser = typeof window !== 'undefined'
+    
+    if (isBrowser && baseUrl.includes('api.bscscan.com')) {
+      // 浏览器环境：使用代理API路由
+      const proxyUrl = new URL('/api/bscscan-proxy', window.location.origin)
+      Object.keys(params).forEach(key => {
+        if (params[key] !== undefined && params[key] !== null) {
+          proxyUrl.searchParams.append(key, String(params[key]))
+        }
+      })
+      
+      DebugLogger.log(`🔄 使用代理API: ${proxyUrl.toString()}`)
+      return proxyUrl.toString()
+    } else {
+      // 服务器环境：直接请求BSCScan API
+      const url = new URL(baseUrl)
+      Object.keys(params).forEach(key => {
+        if (params[key] !== undefined && params[key] !== null) {
+          url.searchParams.append(key, String(params[key]))
+        }
+      })
+      
+      DebugLogger.log(`🔄 直接请求API: ${url.toString()}`)
+      return url.toString()
+    }
+  }
+
+  /**
+   * 构建请求URL (原有方法，保持向后兼容)
    */
   private buildUrl(baseUrl: string, endpoint: string, params: { [key: string]: any }): string {
     const url = new URL(baseUrl)
