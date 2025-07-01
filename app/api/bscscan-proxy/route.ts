@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// BSCScan API代理路由
+// BSCScan API代理路由 - 使用新的服务架构
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -8,41 +8,67 @@ export async function GET(request: NextRequest) {
     // 提取所有查询参数
     const params = Object.fromEntries(searchParams.entries())
     
-    // 验证必要参数
-    if (!params.module || !params.action || !params.apikey) {
+    // 验证必要参数 (新架构不需要apikey，由服务内部管理)
+    if (!params.module || !params.action) {
       return NextResponse.json(
-        { error: '缺少必要参数: module, action, apikey' },
+        { error: '缺少必要参数: module, action' },
         { status: 400 }
       )
     }
     
-    // 构建BSCScan API URL
-    const bscscanUrl = new URL('https://api.bscscan.com/api')
-    Object.entries(params).forEach(([key, value]) => {
-      if (value) {
-        bscscanUrl.searchParams.append(key, value)
-      }
-    })
-    
     console.log(`🔄 代理BSCScan请求: ${params.module}/${params.action}`)
     
-    // 发起请求到BSCScan API
-    const response = await fetch(bscscanUrl.toString(), {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (compatible; BN-Alpha-Tool/1.0)'
-      }
-    })
+    // 动态导入BSCScan服务
+    const { BSCScanService } = await import('@/services/api/bscscan-service')
+    const bscscanService = BSCScanService.getInstance()
     
-    if (!response.ok) {
-      throw new Error(`BSCScan API请求失败: ${response.status} ${response.statusText}`)
+    // 移除apikey参数（由服务内部管理）
+    const { apikey, ...serviceParams } = params
+    
+    // 使用新的BSCScan服务执行请求
+    const response = await bscscanService.makeRequest(serviceParams)
+    
+    if (!response.success) {
+      // 检查是否为速率限制错误
+      const isRateLimit = response.error?.includes('rate limit') || 
+                         response.error?.includes('requests per sec') ||
+                         response.error?.includes('Max calls per sec')
+      
+      if (isRateLimit) {
+        return NextResponse.json({
+          status: '0',
+          message: 'NOTOK',
+          result: response.error,
+          proxyNote: `BSCScan API速率限制: ${response.error}`,
+          isRateLimit: true
+        }, {
+          status: 429,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Retry-After': '2'
+          }
+        })
+      }
+      
+      // 其他错误
+      return NextResponse.json({
+        status: '0',
+        message: 'NOTOK',
+        result: response.error,
+        proxyNote: `BSCScan API错误: ${response.error}`
+      }, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        }
+      })
     }
     
-    const data = await response.json()
-    
-    // 返回BSCScan的响应数据
-    return NextResponse.json(data, {
+    // 返回成功响应
+    return NextResponse.json(response.data, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',

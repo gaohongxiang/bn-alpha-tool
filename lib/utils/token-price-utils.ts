@@ -1,4 +1,4 @@
-import { debugLog, debugWarn, debugError } from '../lib/debug-logger'
+import { debugLog } from '../debug-logger'
 
 export interface TokenPriceMap {
     [symbol: string]: number
@@ -13,6 +13,10 @@ export interface Transaction {
     hash: string
 }
 
+/**
+ * 代币价格工具类
+ * 处理代币价格查询、推算等功能
+ */
 export class TokenPriceUtils {
     /**
      * 基础稳定币价格映射
@@ -30,13 +34,34 @@ export class TokenPriceUtils {
      * @returns 代币价格映射表
      */
     static async buildCompletePriceMap(transactions: Transaction[]): Promise<TokenPriceMap> {
-        // 首先构建基础价格映射表
+        // 首先构建基础价格映射表（包含稳定币）
         const priceMap = this.buildTokenPriceMap(transactions)
         
         // 添加BNB价格
         if (!priceMap['BNB']) {
-            priceMap['BNB'] = await this.getCurrentBNBPrice()
+            try {
+                priceMap['BNB'] = await this.getCurrentBNBPrice()
+                debugLog(`💰 获取BNB实时价格: $${priceMap['BNB']}`)
+            } catch (error) {
+                priceMap['BNB'] = 600 // 备用价格
+                debugLog(`⚠️ BNB价格获取失败，使用备用价格: $${priceMap['BNB']}`)
+            }
         }
+
+        // 确保稳定币价格存在
+        Object.keys(this.BASE_PRICES).forEach(stablecoin => {
+            if (!priceMap[stablecoin]) {
+                priceMap[stablecoin] = this.BASE_PRICES[stablecoin]
+                debugLog(`💎 添加稳定币 ${stablecoin} 价格: $${priceMap[stablecoin]}`)
+            }
+        })
+
+        debugLog(`📊 完整价格映射表构建完成，包含 ${Object.keys(priceMap).length} 个代币:`)
+        Object.entries(priceMap)
+            .filter(([_, price]) => price > 0)
+            .forEach(([symbol, price]) => {
+                debugLog(`   ${symbol}: $${price.toFixed(6)}`)
+            })
 
         return priceMap
     }
@@ -142,29 +167,6 @@ export class TokenPriceUtils {
         try {
             debugLog('🔍 获取BNB实时价格...')
             
-            // 使用BSCScan API获取BNB价格
-            try {
-                // 导入API管理器
-                const { apiManager } = await import('../components/api-manager')
-                
-                const params = {
-                    module: 'stats',
-                    action: 'bnbprice'
-                }
-                
-                const response = await apiManager.makeRequest('bsc', 'bscscan', '', params)
-                
-                if (response.success && response.data?.result) {
-                    const bnbPrice = parseFloat(response.data.result.ethusd)
-                    if (bnbPrice && bnbPrice > 0) {
-                        debugLog(`✅ BSCScan BNB价格: $${bnbPrice}`)
-                        return bnbPrice
-                    }
-                }
-            } catch (error) {
-                debugLog('⚠️ BSCScan API失败:', error)
-            }
-
             // 备用方法1：Binance API
             try {
                 const response = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT')

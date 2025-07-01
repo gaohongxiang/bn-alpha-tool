@@ -1,7 +1,7 @@
 {
   "_meta": {
     "description": "Binance Alpha空投工具配置文件",
-    "lastUpdated": "2025-06-12"
+    "lastUpdated": "2025-07-01"
   },
   
   "networks": {
@@ -77,9 +77,10 @@
         "defaultGasLimit": 21000
       },
 
-      "api": {
-        "baseUrl": "https://api.bscscan.com/api",
-        "keys": [
+      "apis": {
+        "bscscan": {
+          "baseUrl": "https://api.bscscan.com/api",
+          "keys": [
           {
             "key": "U4ZMDNTCZKSMHX2671VGQPF8HRWGEUTE5H",
             "name": "默认API Key 1",
@@ -94,8 +95,9 @@
             "key": "A5168UYQIS4I1HBVM3WX8URQJ7Z45WYSCH",
             "name": "默认API Key 3", 
             "active": true
-          }
-        ]
+                      }
+          ]
+        }
       }
     }
   },

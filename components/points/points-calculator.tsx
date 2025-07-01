@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { HelpCircle, Calculator } from "lucide-react"
-import { PointsUtils } from "@/components/points-utils"
+import { PointsUtils } from "@/lib/utils/points-utils"
 
 export function PointsCalculator() {
   // 状态管理

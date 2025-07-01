@@ -63,8 +63,6 @@ export function Dashboard({ setActiveTab }: DashboardProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50">
       <div className="max-w-6xl mx-auto px-6 py-8">
-       
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {features.map((feature) => {
             const Icon = feature.icon

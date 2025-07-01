@@ -1,26 +1,10 @@
-export interface DayTimeRange {
-  startTimestamp: number // 当天开始时间戳 (UTC+8 8:00)
-  endTimestamp: number   // 当天结束时间戳 (UTC+8 7:59:59)
-  dayStr: string         // 日期字符串 (YYYY-MM-DD)
-  isCompleted: boolean   // 当天是否已结束
-}
+import type { BlockRange, DayTimeRange, TransactionTimeInfo } from '@/types'
+import { debugLog } from '../debug-logger'
 
-export interface BlockRange {
-  startBlock: number     // 开始区块号
-  endBlock: number       // 结束区块号
-  startTimestamp: number // 开始时间戳
-  endTimestamp: number   // 结束时间戳
-}
-
-export interface TransactionTimeInfo {
-  firstTransactionTime?: number  // 首笔有效交易时间
-  lastTransactionTime?: number   // 最后一笔有效交易时间
-  dayRange: DayTimeRange         // 当天时间范围
-}
-
-import { apiManager } from './api-manager'
-import { debugLog, debugWarn, debugError } from '../lib/debug-logger'
-
+/**
+ * 时间工具类
+ * 处理时间戳转换、区块查询等功能
+ */
 export class TimeUtils {
   /**
    * 获取北京时间当天日期（按8点分界）
@@ -227,12 +211,11 @@ export class TimeUtils {
       try {
         debugLog(`🔄 钱包 ${walletIndex + 1}: 获取区块号 - 时间戳 ${timestamp} (${closest}) - 尝试 ${attempt}/3`)
         
-        const response = await apiManager.makeRequest('bsc', 'bscscan', '', {
-          module: 'block',
-          action: 'getblocknobytime',
-          timestamp: timestamp,
-          closest: closest
-        })
+        // 动态导入BSCScan服务
+        const { BSCScanService } = await import('../../services/api/bscscan-service')
+        const bscscanService = BSCScanService.getInstance()
+        
+        const response = await bscscanService.getBlockByTimestamp(timestamp, closest)
 
         if (response.success && response.data?.status === '1') {
           const blockNumber = parseInt(response.data.result)
@@ -254,8 +237,10 @@ export class TimeUtils {
         
         // 如果不是最后一次尝试，等待后重试
         if (attempt < 3) {
-          const delay = attempt * 1000 // 1秒, 2秒
-          debugLog(`⏳ 钱包 ${walletIndex + 1}: 等待 ${delay}ms 后重试...`)
+          const baseDelay = attempt * 2000 // 2秒, 4秒
+          const randomDelay = Math.random() * 1000 // 添加随机延迟0-1秒
+          const delay = baseDelay + randomDelay
+          debugLog(`⏳ 钱包 ${walletIndex + 1}: 等待 ${delay.toFixed(0)}ms 后重试...`)
           await new Promise(resolve => setTimeout(resolve, delay))
         }
       } catch (error) {
@@ -263,7 +248,9 @@ export class TimeUtils {
         debugLog(`❌ 钱包 ${walletIndex + 1}: 请求异常 (尝试 ${attempt}/3):`, lastError.message)
         
         if (attempt < 3) {
-          const delay = attempt * 1000
+          const baseDelay = attempt * 2000 // 2秒, 4秒
+          const randomDelay = Math.random() * 1000
+          const delay = baseDelay + randomDelay
           await new Promise(resolve => setTimeout(resolve, delay))
         }
       }

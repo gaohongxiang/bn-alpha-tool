@@ -32,13 +32,15 @@ export interface NetworkConfig {
     defaultGasPrice: string
     defaultGasLimit: number
   }
-  api: {
-    baseUrl: string
-    keys: Array<{
-      key: string
-      name: string
-      active: boolean
-    }>
+  apis: {
+    bscscan: {
+      baseUrl: string
+      keys: Array<{
+        key: string
+        name: string
+        active: boolean
+      }>
+    }
   }
 }
 
@@ -119,12 +121,12 @@ class AppConfigManager {
           // 按网络合并用户API Keys
           Object.keys(parsed).forEach(networkId => {
             if (this.config!.networks[networkId] && Array.isArray(parsed[networkId])) {
-              parsed[networkId].forEach((userKey: any) => {
-                const exists = this.config!.networks[networkId].api.keys.some(k => k.key === userKey.key)
-                if (!exists) {
-                  this.config!.networks[networkId].api.keys.push(userKey)
-                }
-              })
+                        parsed[networkId].forEach((userKey: any) => {
+            const exists = this.config!.networks[networkId].apis.bscscan.keys.some((k: any) => k.key === userKey.key)
+            if (!exists) {
+              this.config!.networks[networkId].apis.bscscan.keys.push(userKey)
+            }
+          })
             }
           })
         }
@@ -272,7 +274,7 @@ class AppConfigManager {
 
   getAPIConfig() {
     const network = this.getCurrentNetworkConfig()
-    return network?.api || null
+    return network?.apis?.bscscan || null
   }
 
   getActiveAPIKeys() {
@@ -303,6 +305,70 @@ class AppConfigManager {
     }
   }
 
+  async removeUserAPIKey(keyToRemove: string): Promise<boolean> {
+    try {
+      const networkId = this.getCurrentNetwork()
+      const userKeys = this.getUserAPIKeys()
+      
+      if (!userKeys[networkId]) {
+        return false
+      }
+      
+      // 从用户API Keys中移除
+      const originalLength = userKeys[networkId].length
+      userKeys[networkId] = userKeys[networkId].filter((key: any) => key.key !== keyToRemove)
+      
+      if (userKeys[networkId].length === originalLength) {
+        return false // 没有找到要删除的key
+      }
+      
+      this.saveUserAPIKeys(userKeys)
+      
+      // 重新加载配置以更新内存中的数据
+      await this.loadConfig()
+      
+      return true
+    } catch (error) {
+      console.error('删除API密钥失败:', error)
+      return false
+    }
+  }
+
+  async toggleUserAPIKey(keyToToggle: string): Promise<boolean> {
+    try {
+      const networkId = this.getCurrentNetwork()
+      const userKeys = this.getUserAPIKeys()
+      
+      if (!userKeys[networkId]) {
+        return false
+      }
+      
+      // 查找并切换状态
+      let found = false
+      userKeys[networkId] = userKeys[networkId].map((key: any) => {
+        if (key.key === keyToToggle) {
+          found = true
+          return { ...key, active: !key.active }
+        }
+        return key
+      })
+      
+      if (!found) {
+        return false // 没有找到要切换的key
+      }
+      
+      this.saveUserAPIKeys(userKeys)
+      
+      // 重新加载配置以更新内存中的数据
+      await this.loadConfig()
+      
+      return true
+    } catch (error) {
+      console.error('切换API密钥状态失败:', error)
+      return false
+    }
+  }
+
   private getUserAPIKeys(): any {
     try {
       if (typeof window !== 'undefined') {
@@ -325,8 +391,6 @@ class AppConfigManager {
     }
   }
 
-
-
   /**
    * 获取配置统计信息
    */
@@ -346,7 +410,7 @@ class AppConfigManager {
       totalTokens: network.tokens.length,
       totalPairs: pairs.length,
       volumeCountingPairs: volumeCountingPairs.length,
-      totalAPIKeys: network.api.keys.length
+      totalAPIKeys: network.apis.bscscan.keys.length
     }
   }
 }
