@@ -677,7 +677,7 @@
     "type": "alpha"
   },
   {
-    "date": "2025年06月29日",
+    "date": "2025年06月28日",
     "token": "REKT",
     "participants": null,
     "amount": 140230000,
@@ -685,5 +685,99 @@
     "currentPrice": "$0.00000025",
     "points": 170,
     "type": "alpha"
+  },
+  {
+    "date": "2025年06月29日",
+    "token": "FUEL",
+    "participants": null,
+    "amount": 5550,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.007",
+    "points": 170,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月1日",
+    "token": "BGSC",
+    "participants": null,
+    "amount": 7360,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.006",
+    "phase1Points": 210,
+    "phase2Points": 170,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月2日",
+    "token": "ECHO",
+    "participants": null,
+    "amount": 625,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.03",
+    "points": 170,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月3日",
+    "token": "M",
+    "participants": null,
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.05",
+    "phase1Points": 214,
+    "phase2Points": 140,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月3日",
+    "token": "ICNT",
+    "participants": null,
+    "amount": 100,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.035",
+    "phase1Points": 214,
+    "phase2Points": 140,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月4日",
+    "token": "CROSS",
+    "participants": null,
+    "amount": 500,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.075",
+    "points": 140,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月5日",
+    "token": "AIN",
+    "participants": null,
+    "amount": 600,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.045",
+    "points": 140,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月6日",
+    "token": "MPLX",
+    "participants": null,
+    "amount": 400,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.1",
+    "points": 140,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月7日",
+    "token": "PAL",
+    "participants": null,
+    "amount": 1709,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.027",
+    "points": 202,
+    "type": "tge",
+    "cost": 10
   }
 ] 
