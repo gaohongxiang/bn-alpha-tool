@@ -779,5 +779,47 @@
     "points": 202,
     "type": "tge",
     "cost": 10
+  },
+  {
+    "date": "2025年07月8日",
+    "token": "BOOM",
+    "participants": null,
+    "amount": 1560,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.045",
+    "points": 200,
+    "type": "tge",
+    "cost": 10
+  },
+  {
+    "date": "2025年07月8日",
+    "token": "OIK",
+    "participants": null,
+    "amount": 750,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.06",
+    "points": 140,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月9日",
+    "token": "TANSSI",
+    "participants": null,
+    "amount": 750,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.047",
+    "points": 140,
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月9日",
+    "token": "RCADE",
+    "participants": null,
+    "amount": 8000,
+    "supplementaryToken": 0,
+    "currentPrice": "$0.0055",
+    "phase1Points": 210,
+    "phase2Points": 120,
+    "type": "alpha"
   }
 ] 
