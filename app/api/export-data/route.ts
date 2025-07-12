@@ -3,24 +3,12 @@ import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
 
-interface WalletData {
-  address: string
-  note: string
-  totalBalance: number
-  tokenBalances: any[]
-  tradingVolume: number
-  transactionCount: number
-  estimatedPoints: number
-  revenue: number
-  gasUsed: number
-  tradingLoss: number
-  gasLoss: number
-  error?: string
-}
+// 导入统一的类型定义
+import type { WalletData, ExportDataRequest } from '@/types'
 
 export async function POST(request: NextRequest) {
   try {
-    const { selectedDate, walletData, totalStats } = await request.json()
+    const { selectedDate, walletData, totalStats }: ExportDataRequest = await request.json()
     
     if (!selectedDate || !walletData || !Array.isArray(walletData)) {
       return NextResponse.json(

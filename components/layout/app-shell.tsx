@@ -5,10 +5,11 @@ import { Sidebar } from "@/components/layout/sidebar"
 import { Dashboard } from "@/components/dashboard/dashboard"
 import { PointsCalculator } from "@/components/points/points-calculator"
 import { AirdropHistory } from "@/components/airdrop/airdrop-history"
-import { RevenueDisplay } from "@/components/revenue/revenue-display"
+import { RevenueDisplay } from "@/components/revenue/index"
 import { RulesExplanation } from "@/components/rules/rules-explanation"
 import { useUIStore } from "@/stores/ui-store"
 import { useWalletStore } from "@/stores/wallet-store"
+
 
 /**
  * App Shell - 客户端组件

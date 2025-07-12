@@ -1,7 +1,8 @@
 {
-  "name": "my-v0-project",
+  "name": "bn-alpha-tool",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -42,6 +43,7 @@
     "clsx": "^2.1.1",
     "cmdk": "latest",
     "date-fns": "4.1.0",
+    "dotenv": "^17.0.1",
     "embla-carousel-react": "latest",
     "ethers": "latest",
     "input-otp": "latest",
@@ -58,6 +60,7 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "latest",
+    "winston": "^3.17.0",
     "zod": "^3.24.1",
     "zustand": "^5.0.6"
   },

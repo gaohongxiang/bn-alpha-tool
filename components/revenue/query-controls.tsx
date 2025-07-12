@@ -40,6 +40,7 @@ export function QueryControls({
     yesterday.setDate(today.getDate() - 1)
     
     const formatDate = (date: Date) => {
+      // 统一使用UTC时区的日期
       return date.toISOString().split('T')[0]
     }
     

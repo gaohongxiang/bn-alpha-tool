@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Clock } from "lucide-react"
 import type { CurrentAirdropItem, AirdropStatusInfo } from "@/types/airdrop"
-import { parseUTC8Time, formatTimeRemaining } from "@/lib/utils/airdrop-utils"
+import { parseUTC8Time, formatTimeRemaining } from "@/lib/features/airdrop"
 
 interface CurrentAirdropsProps {
   currentAirdrops: CurrentAirdropItem[]

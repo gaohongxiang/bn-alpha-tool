@@ -2,12 +2,12 @@
 
 import { useState, useMemo } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import airdropAllData from "@/data/airdrop-history.json"
+import airdropAllData from "@/public/data/airdrop-history.json"
 import { CurrentAirdrops } from "./current-airdrops"
 import { HistoryTable } from "./history-table"
 import { HistoryChart } from "./history-chart"
 import type { AirdropItem, AirdropHistoryItem, CurrentAirdropItem } from "@/types/airdrop"
-import { calculateCurrentValue, calculateRevenue } from "@/lib/utils/airdrop-utils"
+import { calculateCurrentValue, calculateRevenue } from "@/lib/features/airdrop"
 
 export function AirdropHistory() {
   const [activeView, setActiveView] = useState("chart") // 默认显示历史曲线

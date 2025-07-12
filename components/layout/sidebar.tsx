@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/core/utils"
 import { Calculator, BarChart3, Clock, BookOpen } from "lucide-react"
 
 interface SidebarProps {
@@ -10,29 +10,29 @@ interface SidebarProps {
 
 export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
   const menuItems = [
-    { 
-      id: "points-calculator", 
-      label: "收益计算器", 
+    {
+      id: "points-calculator",
+      label: "收益计算器",
       icon: Calculator,
-      theme: "from-orange-600 via-yellow-600 to-amber-600" 
+      theme: "from-orange-600 via-yellow-600 to-amber-600"
     },
-    { 
-      id: "revenue-display", 
-      label: "交易统计", 
+    {
+      id: "revenue-display",
+      label: "交易统计",
       icon: BarChart3,
-      theme: "from-green-600 via-emerald-600 to-teal-600" 
+      theme: "from-green-600 via-emerald-600 to-teal-600"
     },
-    { 
-      id: "airdrop-history", 
-      label: "空投历史", 
+    {
+      id: "airdrop-history",
+      label: "空投历史",
       icon: Clock,
-      theme: "from-blue-600 via-cyan-600 to-teal-600" 
+      theme: "from-blue-600 via-cyan-600 to-teal-600"
     },
-    { 
-      id: "rules-explanation", 
-      label: "规则详解", 
+    {
+      id: "rules-explanation",
+      label: "规则详解",
       icon: BookOpen,
-      theme: "from-rose-600 via-pink-600 to-pink-500" 
+      theme: "from-rose-600 via-pink-600 to-pink-500"
     },
   ]
 

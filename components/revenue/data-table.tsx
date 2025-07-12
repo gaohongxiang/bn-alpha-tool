@@ -87,7 +87,7 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
   // 搜索过滤
   const filteredData = walletData.filter(wallet => 
     wallet.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    wallet.note.toLowerCase().includes(searchQuery.toLowerCase())
+    wallet.note?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   // 排序数据
@@ -99,32 +99,32 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
 
       switch (sortBy) {
         case "balance":
-          aVal = a.totalBalance
-          bVal = b.totalBalance
+          aVal = a.totalBalance || 0
+          bVal = b.totalBalance || 0
           break
         case "volume":
-          aVal = a.tradingVolume
-          bVal = b.tradingVolume
+          aVal = a.tradingVolume || 0
+          bVal = b.tradingVolume || 0
           break
         case "points":
-          aVal = a.estimatedPoints
-          bVal = b.estimatedPoints
+          aVal = a.estimatedPoints || 0
+          bVal = b.estimatedPoints || 0
           break
         case "transactions":
-          aVal = a.transactionCount
-          bVal = b.transactionCount
+          aVal = a.transactionCount || 0
+          bVal = b.transactionCount || 0
           break
         case "revenue":
-          aVal = a.revenue + a.gasUsed
-          bVal = b.revenue + b.gasUsed
+          aVal = (a.revenue || 0) + (a.gasUsed || 0)
+          bVal = (b.revenue || 0) + (b.gasUsed || 0)
           break
         case "tradingLoss":
-          aVal = a.tradingLoss || a.revenue
-          bVal = b.tradingLoss || b.revenue
+          aVal = a.tradingLoss || a.revenue || 0
+          bVal = b.tradingLoss || b.revenue || 0
           break
         case "gasLoss":
-          aVal = a.gasLoss || a.gasUsed
-          bVal = b.gasLoss || b.gasUsed
+          aVal = a.gasLoss || a.gasUsed || 0
+          bVal = b.gasLoss || b.gasUsed || 0
           break
         default:
           return 0
@@ -140,12 +140,12 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
 
   // 计算总计
   const totalStats = {
-    totalBalance: filteredData.reduce((sum, w) => sum + w.totalBalance, 0),
-    totalVolume: filteredData.reduce((sum, w) => sum + w.tradingVolume, 0),
-    totalPoints: filteredData.reduce((sum, w) => sum + w.estimatedPoints, 0),
-    totalTransactions: filteredData.reduce((sum, w) => sum + w.transactionCount, 0),
-    totalRevenue: filteredData.reduce((sum, w) => sum + (w.tradingLoss || w.revenue), 0),
-    totalGas: filteredData.reduce((sum, w) => sum + (w.gasLoss || w.gasUsed), 0),
+    totalBalance: filteredData.reduce((sum, w) => sum + (w.totalBalance || 0), 0),
+    totalVolume: filteredData.reduce((sum, w) => sum + (w.tradingVolume || 0), 0),
+    totalPoints: filteredData.reduce((sum, w) => sum + (w.estimatedPoints || 0), 0),
+    totalTransactions: filteredData.reduce((sum, w) => sum + (w.transactionCount || 0), 0),
+    totalRevenue: filteredData.reduce((sum, w) => sum + (w.tradingLoss || w.revenue || 0), 0),
+    totalGas: filteredData.reduce((sum, w) => sum + (w.gasLoss || w.gasUsed || 0), 0),
   }
 
   // 获取排序图标
@@ -361,7 +361,7 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                         <TableCell className="text-sm">{wallet.note}</TableCell>
                         <TableCell>
                           <div className="text-right">
-                            <div className="text-green-600 font-medium">${formatNumber(wallet.totalBalance)}</div>
+                            <div className="text-green-600 font-medium">${formatNumber(wallet.totalBalance || 0)}</div>
                             <div className="text-xs text-gray-500">
                               {wallet.tokenBalances?.length || 0} 代币
                             </div>
@@ -369,30 +369,30 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                         </TableCell>
                         <TableCell>
                           <div className="text-right">
-                            <div className="text-blue-600 font-medium">${formatNumber(wallet.tradingVolume)}</div>
+                            <div className="text-blue-600 font-medium">${formatNumber(wallet.tradingVolume || 0)}</div>
                             <Badge variant="outline" className="text-xs">
                               BSC 2x
                             </Badge>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="text-right font-medium">{wallet.transactionCount}</div>
+                          <div className="text-right font-medium">{wallet.transactionCount || 0}</div>
                         </TableCell>
                         <TableCell>
                           <div className="text-right">
-                            <Badge variant={wallet.estimatedPoints > 0 ? "default" : "secondary"} className="text-purple-600">
-                              {wallet.estimatedPoints}分
+                            <Badge variant={(wallet.estimatedPoints || 0) > 0 ? "default" : "secondary"} className="text-purple-600">
+                              {wallet.estimatedPoints || 0}分
                             </Badge>
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="text-right">
                             <div className="text-red-600 font-medium">
-                              ${formatNumber((wallet.tradingLoss || wallet.revenue) + (wallet.gasLoss || wallet.gasUsed))}
+                              ${formatNumber((wallet.tradingLoss || wallet.revenue || 0) + (wallet.gasLoss || wallet.gasUsed || 0))}
                             </div>
                             <div className="text-xs text-gray-500 space-y-0.5">
-                              <div>交易: ${formatNumber(wallet.tradingLoss || wallet.revenue)}</div>
-                              <div>Gas: ${formatNumber(wallet.gasLoss || wallet.gasUsed)}</div>
+                              <div>交易: ${formatNumber(wallet.tradingLoss || wallet.revenue || 0)}</div>
+                              <div>Gas: ${formatNumber(wallet.gasLoss || wallet.gasUsed || 0)}</div>
                             </div>
                           </div>
                         </TableCell>
@@ -458,27 +458,27 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                         <div className="grid grid-cols-2 gap-2 text-sm">
                           <div>
                             <div className="text-gray-600">余额</div>
-                            <div className="font-medium text-green-600">${formatNumber(wallet.totalBalance)}</div>
+                            <div className="font-medium text-green-600">${formatNumber(wallet.totalBalance || 0)}</div>
                           </div>
                           <div>
                             <div className="text-gray-600">交易额</div>
-                            <div className="font-medium text-blue-600">${formatNumber(wallet.tradingVolume)}</div>
+                            <div className="font-medium text-blue-600">${formatNumber(wallet.tradingVolume || 0)}</div>
                           </div>
                           <div>
                             <div className="text-gray-600">积分</div>
-                            <div className="font-medium text-purple-600">{wallet.estimatedPoints}分</div>
+                            <div className="font-medium text-purple-600">{wallet.estimatedPoints || 0}分</div>
                           </div>
                           <div>
                             <div className="text-gray-600">磨损</div>
                             <div className="font-medium text-red-600">
-                              ${formatNumber((wallet.tradingLoss || wallet.revenue) + (wallet.gasLoss || wallet.gasUsed))}
+                              ${formatNumber((wallet.tradingLoss || wallet.revenue || 0) + (wallet.gasLoss || wallet.gasUsed || 0))}
                             </div>
                           </div>
                         </div>
 
                         <div className="flex justify-between items-center pt-2 border-t">
                           <div className="text-xs text-gray-500">
-                            {wallet.transactionCount} 次有效交易
+                            {wallet.transactionCount || 0} 次有效交易
                           </div>
                           <div className="flex gap-1">
                             {wallet.error ? (

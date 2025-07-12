@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { HelpCircle, Calculator } from "lucide-react"
-import { PointsUtils } from "@/lib/utils/points-utils"
+import { Points } from "@/lib/features/points"
 
 export function PointsCalculator() {
   // 状态管理
@@ -59,9 +59,9 @@ export function PointsCalculator() {
 
   // 计算结果
   const calculations = useMemo(() => {
-    const balancePoints = PointsUtils.balance(balance[0])
+    const balancePoints = Points.balancePoints(balance[0])
     const effectiveVolume = isBscChain ? dailyTradingVolume[0] * 2 : dailyTradingVolume[0]
-    const tradingVolumePoints = PointsUtils.tradingVolume(effectiveVolume)
+    const tradingVolumePoints = Points.tradingVolumePoints(effectiveVolume)
     const dailyTotalPoints = balancePoints + tradingVolumePoints
     const cycleTotalPoints = dailyTotalPoints * 15
 

@@ -1,5 +1,5 @@
-import type { Metadata } from 'next'
 import { ErrorBoundary } from '@/components/layout/error-boundary'
+import { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {

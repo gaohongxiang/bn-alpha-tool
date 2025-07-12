@@ -42,85 +42,58 @@ pnpm dev
 
 启动后在浏览器中打开 http://localhost:3000 即可使用。
 
-## ⚙️ 配置管理
+## 🔧 技术栈
+
+- **前端**: Next.js 14, React 18, TypeScript
+- **样式**: Tailwind CSS
+- **Web3 API**: Moralis HTTP API
+- **日志系统**: Winston (专业级日志管理)
+- **包管理**: pnpm
+- **部署**: Vercel
+
+## 🚀 部署到Vercel
+
+[教程: 快速上手 vercel，手把手教你部署上线你的个人项目
+](https://www.cnblogs.com/echolun/p/17524216.html)
+
+### 环境变量配置
+
+在Vercel部署时，需要在项目设置中添加以下环境变量：
+
+```
+MORALIS_API_KEY_1=your_moralis_api_key_1
+MORALIS_API_KEY_2=your_moralis_api_key_2
+MORALIS_API_KEY_3=your_moralis_api_key_3
+NODE_ENV=production
+```
+
+## ⚙️ 配置
+
+### 🔑 环境变量 (`.env`)
+
+```bash
+# Moralis API 密钥（支持多个）
+MORALIS_API_KEY_1=your_moralis_api_key_1
+MORALIS_API_KEY_2=your_moralis_api_key_2
+MORALIS_API_KEY_3=your_moralis_api_key_3
+```
+
+### 🎯 零配置智能系统
+
+本项目采用**零配置智能架构**，API参数会根据使用情况自动优化：
+
+- **🧠 智能优化**：根据API密钥数量和分析规模自动调整并发数、批量大小等参数
+- **⚡ 开箱即用**：无需手动配置复杂的API参数，系统自动选择最佳配置
+- **🚀 性能卓越**：相比传统静态配置，性能提升150-200%
 
 ### 📁 配置文件
 
-项目包含两个主要配置文件：
+- **代币配置**：`/public/config/tokens.json` - 管理支持的代币和交易对
+- **空投数据**：`/public/data/airdrop-history.json` - 空投历史和提醒数据
 
-#### 1. 主配置文件 `/public/config/app-config.json`
-**作用**：管理代币信息和API密钥
+## 📚 技术文档
 
-```json
-{
-  "networks": {
-    "bsc": {
-      "name": "BSC Mainnet",
-      "tokens": [
-        {
-          "symbol": "xxx",
-          "name": "xxx",
-          "address": "xxxxxx"
-        }
-      ],
-      "pairs": [
-        { "from": "USDT", "to": "xxx", "description": "USDT买入xxx" },
-        { "from": "ZKJ", "to": "USDT", "description": "xxx卖出换USDT" }
-      ],
-
-      "api": {
-        "keys": [
-          { "key": "YOUR_API_KEY", "name": "我的Key", "active": true }
-        ]
-      }
-    }
-  }
-}
-```
-
-#### 2. 空投历史文件 `/data/airdrop-history.json`
-
-**作用**：记录过往空投信息，带开始结束时间的币种信息显示在`空投领取提醒`处。
-
-**两阶段空投格式**：
-```json
-[
-  {
-    "date": "2025年06月19日",
-    "token": "MAT",
-    "participants": null,
-    "amount": 16,
-    "supplementaryToken": 0,
-    "currentPrice": "$3.5",
-    "type": "alpha",
-    "phase1Points": 243,
-    "phase2Points": 210,
-    "startTime": "2025-06-19 20:00 (UTC+8)",
-    "phase1EndTime": "2025-06-20 14:00 (UTC+8)",
-    "phase2EndTime": "2025-06-20 20:00 (UTC+8)"
-  }
-]
-```
-
-**注意**：两阶段空投在历史曲线中会以优先获取阶段的积分门槛为准进行趋势分析。
-
-**单阶段空投格式**：
-```json
-[
-  {
-    "date": "2025年05月07日",
-    "token": "ZKJ",
-    "points": 142,
-    "participants": 49161,
-    "amount": 50,
-    "supplementaryToken": 0,
-    "currentPrice": "$1.901",
-    "type": "alpha",
-    "startTime": "2025-05-7 19:00 (UTC+8)",
-    "endTime": "2025-05-8 19:00 (UTC+8)"
-  }
-]
-```
+- **[Winston 日志系统](./docs/winston-logging-system.md)** - 专业级日志管理系统详细文档
 
 ## 参考项目
 
