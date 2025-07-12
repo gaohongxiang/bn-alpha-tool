@@ -844,14 +844,17 @@
     "type": "alpha"
   },
   {
-    "date": "2025年07月11日",
-    "token": "G",
+    "date": "2025年07月12日",
+    "token": "PEAQ",
     "participants": null,
-    "amount": 8000,
+    "amount": 643,
     "supplementaryToken": 0,
-    "currentPrice": "$0.0055",
-    "phase1Points": 210,
-    "phase2Points": 120,
+    "currentPrice": "$0.075",
+    "phase1Points": 234,
+    "phase2Points": 180,
+    "startTime": "2025-07-12 15:00 (UTC+8)",
+    "phase1EndTime": "2025-07-13 09:00 (UTC+8)",
+    "phase2EndTime": "2025-07-13 15:00 (UTC+8)",
     "type": "alpha"
   }
 ] 
