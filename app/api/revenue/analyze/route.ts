@@ -48,19 +48,22 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalyzeRe
     // 启动服务端日志会话，与客户端同步
     const sessionId = `钱包分析_${date}`
 
-    // 初始化API专用 Winston 日志器，传入会话ID
-    const apiLogger = await initializeApiLogger(sessionId)
-
-    // 将API Logger设置为winston-logger的后端
-    logger.setServerWinston(apiLogger)
-
-    // 使用服务端 Winston 记录详细会话信息
-    logSessionStart(sessionId, {
-      walletCount: walletAddresses.length,
-      date: date,
-      config: config,
-      timestamp: new Date().toISOString()
-    })
+    // 简化日志初始化，避免在 Vercel 环境中创建文件
+    try {
+      // 初始化API专用 Winston 日志器，传入会话ID
+      const apiLogger = await initializeApiLogger(sessionId)
+      // 将API Logger设置为winston-logger的后端
+      logger.setServerWinston(apiLogger)
+      // 使用服务端 Winston 记录详细会话信息
+      logSessionStart(sessionId, {
+        walletCount: walletAddresses.length,
+        date: date,
+        config: config,
+        timestamp: new Date().toISOString()
+      })
+    } catch (logError) {
+      console.warn('日志系统初始化失败，继续执行:', logError)
+    }
 
     // 客户端兼容的 logger
     logger.startSession(sessionId)
@@ -206,11 +209,23 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalyzeRe
     })
 
   } catch (error) {
-    logger.error('api-error', `❌ [API] 收益分析失败: ${error}`)
+    console.error('❌ [API] 收益分析失败:', error)
+
+    // 尝试记录错误到日志系统
+    try {
+      logger.error('api-error', `❌ [API] 收益分析失败: ${error}`)
+    } catch (logError) {
+      console.warn('日志记录失败:', logError)
+    }
+
+    // 返回详细的错误信息用于调试
+    const errorMessage = error instanceof Error ? error.message : '未知错误'
+    const errorStack = error instanceof Error ? error.stack : undefined
 
     return NextResponse.json({
       success: false,
-      error: error instanceof Error ? error.message : '未知错误'
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? errorStack : undefined
     }, { status: 500 })
   }
 }

@@ -1,0 +1,34 @@
+{
+  "apiKeys": {
+    "moralis": {
+      "keys": [],
+      "rotationEnabled": true,
+      "maxRetries": 3
+    }
+  },
+  "features": {
+    "enableDebugMode": false,
+    "enableExperimentalFeatures": false,
+    "enableVerboseLogging": false
+  },
+  "cache": {
+    "defaultTTL": 3600,
+    "maxSize": 1000,
+    "cleanupInterval": 300000
+  },
+  "api": {
+    "timeout": 30000,
+    "rateLimit": {
+      "requestsPerSecond": 30,
+      "burstSize": 50
+    },
+    "concurrency": {
+      "maxConcurrentRequests": 30
+    }
+  },
+  "_meta": {
+    "description": "应用配置文件 - 用于客户端配置加载",
+    "lastUpdated": "2025-01-12",
+    "version": "1.0.0"
+  }
+}

@@ -37,45 +37,45 @@ export async function initializeApiLogger(sessionId?: string): Promise<winston.L
   }
 
   try {
-    const logDir = join(process.cwd(), 'data', 'runtime', 'logs')
-
-    // 确保日志目录存在
-    if (!existsSync(logDir)) {
-      mkdirSync(logDir, { recursive: true })
-    }
-
     // 清空日志缓存
     logBuffer = []
 
-    // 创建 Winston 实例
-    apiLogger = winston.createLogger({
-      level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
-      format: winston.format.combine(
-        winston.format.timestamp({ format: 'MM/DD/YYYY, h:mm:ss A' }),
-        winston.format.errors({ stack: true }),
-        winston.format.json()
-      ),
-      transports: [
-        // 控制台输出 (彩色)
-        new winston.transports.Console({
-          format: winston.format.combine(
-            winston.format.colorize(),
-            winston.format.printf((info: any) => {
-              const { timestamp, level, message, category, session, ...meta } = info
-              const sessionInfo = session ? ` [${session}]` : ''
-              const categoryInfo = category ? ` ${category.toUpperCase()}` : ''
-              const metaInfo = Object.keys(meta).length > 0 ? ` | ${JSON.stringify(meta)}` : ''
-              const logLine = `[${timestamp}]${sessionInfo} ${level}${categoryInfo}: ${message}${metaInfo}`
+    // 检查是否在 Vercel 等无服务器环境中
+    const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY
 
-              // 缓存日志到内存中，用于后续写入统一文件
-              logBuffer.push(logLine)
+    const transports: winston.transport[] = [
+      // 控制台输出 (彩色)
+      new winston.transports.Console({
+        format: winston.format.combine(
+          winston.format.colorize(),
+          winston.format.printf((info: any) => {
+            const { timestamp, level, message, category, session, ...meta } = info
+            const sessionInfo = session ? ` [${session}]` : ''
+            const categoryInfo = category ? ` ${category.toUpperCase()}` : ''
+            const metaInfo = Object.keys(meta).length > 0 ? ` | ${JSON.stringify(meta)}` : ''
+            const logLine = `[${timestamp}]${sessionInfo} ${level}${categoryInfo}: ${message}${metaInfo}`
 
-              return logLine
-            })
-          )
-        }),
+            // 缓存日志到内存中
+            logBuffer.push(logLine)
+
+            return logLine
+          })
+        )
+      })
+    ]
+
+    // 只在非无服务器环境中添加文件传输
+    if (!isServerless) {
+      try {
+        const logDir = join(process.cwd(), 'data', 'runtime', 'logs')
+
+        // 确保日志目录存在
+        if (!existsSync(logDir)) {
+          mkdirSync(logDir, { recursive: true })
+        }
+
         // 为每个会话创建独立的日志文件
-        new winston.transports.File({
+        transports.push(new winston.transports.File({
           filename: join(logDir, getSessionLogFileName(currentSessionId)),
           maxsize: 20 * 1024 * 1024,  // 20MB
           format: winston.format.combine(
@@ -88,8 +88,21 @@ export async function initializeApiLogger(sessionId?: string): Promise<winston.L
               return `[${timestamp}]${sessionInfo} ${level.toUpperCase()}${categoryInfo}: ${message}${metaInfo}`
             })
           )
-        })
-      ]
+        }))
+      } catch (fileError) {
+        console.warn('无法创建文件日志传输，仅使用控制台输出:', fileError)
+      }
+    }
+
+    // 创建 Winston 实例
+    apiLogger = winston.createLogger({
+      level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+      format: winston.format.combine(
+        winston.format.timestamp({ format: 'MM/DD/YYYY, h:mm:ss A' }),
+        winston.format.errors({ stack: true }),
+        winston.format.json()
+      ),
+      transports
       // 移除异常和拒绝处理器，减少日志文件数量
     })
 
