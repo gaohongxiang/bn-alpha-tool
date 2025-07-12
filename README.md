@@ -56,17 +56,6 @@ pnpm dev
 [教程: 快速上手 vercel，手把手教你部署上线你的个人项目
 ](https://www.cnblogs.com/echolun/p/17524216.html)
 
-### 环境变量配置
-
-在Vercel部署时，需要在项目设置中添加以下环境变量：
-
-```
-MORALIS_API_KEY_1=your_moralis_api_key_1
-MORALIS_API_KEY_2=your_moralis_api_key_2
-MORALIS_API_KEY_3=your_moralis_api_key_3
-NODE_ENV=production
-```
-
 ## ⚙️ 配置
 
 ### 🔑 环境变量 (`.env`)
@@ -77,14 +66,6 @@ MORALIS_API_KEY_1=your_moralis_api_key_1
 MORALIS_API_KEY_2=your_moralis_api_key_2
 MORALIS_API_KEY_3=your_moralis_api_key_3
 ```
-
-### 🎯 零配置智能系统
-
-本项目采用**零配置智能架构**，API参数会根据使用情况自动优化：
-
-- **🧠 智能优化**：根据API密钥数量和分析规模自动调整并发数、批量大小等参数
-- **⚡ 开箱即用**：无需手动配置复杂的API参数，系统自动选择最佳配置
-- **🚀 性能卓越**：相比传统静态配置，性能提升150-200%
 
 ### 📁 配置文件
 
