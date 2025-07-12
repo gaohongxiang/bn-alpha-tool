@@ -50,15 +50,18 @@ class WinstonLogger {
   }
 
   private logSystemInfo(): void {
-    const message = isServer ? 
-      '🚀 混合日志系统初始化 (服务端: Winston, 客户端: Console)' :
-      '🚀 混合日志系统初始化 (客户端模式)'
-    
-    this.info('system', message, {
-      isServer,
-      nodeEnv: process.env.NODE_ENV,
-      timestamp: new Date().toISOString()
-    })
+    // 只在开发环境中输出系统初始化信息
+    if (process.env.NODE_ENV === 'development') {
+      const message = isServer ?
+        '🚀 混合日志系统初始化 (服务端: Winston, 客户端: Console)' :
+        '🚀 混合日志系统初始化 (客户端模式)'
+
+      this.info('system', message, {
+        isServer,
+        nodeEnv: process.env.NODE_ENV,
+        timestamp: new Date().toISOString()
+      })
+    }
   }
 
   // 会话管理
@@ -120,6 +123,14 @@ class WinstonLogger {
       serverWinstonLogger.log(level, message, logData)
     } else {
       // 客户端使用简单 console
+      // 在生产环境中只输出错误信息
+      const isProduction = process.env.NODE_ENV === 'production'
+
+      if (isProduction && level !== 'error') {
+        // 生产环境中跳过非错误日志
+        return
+      }
+
       const timestamp = new Date().toLocaleString()
       const sessionInfo = this.currentSession?.id ? ` [${this.currentSession.id}]` : ''
       const prefix = `[${timestamp}]${sessionInfo} ${level.toUpperCase()} ${category}:`
