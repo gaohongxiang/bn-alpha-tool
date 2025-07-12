@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
+import { writeFile, mkdir, appendFile } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
 
@@ -26,7 +26,6 @@ export async function POST(request: NextRequest) {
     // 根据append参数决定写入模式
     if (append) {
       // 追加模式：在文件末尾添加内容
-      const { appendFile } = await import('fs/promises')
       await appendFile(filePath, content, 'utf-8')
     } else {
       // 覆盖模式：重写整个文件

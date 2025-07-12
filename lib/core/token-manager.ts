@@ -3,6 +3,9 @@
  * 只负责网络和代币数据配置
  */
 
+import { readFile } from 'fs/promises'
+import { join } from 'path'
+
 // ==================== 类型定义 ====================
 
 // 原始配置文件的类型
@@ -108,7 +111,7 @@ class TokenManager {
   private async loadConfig(): Promise<void> {
     try {
       let configData: string
-      
+
       // 检查是否在浏览器环境
       if (typeof window !== 'undefined') {
         const response = await fetch(this.CONFIG_PATH)
@@ -117,12 +120,11 @@ class TokenManager {
         }
         configData = await response.text()
       } else {
-        const fs = await import('fs/promises')
-        const path = await import('path')
-        const configPath = path.join(process.cwd(), 'public', this.CONFIG_PATH)
-        configData = await fs.readFile(configPath, 'utf-8')
+        // 使用顶层静态导入
+        const configPath = join(process.cwd(), 'public', this.CONFIG_PATH)
+        configData = await readFile(configPath, 'utf-8')
       }
-      
+
       this.rawConfig = JSON.parse(configData) as RawAppConfig
       console.log(`📋 配置加载成功`)
     } catch (error) {

@@ -11,7 +11,7 @@ import { logger } from '../../core/logger'
 import { BlockRange } from './block-range'
 import { validateAndCleanWalletAddress, validateAndCleanDateString } from '../../core/utils'
 // 使用新的 API 客户端管理器
-import { getHttpClient } from './api-clients'
+import { getHttpClient, APIClientManager } from './api-clients'
 import type { SimpleBatchConfig } from '../../core/api'
 
 /**
@@ -391,7 +391,6 @@ export class RevenueAnalyzer {
         this.initializationPromise = null
 
         // 重置 API 客户端管理器
-        const { APIClientManager } = await import('./api-clients')
         APIClientManager.reset()
 
         logger.debug('revenue-analyzer', '🔄 系统状态已重置')
@@ -401,7 +400,6 @@ export class RevenueAnalyzer {
      * 获取系统状态
      */
     static async getSystemStatus() {
-        const { APIClientManager } = await import('./api-clients')
         return {
             tokenManager: this.isTokenManagerInitialized(),
             apiClients: APIClientManager.getStatus(),
