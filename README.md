@@ -67,6 +67,8 @@ MORALIS_API_KEY_2=your_moralis_api_key_2
 MORALIS_API_KEY_3=your_moralis_api_key_3
 ```
 
+申请moralis_api_key: https://moralis.com/
+
 ### 📁 配置文件
 
 - **代币配置**：`/public/config/tokens.json` - 管理支持的代币和交易对
