@@ -873,9 +873,6 @@
     "currentPrice": "$0.03",
     "phase1Points": 224,
     "phase2Points": 140,
-    "startTime": "2025-07-15 18:00:00",
-    "phase1EndTime": "2025-07-16 12:00:00",
-    "phase2EndTime": "2025-07-16 18:00:00",
     "type": "alpha"
   },
   {
@@ -906,24 +903,21 @@
     "participants": null,
     "amount": "150",
     "supplementaryToken": 0,
-    "currentPrice": "0.9",
+    "currentPrice": "1",
     "phase1Points": "224",
     "phase2Points": "140",
-    "startTime": "2025-07-17 20:30:00",
-    "phase1EndTime": "2025-07-18 15:30:00",
-    "phase2EndTime": "2025-07-18 20:30:00",
     "type": "alpha"
   },
   {
     "date": "2025年07月18日",
     "token": "TAKER",
     "participants": null,
-    "amount": "_",
+    "amount": "1000",
     "supplementaryToken": 0,
     "currentPrice": "-",
-    "phase1Points": "_",
-    "phase2Points": "_",
-    "startTime": "2025-07-18",
+    "points": "165",
+    "startTime": "2025-07-18 18:00:00",
+    "endTime": "2025-07-19 18:00:00",
     "type": "alpha"
   },
   {
