@@ -914,10 +914,20 @@
     "participants": null,
     "amount": "1000",
     "supplementaryToken": 0,
+    "currentPrice": "0.072",
+    "points": "165",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月18日",
+    "token": "G",
+    "participants": null,
+    "amount": "88000",
+    "supplementaryToken": 0,
     "currentPrice": "-",
     "points": "165",
-    "startTime": "2025-07-18 18:00:00",
-    "endTime": "2025-07-19 18:00:00",
+    "startTime": "2025-07-18 21:00:00",
+    "endTime": "2025-07-19 21:00:00",
     "type": "alpha"
   },
   {
