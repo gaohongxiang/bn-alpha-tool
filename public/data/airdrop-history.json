@@ -890,9 +890,9 @@
     "date": "2025年07月17日",
     "token": "BAS",
     "participants": null,
-    "amount": "_",
+    "amount": "0",
     "supplementaryToken": 0,
-    "currentPrice": "_",
+    "currentPrice": "0",
     "points": "213",
     "type": "tge",
     "cost": "6"
@@ -924,10 +924,8 @@
     "participants": null,
     "amount": "88000",
     "supplementaryToken": 0,
-    "currentPrice": "-",
+    "currentPrice": "0.0011",
     "points": "165",
-    "startTime": "2025-07-18 21:00:00",
-    "endTime": "2025-07-19 21:00:00",
     "type": "alpha"
   },
   {
