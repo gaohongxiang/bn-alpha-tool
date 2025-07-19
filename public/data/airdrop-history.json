@@ -638,7 +638,7 @@
     "date": "2025年06月26日",
     "token": "XO",
     "participants": null,
-    "amount":3125,
+    "amount": 3125,
     "supplementaryToken": 0,
     "currentPrice": "$0.01",
     "phase1Points": 239,
@@ -932,12 +932,10 @@
     "date": "2025年07月19日",
     "token": "ESPORTS",
     "participants": null,
-    "amount": "_",
+    "amount": "900",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "phase1Points": "_",
-    "phase2Points": "_",
-    "startTime": "2025-07-19",
+    "currentPrice": "0.06",
+    "points": "160",
     "type": "alpha"
   }
-] 
+]
