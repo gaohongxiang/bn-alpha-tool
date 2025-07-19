@@ -7,17 +7,17 @@ import { CurrentAirdrops } from "./current-airdrops"
 import { HistoryTable } from "./history-table"
 import { HistoryChart } from "./history-chart"
 import type { AirdropItem, AirdropHistoryItem, CurrentAirdropItem } from "@/types/airdrop"
-import { calculateCurrentValue, calculateRevenue } from "@/lib/features/airdrop"
+import { calculateCurrentValue, calculateRevenue, normalizeNumericField } from "@/lib/features/airdrop"
 
 export function AirdropHistory() {
   const [activeView, setActiveView] = useState("chart") // 默认显示历史曲线
 
   // 从合并的数据中分离当前空投和历史数据
   const allData = airdropAllData as AirdropItem[]
-  const currentAirdrops: CurrentAirdropItem[] = allData.filter(item => 
+  const currentAirdrops: CurrentAirdropItem[] = allData.filter(item =>
     item.startTime && (item.phase1EndTime || item.endTime)
   ) as CurrentAirdropItem[]
-  const historyRawData: AirdropItem[] = allData.filter(item => 
+  const historyRawData: AirdropItem[] = allData.filter(item =>
     !item.startTime || (!item.phase1EndTime && !item.endTime)
   )
 
@@ -27,8 +27,8 @@ export function AirdropHistory() {
       .filter(item => item.currentPrice) // 只处理有价格的历史数据
       .map(item => ({
         ...item,
-        // 对于两阶段空投，使用优先获取阶段的积分作为主要积分
-        points: item.phase1Points || item.points,
+        // 对于两阶段空投，使用优先获取阶段的积分作为主要积分，并标准化为数字
+        points: normalizeNumericField(item.phase1Points || item.points),
         currentValue: calculateCurrentValue(item.amount, item.supplementaryToken, item.currentPrice!),
         revenue: calculateRevenue(item.amount, item.supplementaryToken, item.currentPrice!, item.cost)
       }))
@@ -36,7 +36,11 @@ export function AirdropHistory() {
 
   // 计算平均值用于显示在图表中
   const averagePoints = useMemo(() => {
-    const total = airdropHistoryData.reduce((sum, item) => sum + item.points, 0)
+    const total = airdropHistoryData.reduce((sum, item) => {
+      // 确保 points 是数字类型
+      const points = typeof item.points === 'string' ? parseFloat(item.points) : item.points
+      return sum + points
+    }, 0)
     return Math.round(total / airdropHistoryData.length)
   }, [airdropHistoryData])
 
@@ -56,11 +60,10 @@ export function AirdropHistory() {
             <div className="flex w-full bg-gray-100 rounded-t-lg overflow-hidden">
               <button
                 onClick={() => setActiveView("table")}
-                className={`flex-1 py-4 px-6 text-center font-medium transition-all duration-200 relative ${
-                  activeView === "table"
+                className={`flex-1 py-4 px-6 text-center font-medium transition-all duration-200 relative ${activeView === "table"
                     ? "bg-white text-blue-600 shadow-sm"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 <span className="relative z-10">📊 数据表格</span>
                 {activeView === "table" && (
@@ -69,11 +72,10 @@ export function AirdropHistory() {
               </button>
               <button
                 onClick={() => setActiveView("chart")}
-                className={`flex-1 py-4 px-6 text-center font-medium transition-all duration-200 relative ${
-                  activeView === "chart"
+                className={`flex-1 py-4 px-6 text-center font-medium transition-all duration-200 relative ${activeView === "chart"
                     ? "bg-white text-blue-600 shadow-sm"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 <span className="relative z-10">📈 历史曲线</span>
                 {activeView === "chart" && (
@@ -86,7 +88,7 @@ export function AirdropHistory() {
             {activeView === "table" ? (
               <HistoryTable airdropHistoryData={airdropHistoryData} />
             ) : (
-              <HistoryChart 
+              <HistoryChart
                 airdropHistoryData={airdropHistoryData}
                 averagePoints={averagePoints}
                 averageRevenue={averageRevenue}

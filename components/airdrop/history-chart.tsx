@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import type { AirdropHistoryItem } from "@/types/airdrop"
+import { normalizeNumericField } from "@/lib/features/airdrop"
 
 interface HistoryChartProps {
   airdropHistoryData: AirdropHistoryItem[]
@@ -45,8 +46,7 @@ export function HistoryChart({ airdropHistoryData, averagePoints, averageRevenue
     const thresholdPath = airdropHistoryData
       .map((d, i) => {
         const x = paddingLeft + i * xStep
-        // 确保 points 是数字类型
-        const points = typeof d.points === 'string' ? parseFloat(d.points) : d.points
+        const points = normalizeNumericField(d.points)
         const y = paddingTop + (chartHeight * (maxThreshold - points)) / maxThreshold
         return `${i === 0 ? "M" : "L"} ${x} ${y}`
       })
@@ -55,8 +55,7 @@ export function HistoryChart({ airdropHistoryData, averagePoints, averageRevenue
     const revenuePath = airdropHistoryData
       .map((d, i) => {
         const x = paddingLeft + i * xStep
-        // 确保 revenue 是数字类型
-        const revenue = typeof d.revenue === 'string' ? parseFloat(d.revenue) : d.revenue
+        const revenue = normalizeNumericField(d.revenue)
         const y = paddingTop + (chartHeight * (maxRevenue - revenue)) / maxRevenue
         return `${i === 0 ? "M" : "L"} ${x} ${y}`
       })
@@ -64,9 +63,8 @@ export function HistoryChart({ airdropHistoryData, averagePoints, averageRevenue
 
     const handleMouseEnter = (event: React.MouseEvent, data: AirdropHistoryItem, index: number) => {
       const x = paddingLeft + index * xStep
-      // 确保 points 和 revenue 是数字类型
-      const points = typeof data.points === 'string' ? parseFloat(data.points) : data.points
-      const revenue = typeof data.revenue === 'string' ? parseFloat(data.revenue) : data.revenue
+      const points = normalizeNumericField(data.points)
+      const revenue = normalizeNumericField(data.revenue)
       const thresholdY = paddingTop + (chartHeight * (maxThreshold - points)) / maxThreshold
       const revenueY = paddingTop + (chartHeight * (maxRevenue - revenue)) / maxRevenue
 
@@ -144,9 +142,8 @@ export function HistoryChart({ airdropHistoryData, averagePoints, averageRevenue
           {/* 数据点和悬停区域 */}
           {airdropHistoryData.map((d, i) => {
             const x = paddingLeft + i * xStep
-            // 确保 points 和 revenue 是数字类型
-            const points = typeof d.points === 'string' ? parseFloat(d.points) : d.points
-            const revenue = typeof d.revenue === 'string' ? parseFloat(d.revenue) : d.revenue
+            const points = normalizeNumericField(d.points)
+            const revenue = normalizeNumericField(d.revenue)
             const thresholdY = paddingTop + (chartHeight * (maxThreshold - points)) / maxThreshold
             const revenueY = paddingTop + (chartHeight * (maxRevenue - revenue)) / maxRevenue
             
@@ -246,13 +243,13 @@ export function HistoryChart({ airdropHistoryData, averagePoints, averageRevenue
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-500">空投数量:</span>
                   <span className="text-xs font-medium text-green-600">
-                    {(typeof hoveredPoint.data.amount === 'string' ? parseFloat(hoveredPoint.data.amount) : hoveredPoint.data.amount).toLocaleString()}
+                    {normalizeNumericField(hoveredPoint.data.amount).toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-500">补发代币:</span>
                   <span className="text-xs font-medium text-orange-600">
-                    {(typeof hoveredPoint.data.supplementaryToken === 'string' ? parseFloat(hoveredPoint.data.supplementaryToken) : hoveredPoint.data.supplementaryToken).toLocaleString()}
+                    {normalizeNumericField(hoveredPoint.data.supplementaryToken).toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -262,7 +259,7 @@ export function HistoryChart({ airdropHistoryData, averagePoints, averageRevenue
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-500">单号收益:</span>
                   <span className="text-xs font-medium text-green-600">
-                    ${(typeof hoveredPoint.data.revenue === 'string' ? parseFloat(hoveredPoint.data.revenue) : hoveredPoint.data.revenue).toFixed(2)}
+                    ${normalizeNumericField(hoveredPoint.data.revenue).toFixed(2)}
                   </span>
                 </div>
                 {hoveredPoint.data.cost && (
