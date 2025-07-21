@@ -15,10 +15,10 @@ export function AirdropHistory() {
   // 从合并的数据中分离当前空投和历史数据
   const allData = airdropAllData as AirdropItem[]
   const currentAirdrops: CurrentAirdropItem[] = allData.filter(item =>
-    item.startTime && (item.phase1EndTime || item.endTime)
+    item.startTime // 有startTime字段的为当前空投
   ) as CurrentAirdropItem[]
   const historyRawData: AirdropItem[] = allData.filter(item =>
-    !item.startTime || (!item.phase1EndTime && !item.endTime)
+    !item.startTime // 没有startTime字段的为历史数据
   )
 
   // 使用 useMemo 处理数据，添加revenue计算字段

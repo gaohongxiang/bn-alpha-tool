@@ -8,9 +8,10 @@ export interface AirdropItem {
   supplementaryToken: number | string  // 支持字符串和数字类型 | string
   currentPrice: string | null
   type: "alpha" | "tge"
+
   cost?: number  // TGE项目的成本（可选）
   pointsConsumed?: boolean  // 可选字段，默认为true
-  // 两阶段时间字段（可选，有则为当前空投）
+  // 时间字段（仅当status为current或upcoming时需要）
   startTime?: string // 格式: "2025-06-19 20:00 (UTC+8)"
   // 简化的两阶段字段
   phase1Points?: number

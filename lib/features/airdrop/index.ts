@@ -62,16 +62,30 @@ export function calculateRevenue(amount: number | string, supplementaryToken: nu
 
 /**
  * 将UTC+8时间字符串转换为Date对象
+ * 支持两种格式：
+ * 1. "2025-06-11 10:00 (UTC+8)" - 完整时间格式
+ * 2. "2025-06-11" - 仅日期格式
  */
 export const parseUTC8Time = (timeStr: string): Date => {
-  // 从 "2025-06-11 10:00 (UTC+8)" 中提取日期时间部分
-  const match = timeStr.match(/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2})/)
-  if (!match) return new Date()
-
-  const [, dateStr, timeStr2] = match
-  // 创建UTC+8时间并转换为UTC
-  const utc8Date = new Date(`${dateStr}T${timeStr2}:00+08:00`)
-  return utc8Date
+  if (!timeStr) return new Date()
+  
+  // 尝试匹配完整时间格式 "2025-06-11 10:00 (UTC+8)"
+  const fullTimeMatch = timeStr.match(/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2})/)
+  if (fullTimeMatch) {
+    const [, dateStr, timeStr2] = fullTimeMatch
+    return new Date(`${dateStr}T${timeStr2}:00+08:00`)
+  }
+  
+  // 尝试匹配仅日期格式 "2025-06-11"
+  const dateOnlyMatch = timeStr.match(/(\d{4}-\d{2}-\d{2})/)
+  if (dateOnlyMatch) {
+    const [, dateStr] = dateOnlyMatch
+    // 默认使用当天的00:00时间
+    return new Date(`${dateStr}T00:00:00+08:00`)
+  }
+  
+  // 如果都不匹配，返回当前时间
+  return new Date()
 }
 
 /**
