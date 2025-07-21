@@ -937,5 +937,25 @@
     "currentPrice": "0.06",
     "points": "160",
     "type": "alpha"
+  },
+  {
+    "date": "2025年07月20日",
+    "token": "UPTOP",
+    "participants": null,
+    "amount": "1500",
+    "supplementaryToken": 0,
+    "currentPrice": "0.03",
+    "points": "180",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月21日",
+    "token": "TA",
+    "participants": null,
+    "amount": "750",
+    "supplementaryToken": 0,
+    "currentPrice": "0.14",
+    "points": "210",
+    "type": "alpha"
   }
 ]
