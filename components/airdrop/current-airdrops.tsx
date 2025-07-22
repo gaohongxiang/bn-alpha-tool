@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Clock } from "lucide-react"
 import type { CurrentAirdropItem, AirdropStatusInfo } from "@/types/airdrop"
-import { parseUTC8Time, formatTimeRemaining } from "@/lib/features/airdrop"
+import { parseUTC8Time, formatTimeRemaining, isDateOnlyFormat } from "@/lib/features/airdrop"
 
 interface CurrentAirdropsProps {
   currentAirdrops: CurrentAirdropItem[]
@@ -13,22 +13,58 @@ interface CurrentAirdropsProps {
 
 export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
   // 实时倒计时状态
-  const [countdowns, setCountdowns] = useState<{[key: string]: AirdropStatusInfo}>({})
+  const [countdowns, setCountdowns] = useState<{ [key: string]: AirdropStatusInfo }>({})
 
   // 获取当前空投的状态信息
   const getAirdropStatus = (airdrop: CurrentAirdropItem): AirdropStatusInfo => {
     const now = new Date()
     const start = parseUTC8Time(airdrop.startTime)
-    
+
+    // 如果startTime只有日期格式，显示"今日开放"，不显示倒计时
+    if (isDateOnlyFormat(airdrop.startTime)) {
+      const today = new Date()
+      const startDate = new Date(start.getFullYear(), start.getMonth(), start.getDate())
+      const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+
+      if (startDate.getTime() === todayDate.getTime()) {
+        return {
+          status: "今日开放",
+          color: "blue",
+          progress: 0, // 不显示进度，因为不知道具体时间
+          phase: "single",
+          currentPhase: null,
+          points: airdrop.phase1Points || airdrop.points || 0
+        }
+      } else if (startDate > todayDate) {
+        return {
+          status: "即将开放",
+          color: "gray",
+          progress: 0,
+          phase: "waiting",
+          currentPhase: null,
+          points: airdrop.phase1Points || airdrop.points || 0
+        }
+      } else {
+        return {
+          status: "已结束",
+          color: "red",
+          progress: 100,
+          phase: "ended",
+          currentPhase: null,
+          points: airdrop.phase1Points || airdrop.points || 0
+        }
+      }
+    }
+
     // 如果有两阶段配置，使用两阶段逻辑
     if (airdrop.phase1EndTime && airdrop.phase2EndTime) {
       const phase1End = parseUTC8Time(airdrop.phase1EndTime)
       const phase2End = parseUTC8Time(airdrop.phase2EndTime)
-      
+
       if (now < start) {
-        return { 
-          status: "未开始", 
-          color: "gray", 
+        return {
+          status: "未开始",
+          color: "gray",
           progress: 0,
           phase: "waiting",
           currentPhase: null,
@@ -39,13 +75,13 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
         const total = phase1End.getTime() - start.getTime()
         const elapsed = now.getTime() - start.getTime()
         const progress = Math.max(0, Math.min(100, (elapsed / total) * 100))
-        
+
         const remaining = phase1End.getTime() - now.getTime()
         const statusText = formatTimeRemaining(remaining)
-        
-        return { 
+
+        return {
           status: statusText,
-          color: "blue", 
+          color: "blue",
           progress,
           phase: "phase1",
           currentPhase: "优先获取",
@@ -56,22 +92,22 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
         const totalDuration = phase2End.getTime() - start.getTime()
         const elapsed = now.getTime() - start.getTime()
         const progress = Math.max(0, Math.min(100, (elapsed / totalDuration) * 100))
-        
+
         const remaining = phase2End.getTime() - now.getTime()
         const statusText = formatTimeRemaining(remaining)
-        
-        return { 
+
+        return {
           status: statusText,
-          color: "orange", 
+          color: "orange",
           progress,
           phase: "phase2",
           currentPhase: "先到先得",
           points: airdrop.phase2Points || 0
         }
       } else {
-        return { 
-          status: "已结束", 
-          color: "red", 
+        return {
+          status: "已结束",
+          color: "red",
           progress: 100,
           phase: "ended",
           currentPhase: null,
@@ -81,20 +117,20 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
     } else {
       // 兼容旧格式的单阶段逻辑
       const end = parseUTC8Time(airdrop.endTime || "")
-      
+
       if (now < start) {
-        return { 
-          status: "未开始", 
-          color: "gray", 
+        return {
+          status: "未开始",
+          color: "gray",
           progress: 0,
           phase: "waiting",
           currentPhase: null,
           points: airdrop.points
         }
       } else if (now > end) {
-        return { 
-          status: "已结束", 
-          color: "red", 
+        return {
+          status: "已结束",
+          color: "red",
           progress: 100,
           phase: "ended",
           currentPhase: null,
@@ -104,13 +140,13 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
         const total = end.getTime() - start.getTime()
         const elapsed = now.getTime() - start.getTime()
         const progress = Math.max(0, Math.min(100, (elapsed / total) * 100))
-        
+
         const remaining = end.getTime() - now.getTime()
         const statusText = formatTimeRemaining(remaining)
-        
-        return { 
+
+        return {
           status: statusText,
-          color: "orange", 
+          color: "orange",
           progress,
           phase: "single",
           currentPhase: null,
@@ -123,12 +159,12 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
   // 实时更新倒计时
   useEffect(() => {
     const updateCountdowns = () => {
-      const newCountdowns: {[key: string]: AirdropStatusInfo} = {}
-      
+      const newCountdowns: { [key: string]: AirdropStatusInfo } = {}
+
       currentAirdrops.forEach((airdrop) => {
         newCountdowns[airdrop.token] = getAirdropStatus(airdrop)
       })
-      
+
       setCountdowns(newCountdowns)
     }
 
@@ -179,16 +215,14 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
                       <div className="flex items-center gap-2">
                         <div className="text-lg font-bold text-gray-800">{airdrop.token}</div>
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            airdrop.type === "alpha" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"
-                          }`}
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${airdrop.type === "alpha" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"
+                            }`}
                         >
                           {airdrop.type.toUpperCase()}
                         </span>
                         {statusInfo.currentPhase && (
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            statusInfo.phase === "phase1" ? "bg-blue-100 text-blue-800" : "bg-orange-100 text-orange-800"
-                          }`}>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusInfo.phase === "phase1" ? "bg-blue-100 text-blue-800" : "bg-orange-100 text-orange-800"
+                            }`}>
                             {statusInfo.currentPhase}阶段
                           </span>
                         )}
@@ -204,7 +238,7 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
                           {airdrop.type === "tge" ? "分配数量" : "空投数量"}（枚）：
                           <span className="text-blue-600 font-medium">{airdrop.amount}</span>
                         </div>
-                        
+
                         {/* 积分门槛信息 */}
                         {airdrop.phase1Points ? (
                           <>
@@ -229,10 +263,10 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
                     <div className="space-y-2">
                       <div className="text-sm">
                         <span className="text-gray-600">
-                        {airdrop.type === "tge" ? "开始时间：" : "开始领取时间："}</span>
+                          {airdrop.type === "tge" ? "开始时间：" : "开始领取时间："}</span>
                         <span className="text-blue-600 ml-1">{airdrop.startTime}</span>
                       </div>
-                      
+
                       {/* 时间信息 */}
                       {airdrop.phase1EndTime ? (
                         <>
@@ -251,29 +285,28 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
                         airdrop.endTime && (
                           <div className="text-sm">
                             <span className="text-gray-600">
-                            {airdrop.type === "tge" ? "截止时间：" : "截止领取时间："}</span>
+                              {airdrop.type === "tge" ? "截止时间：" : "截止领取时间："}</span>
                             <span className="text-orange-600 ml-1">{airdrop.endTime}</span>
                           </div>
                         )
                       )}
-                      
+
                       <div className="text-sm">
                         <span className="text-gray-600">
-                          {statusInfo.phase === "phase1" ? "优先获取倒计时：" : 
-                           statusInfo.phase === "phase2" ? "先到先得倒计时：" : 
-                           "倒计时："}
+                          {statusInfo.phase === "phase1" ? "优先获取倒计时：" :
+                            statusInfo.phase === "phase2" ? "先到先得倒计时：" :
+                              "倒计时："}
                         </span>
-                        <span className={`font-medium ml-1 ${
-                          statusInfo.color === "gray" ? "text-gray-600" : 
-                          statusInfo.color === "red" ? "text-red-600" : 
-                          statusInfo.color === "blue" ? "text-blue-600" : "text-orange-600"
-                        }`}>
+                        <span className={`font-medium ml-1 ${statusInfo.color === "gray" ? "text-gray-600" :
+                          statusInfo.color === "red" ? "text-red-600" :
+                            statusInfo.color === "blue" ? "text-blue-600" : "text-orange-600"
+                          }`}>
                           {statusInfo.status}
                         </span>
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* 进度条 - 双色进度条 */}
                   <div className="mt-4">
                     {airdrop.phase1EndTime && airdrop.phase2EndTime ? (
@@ -288,14 +321,14 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
                             const totalDuration = phase2End.getTime() - start.getTime()
                             const phase1Duration = phase1End.getTime() - start.getTime()
                             const phase1Percentage = (phase1Duration / totalDuration) * 100
-                            
+
                             // 当前进度
                             let currentProgress = 0
                             if (now >= start) {
                               const elapsed = now.getTime() - start.getTime()
                               currentProgress = Math.min(100, (elapsed / totalDuration) * 100)
                             }
-                            
+
                             return (
                               <>
                                 {/* 第一阶段背景（蓝色区域） */}
@@ -303,24 +336,23 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
                                   className="absolute top-0 left-0 h-3 bg-blue-100 rounded-l-full"
                                   style={{ width: `${phase1Percentage}%` }}
                                 ></div>
-                                
+
                                 {/* 第二阶段背景（橙色区域） */}
                                 <div
                                   className="absolute top-0 h-3 bg-orange-100 rounded-r-full"
-                                  style={{ 
-                                    left: `${phase1Percentage}%`, 
-                                    width: `${100 - phase1Percentage}%` 
+                                  style={{
+                                    left: `${phase1Percentage}%`,
+                                    width: `${100 - phase1Percentage}%`
                                   }}
                                 ></div>
-                                
+
                                 {/* 实际进度 */}
                                 <div
-                                  className={`absolute top-0 left-0 h-3 rounded-full transition-all duration-300 ${
-                                    currentProgress <= phase1Percentage ? "bg-blue-500" : "bg-gradient-to-r from-blue-500 via-blue-500 to-orange-500"
-                                  }`}
+                                  className={`absolute top-0 left-0 h-3 rounded-full transition-all duration-300 ${currentProgress <= phase1Percentage ? "bg-blue-500" : "bg-gradient-to-r from-blue-500 via-blue-500 to-orange-500"
+                                    }`}
                                   style={{ width: `${currentProgress}%` }}
                                 ></div>
-                                
+
                                 {/* 阶段分界线 */}
                                 <div
                                   className="absolute top-0 w-0.5 h-3 bg-gray-400"
@@ -330,7 +362,7 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
                             )
                           })()}
                         </div>
-                        
+
                         {/* 阶段标签 */}
                         <div className="relative flex text-xs h-5 pt-1">
                           {(() => {
@@ -341,16 +373,16 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
                             const totalDuration = phase2End.getTime() - start.getTime()
                             const phase1Duration = phase1End.getTime() - start.getTime()
                             const phase1Percentage = (phase1Duration / totalDuration) * 100
-                            
+
                             return (
                               <>
                                 {/* 优先获取标签 - 在左侧 */}
                                 <span className={`absolute left-0 ${statusInfo.phase === "phase1" || statusInfo.phase === "waiting" ? "text-blue-600 font-medium" : "text-gray-500"}`}>
                                   优先获取 ({airdrop.phase1Points || 0}分)
                                 </span>
-                                
+
                                 {/* 先到先得标签 - 在第二阶段开始位置 */}
-                                <span 
+                                <span
                                   className={`absolute ${statusInfo.phase === "phase2" ? "text-orange-600 font-medium" : "text-gray-500"}`}
                                   style={{ left: `${phase1Percentage}%`, transform: 'translateX(-50%)' }}
                                 >
@@ -365,11 +397,10 @@ export function CurrentAirdrops({ currentAirdrops }: CurrentAirdropsProps) {
                       // 单阶段进度条（兼容旧格式）
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full transition-all duration-300 ${
-                            statusInfo.color === "gray" ? "bg-gray-400" : 
-                            statusInfo.color === "red" ? "bg-red-500" : 
-                            statusInfo.color === "blue" ? "bg-blue-500" : "bg-orange-500"
-                          }`}
+                          className={`h-2 rounded-full transition-all duration-300 ${statusInfo.color === "gray" ? "bg-gray-400" :
+                            statusInfo.color === "red" ? "bg-red-500" :
+                              statusInfo.color === "blue" ? "bg-blue-500" : "bg-orange-500"
+                            }`}
                           style={{ width: `${statusInfo.progress}%` }}
                         ></div>
                       </div>

@@ -89,6 +89,15 @@ export const parseUTC8Time = (timeStr: string): Date => {
 }
 
 /**
+ * 判断时间字符串是否为仅日期格式（没有具体时间）
+ */
+export const isDateOnlyFormat = (timeStr: string): boolean => {
+  if (!timeStr) return false
+  // 只匹配 YYYY-MM-DD 格式，不包含时间
+  return /^\d{4}-\d{2}-\d{2}$/.test(timeStr.trim())
+}
+
+/**
  * 格式化剩余时间的辅助函数
  */
 export const formatTimeRemaining = (remaining: number): string => {
