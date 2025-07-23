@@ -629,7 +629,7 @@
     "participants": null,
     "amount": 11356,
     "supplementaryToken": 0,
-    "currentPrice": "$0",
+    "currentPrice": "$0.0075",
     "points": 218,
     "type": "tge",
     "cost": 6
@@ -986,10 +986,8 @@
     "participants": null,
     "amount": "1500",
     "supplementaryToken": 0,
-    "currentPrice": "-",
+    "currentPrice": "0.028",
     "points": "200",
-    "startTime": "2025-07-23 17:00",
-    "endTime": "2025-07-24 17:00",
     "type": "alpha"
   },
   {
@@ -1001,6 +999,17 @@
     "currentPrice": "-",
     "points": "-",
     "startTime": "2025-07-24",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月25日",
+    "token": "LN",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-07-25",
     "type": "alpha"
   }
 ]
