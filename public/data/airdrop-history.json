@@ -964,7 +964,7 @@
     "participants": null,
     "amount": "899",
     "supplementaryToken": 0,
-    "currentPrice": "-",
+    "currentPrice": "0.075",
     "points": "225",
     "type": "tge",
     "cost": "9"
@@ -978,20 +978,18 @@
     "currentPrice": "0.35",
     "phase1Points": "238",
     "phase2Points": "200",
-    "startTime": "2025-07-22 20:00",
-    "phase1EndTime": "2025-07-23 14:00",
-    "phase2EndTime": "2025-07-23 20:00",
     "type": "alpha"
   },
   {
     "date": "2025年07月23日",
     "token": "COA",
     "participants": null,
-    "amount": "-",
+    "amount": "1500",
     "supplementaryToken": 0,
     "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-07-23",
+    "points": "200",
+    "startTime": "2025-07-23 17:00",
+    "endTime": "2025-07-24 17:00",
     "type": "alpha"
   },
   {
