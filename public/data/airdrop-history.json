@@ -994,11 +994,13 @@
     "date": "2025年07月24日",
     "token": "ASP",
     "participants": null,
-    "amount": "-",
+    "amount": "125",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-07-24",
+    "currentPrice": "0.54",
+    "points": "225",
+    "startTime": "2025-07-24 18:00",
+    "phase1EndTime": "2025-07-25 12:00",
+    "phase2EndTime": "2025-07-25 18:00",
     "type": "alpha"
   },
   {
@@ -1010,6 +1012,17 @@
     "currentPrice": "-",
     "points": "-",
     "startTime": "2025-07-25",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月26日",
+    "token": "PHY",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-07-26",
     "type": "alpha"
   }
 ]
