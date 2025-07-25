@@ -1023,6 +1023,19 @@
     "type": "alpha"
   },
   {
+    "date": "2025年07月28日",
+    "token": "DELABS",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-07-28 16:00",
+    "endTime": "2025-07-28 18:00",
+    "type": "tge",
+    "cost": "-"
+  },
+  {
     "date": "2025年07月29日",
     "token": "TREE",
     "participants": null,
