@@ -999,20 +999,16 @@
     "currentPrice": "0.54",
     "phase1Points": "225",
     "phase2Points": "200",
-    "startTime": "2025-07-24 18:00",
-    "phase1EndTime": "2025-07-25 12:00",
-    "phase2EndTime": "2025-07-25 18:00",
     "type": "alpha"
   },
   {
     "date": "2025年07月25日",
     "token": "LN",
     "participants": null,
-    "amount": "-",
+    "amount": "600",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-07-25",
+    "currentPrice": "0.055",
+    "points": "200",
     "type": "alpha"
   },
   {
@@ -1024,6 +1020,17 @@
     "currentPrice": "-",
     "points": "-",
     "startTime": "2025-07-26",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月29日",
+    "token": "TREE",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-07-29",
     "type": "alpha"
   }
 ]
