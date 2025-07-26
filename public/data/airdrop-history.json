@@ -1015,11 +1015,10 @@
     "date": "2025年07月26日",
     "token": "PHY",
     "participants": null,
-    "amount": "-",
+    "amount": "750",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-07-26",
+    "currentPrice": "0.06",
+    "points": "200",
     "type": "alpha"
   },
   {
