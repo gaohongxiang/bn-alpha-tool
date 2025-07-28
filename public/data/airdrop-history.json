@@ -1022,17 +1022,25 @@
     "type": "alpha"
   },
   {
+    "date": "2025年07月27日",
+    "token": "VRA",
+    "participants": null,
+    "amount": "32238",
+    "supplementaryToken": 0,
+    "currentPrice": "0.0011",
+    "points": "200",
+    "type": "alpha"
+  },
+  {
     "date": "2025年07月28日",
     "token": "DELABS",
     "participants": null,
-    "amount": "-",
+    "amount": "3217",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-07-28 16:00",
-    "endTime": "2025-07-28 18:00",
+    "currentPrice": "0.017",
+    "points": "218",
     "type": "tge",
-    "cost": "-"
+    "cost": "11"
   },
   {
     "date": "2025年07月29日",
