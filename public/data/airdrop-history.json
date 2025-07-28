@@ -1052,5 +1052,16 @@
     "points": "-",
     "startTime": "2025-07-29",
     "type": "alpha"
+  },
+  {
+    "date": "2025年07月31日",
+    "token": "NAORIS",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-07-31 20:00",
+    "type": "alpha"
   }
 ]
