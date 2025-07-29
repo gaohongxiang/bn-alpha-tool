@@ -1046,11 +1046,14 @@
     "date": "2025年07月29日",
     "token": "TREE",
     "participants": null,
-    "amount": "-",
+    "amount": "100",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-07-29",
+    "currentPrice": "1.2",
+    "phase1Points": "233",
+    "phase2Points": "200",
+    "startTime": "2025-07-29 20:00",
+    "phase1EndTime": "2025-07-30 14:00",
+    "phase2EndTime": "2025-07-30 20:00",
     "type": "alpha"
   },
   {
@@ -1062,6 +1065,28 @@
     "currentPrice": "-",
     "points": "-",
     "startTime": "2025-07-30",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月30日",
+    "token": "RHEA",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-07-30",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年07月31日",
+    "token": "PLAY",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-07-31 16:00",
     "type": "alpha"
   },
   {
