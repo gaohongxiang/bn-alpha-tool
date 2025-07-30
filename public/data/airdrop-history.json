@@ -1073,9 +1073,8 @@
     "participants": null,
     "amount": "1000",
     "supplementaryToken": 0,
-    "currentPrice": "-",
+    "currentPrice": "0.05",
     "points": "200",
-    "startTime": "2025-07-30 21:30",
     "type": "alpha"
   },
   {
@@ -1108,7 +1107,7 @@
     "supplementaryToken": 0,
     "currentPrice": "-",
     "points": "-",
-    "startTime": "2025-07-05",
+    "startTime": "2025-08-05",
     "type": "alpha"
   }
 ]
