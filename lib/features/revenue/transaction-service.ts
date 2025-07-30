@@ -86,20 +86,60 @@ export class TransactionService {
 
           // 如果找到了交易数据，处理并返回
           if (allFilteredTransactions.length > 0) {
-            // 计算第一笔和最后一笔交易的差值
+            // 计算所有买入和卖出交易的差值
             let allTransactionLossValue = 0
             let allGasLossValue = 0
 
-            const firstTransaction = allFilteredTransactions[0]
-            const lastTransaction = allFilteredTransactions[allFilteredTransactions.length - 1]
-            allTransactionLossValue = firstTransaction.totalValueUsd - lastTransaction.totalValueUsd
+            // 分离买入和卖出交易
+            const buyTransactions = allFilteredTransactions.filter((tx: any) => tx.transactionType === 'buy')
+            const sellTransactions = allFilteredTransactions.filter((tx: any) => tx.transactionType === 'sell')
 
-            logger.debug('general', `💰 交易磨损: $${allTransactionLossValue.toFixed(2)} (第一笔 - 最后一笔)`)
+            logger.debug('general', `📊 交易统计: 总交易${allFilteredTransactions.length}笔, 买入${buyTransactions.length}笔, 卖出${sellTransactions.length}笔`)
+
+            // 打印所有交易的详细信息
+            allFilteredTransactions.forEach((tx: any, index: number) => {
+              logger.debug('general', `交易${index + 1}: ${tx.transactionType} ${tx.pairLabel} totalValueUsd=$${tx.totalValueUsd.toFixed(6)}`)
+              logger.debug('general', `  - bought: ${tx.bought?.symbol} ${tx.bought?.amount} ($${tx.bought?.usdAmount?.toFixed(6) || 'N/A'})`)
+              logger.debug('general', `  - sold: ${tx.sold?.symbol} ${tx.sold?.amount} ($${tx.sold?.usdAmount?.toFixed(6) || 'N/A'})`)
+              logger.debug('general', `  - 交易哈希: ${tx.transactionHash}`)
+            })
+
+            // 处理未完成交易：如果最后一笔是买入且买入数量比卖出多，则忽略最后一笔买入
+            let completeBuyTransactions = buyTransactions
+            let ignoredBuyValue = 0
+
+            if (allFilteredTransactions.length > 0) {
+              const lastTransaction = allFilteredTransactions[allFilteredTransactions.length - 1]
+              if (lastTransaction.transactionType === 'buy' && buyTransactions.length > sellTransactions.length) {
+                // 忽略最后一笔买入交易，不是完整的买入卖出对
+                completeBuyTransactions = buyTransactions.slice(0, -1)
+                ignoredBuyValue = lastTransaction.totalValueUsd
+                logger.debug('general', `⏳ 忽略未完成的买入交易: $${ignoredBuyValue.toFixed(2)}`)
+              }
+            }
+
+            // 计算实际的 USDT 流入流出
+            // 买入交易：花费的 USDT（sold.usdAmount 的绝对值）
+            const totalUsdtSpent = completeBuyTransactions.reduce((sum: number, tx: any) => {
+              // 买入交易中，sold 是花费的 USDT（负数），取绝对值
+              return sum + Math.abs(tx.sold?.usdAmount || 0)
+            }, 0)
+
+            // 卖出交易：得到的 USDT（bought.usdAmount）
+            const totalUsdtReceived = sellTransactions.reduce((sum: number, tx: any) => {
+              // 卖出交易中，bought 是得到的 USDT（正数）
+              return sum + (tx.bought?.usdAmount || 0)
+            }, 0)
+
+            // 交易磨损 = 花费的 USDT - 得到的 USDT
+            allTransactionLossValue = totalUsdtSpent - totalUsdtReceived
+
+            logger.debug('general', `💰 交易磨损: $${allTransactionLossValue.toFixed(2)} (花费USDT: $${totalUsdtSpent.toFixed(2)} - 得到USDT: $${totalUsdtReceived.toFixed(2)})${ignoredBuyValue > 0 ? ` [忽略未完成: $${ignoredBuyValue.toFixed(2)}]` : ''}`)
 
             // 计算gas磨损
             try {
               // 使用第一笔交易的哈希来计算gas
-              const transactionHash = firstTransaction.transactionHash
+              const transactionHash = allFilteredTransactions[0].transactionHash
               const gas = await TransactionService.getTransactionGas(httpClient, tokenData.chainIdHex, transactionHash)
               const nativeTokenPrice = tokenData.nativeToken.price || 0
               allGasLossValue = Number(ethers.formatEther(gas.toString())) * nativeTokenPrice * allFilteredTransactions.length
@@ -117,22 +157,34 @@ export class TransactionService {
               allTransactionLossValue,
               allGasLossValue,
               buyTransactionsCount: buyFilteredTransactions.length,
-              buyTransactions: buyFilteredTransactions.map((tx: any) => {
-                // 转换为北京时间格式
-                const date = new Date(new Date(tx.blockTimestamp).getTime() + 8 * 3600 * 1000);
-                const beijingTime = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
-                return {
-                  transactionHash: tx.transactionHash,
-                  pairLabel: tx.pairLabel,
-                  buySymbol: tx.bought.symbol,
-                  sellSymbol: tx.sold.symbol,
-                  buyAmount: tx.bought.amount,
-                  sellAmount: tx.sold.amount,
-                  time: beijingTime,
-                  blockNumber: tx.blockNumber,
-                  totalValueUsd: tx.totalValueUsd,
-                }
-              }),
+              buyTransactions: buyFilteredTransactions
+                .map((tx: any) => {
+                  // 直接使用blockTimestamp，不额外加8小时（因为API返回的可能已经是正确的时间）
+                  const date = new Date(tx.blockTimestamp);
+                  const beijingTime = date.toLocaleString("zh-CN", {
+                    timeZone: "Asia/Shanghai",
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false
+                  });
+                  return {
+                    transactionHash: tx.transactionHash,
+                    pairLabel: tx.pairLabel,
+                    buySymbol: tx.bought.symbol,
+                    sellSymbol: tx.sold.symbol,
+                    buyAmount: tx.bought.amount,
+                    sellAmount: tx.sold.amount,
+                    time: beijingTime,
+                    blockNumber: tx.blockNumber,
+                    totalValueUsd: tx.totalValueUsd,
+                    timestamp: new Date(tx.blockTimestamp).getTime(), // 添加时间戳用于排序
+                  }
+                })
+                .sort((a, b) => b.timestamp - a.timestamp), // 按时间戳降序排列（最新的在前）
               // 根据配置文件中的volumeMultiplier计算交易量
               totalBoughtValue: buyFilteredTransactions.reduce((sum: number, tx: any) => sum + tx.bought.usdAmount, 0) * tokenData.volumeMultiplier,
             }

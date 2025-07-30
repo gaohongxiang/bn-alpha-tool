@@ -44,4 +44,42 @@ export class Points {
     const volumePoints = this.tradingVolumePoints(volume)
     return balancePoints + volumePoints
   }
+
+  /**
+   * 计算距离下一个积分等级还需要的交易量
+   * @param currentVolume 当前交易量
+   * @returns 还需要的交易量，如果已达到最高等级则返回0
+   */
+  static calculateRemainingVolumeForNextLevel(currentVolume: number): number {
+    if (currentVolume < 2) {
+      return 2 - currentVolume // 需要达到2才能获得第一个积分
+    }
+    
+    const currentPoints = Math.floor(Math.log2(currentVolume))
+    const nextPoints = currentPoints + 1
+    
+    // 如果已经达到最高等级（25分），返回0
+    if (currentPoints >= 25) {
+      return 0
+    }
+    
+    const nextVolumeThreshold = Math.pow(2, nextPoints)
+    return Math.max(0, nextVolumeThreshold - currentVolume)
+  }
+
+  /**
+   * 获取下一个积分等级的门槛
+   * @param currentVolume 当前交易量
+   * @returns 下一个等级的交易量门槛
+   */
+  static getNextLevelThreshold(currentVolume: number): number {
+    if (currentVolume < 2) return 2
+    
+    const currentPoints = Math.floor(Math.log2(currentVolume))
+    const nextPoints = currentPoints + 1
+    
+    if (currentPoints >= 25) return Math.pow(2, 25) // 最高等级
+    
+    return Math.pow(2, nextPoints)
+  }
 }

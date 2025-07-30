@@ -10,6 +10,7 @@ import { Copy, X, ArrowUpDown, Loader2, AlertCircle, Settings, CheckCircle, Exte
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { useLogger } from "@/lib/core/logger"
+import { Points } from "@/lib/features/points"
 
 // 导入统一的类型定义
 import type {
@@ -48,7 +49,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
   const [walletModalOpen, setWalletModalOpen] = useState(false)
   const [walletInput, setWalletInput] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
-  
+
   // Toast状态
   const [toast, setToast] = useState<{
     show: boolean;
@@ -56,7 +57,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
     type: 'success' | 'error' | 'warning' | 'info';
     title?: string;
   }>({ show: false, message: '', type: 'info' })
-  
+
   // 编辑状态
   const [editingWallet, setEditingWallet] = useState<string | null>(null)
   const [editingAddress, setEditingAddress] = useState('')
@@ -64,7 +65,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
 
   // 查询相关状态
   const [isQuerying, setIsQuerying] = useState(false)
-  
+
   // 弹窗状态
   const [rulesModalOpen, setRulesModalOpen] = useState(false)
 
@@ -135,7 +136,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
     logger.startSession(sessionId)
 
     logger.debug('batch-query', `🚀 开始查询 ${wallets.length} 个钱包，日期: ${selectedDate}`)
-    logger.debug('batch-query', `📋 钱包列表`, wallets.map((w, i) => `${i+1}. ${w.address} (${w.note})`))
+    logger.debug('batch-query', `📋 钱包列表`, wallets.map((w, i) => `${i + 1}. ${w.address} (${w.note})`))
 
     logger.info('batch-query', `开始查询 ${wallets.length} 个钱包，日期: ${selectedDate}`)
 
@@ -184,7 +185,15 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
         const mergedData = {
           ...walletResult,
           // 保持原有的备注信息
-          note: wallet?.note || `钱包${index + 1}`
+          note: wallet?.note || `钱包${index + 1}`,
+          // 添加 tradingVolume 字段，从 transactionData.totalBoughtValue 获取
+          tradingVolume: walletResult.transactionData?.totalBoughtValue || 0,
+          // 添加其他兼容字段
+          totalBalance: walletResult.tokensValue || 0,
+          transactionCount: walletResult.transactionData?.buyTransactionsCount || 0,
+          estimatedPoints: walletResult.points || 0,
+          tradingLoss: walletResult.transactionData?.allTransactionLossValue || 0,
+          gasLoss: walletResult.transactionData?.allGasLossValue || 0
         }
 
         logger.debug('wallet-result', `💰 钱包 ${index + 1} (${wallet.address}): 余额=$${walletResult.tokensValue.toFixed(2)}, 积分=${walletResult.points}, ${walletResult.error ? '❌错误: ' + walletResult.error : '✅成功'}`)
@@ -279,7 +288,18 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
       // 更新该钱包的数据，保持备注信息
       setWalletData(prev => prev.map(w =>
         w.address === walletAddress
-          ? { ...walletResult, note: wallet.note }
+          ? {
+            ...walletResult,
+            note: wallet.note,
+            // 添加 tradingVolume 字段，从 transactionData.totalBoughtValue 获取
+            tradingVolume: walletResult.transactionData?.totalBoughtValue || 0,
+            // 添加其他兼容字段
+            totalBalance: walletResult.tokensValue || 0,
+            transactionCount: walletResult.transactionData?.buyTransactionsCount || 0,
+            estimatedPoints: walletResult.points || 0,
+            tradingLoss: walletResult.transactionData?.allTransactionLossValue || 0,
+            gasLoss: walletResult.transactionData?.allGasLossValue || 0
+          }
           : w
       ))
 
@@ -293,9 +313,9 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
       setWalletData(prev => prev.map(w =>
         w.address === walletAddress
           ? {
-              ...w,
-              error: error instanceof Error ? error.message : '重试失败'
-            }
+            ...w,
+            error: error instanceof Error ? error.message : '重试失败'
+          }
           : w
       ))
 
@@ -306,7 +326,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
   // 导入钱包逻辑
   const handleImportWallets = useCallback(() => {
     if (!walletInput.trim()) return
-    
+
     const lines = walletInput.trim().split('\n').filter(line => line.trim())
     const newWallets: Wallet[] = []
     let validCount = 0
@@ -337,7 +357,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
       }
 
       const isDuplicate = wallets.some(w => w.address.toLowerCase() === address.toLowerCase()) ||
-                         newWallets.some(w => w.address.toLowerCase() === address.toLowerCase())
+        newWallets.some(w => w.address.toLowerCase() === address.toLowerCase())
 
       if (isDuplicate) {
         duplicateCount++
@@ -381,8 +401,8 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
   const saveEditWallet = useCallback(() => {
     if (!editingWallet) return
 
-    setWallets(prev => prev.map(w => 
-      w.address === editingWallet 
+    setWallets(prev => prev.map(w =>
+      w.address === editingWallet
         ? { address: editingAddress, note: editingNote }
         : w
     ))
@@ -424,7 +444,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
         textArea.select()
         const success = document.execCommand("copy")
         document.body.removeChild(textArea)
-        
+
         if (success) {
           showToast('地址已复制', 'success')
         } else {
@@ -457,11 +477,13 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
 
     // 设置选中的钱包地址和交易数据
     setSelectedWalletAddress(address)
-    setSelectedWalletTransactions(wallet.transactionData.buyTransactions.map(tx => ({
-      ...tx,
-      buySymbol: tx.pairLabel.split('/')[0],
-      sellSymbol: tx.pairLabel.split('/')[1]
-    })))
+    setSelectedWalletTransactions(
+      wallet.transactionData.buyTransactions.map(tx => ({
+        ...tx,
+        buySymbol: tx.pairLabel.split('/')[0],
+        sellSymbol: tx.pairLabel.split('/')[1]
+      }))
+    )
     setTransactionModalOpen(true)
   }, [walletData, showToast])
 
@@ -520,20 +542,19 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50 to-emerald-50">
       <div className="max-w-7xl mx-auto px-6 py-8">
-      {/* Toast 组件 */}
-      {toast.show && (
-        <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border ${
-          toast.type === 'success' ? 'bg-green-50 border-green-200 text-green-800' :
-          toast.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' :
-          toast.type === 'warning' ? 'bg-yellow-50 border-yellow-200 text-yellow-800' :
-          'bg-blue-50 border-blue-200 text-blue-800'
-        }`}>
-          {toast.title && <h4 className="font-medium mb-1">{toast.title}</h4>}
-          <p className="text-sm">{toast.message}</p>
+        {/* Toast 组件 */}
+        {toast.show && (
+          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border ${toast.type === 'success' ? 'bg-green-50 border-green-200 text-green-800' :
+            toast.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' :
+              toast.type === 'warning' ? 'bg-yellow-50 border-yellow-200 text-yellow-800' :
+                'bg-blue-50 border-blue-200 text-blue-800'
+            }`}>
+            {toast.title && <h4 className="font-medium mb-1">{toast.title}</h4>}
+            <p className="text-sm">{toast.message}</p>
           </div>
-      )}
+        )}
 
-              {/* 页面标题和基本控制 */}
+        {/* 页面标题和基本控制 */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <Button
@@ -553,18 +574,18 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
           {/* 查询日期设置 */}
           <div className="flex items-center gap-4 mb-6">
             <label className="text-sm font-medium text-gray-700">查询日期 (UTC):</label>
-            <Input 
-              type="date" 
-              value={selectedDate} 
-              onChange={handleDateChange} 
-              className="w-40" 
+            <Input
+              type="date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              className="w-40"
               disabled={isQuerying}
             />
             <span className="text-xs text-gray-500">
               每日8:00-次日7:59 (UTC+8)
             </span>
           </div>
-                    
+
           {/* 主要操作按钮 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <Button
@@ -574,7 +595,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
             >
               钱包管理 ({wallets.length})
             </Button>
-            
+
             <Button
               className="bg-green-500 hover:bg-green-600 text-white py-3 text-base font-medium flex items-center justify-center gap-2"
               onClick={handleBatchQuery}
@@ -597,13 +618,13 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
         {/* 总数据统计 */}
         {walletData.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-lg font-normal mb-4">链上数据统计</h2>
+            <h2 className="text-lg font-normal mb-4">链上数据统计 <span className="text-sm text-gray-500 font-light">（所有金额均以USDT计价）</span></h2>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <Card>
                 <CardContent className="p-4">
                   <div className="text-sm text-gray-600 mb-1 font-light">总余额</div>
                   <div className="text-xl font-normal text-green-600">
-                    ${totalStats.totalBalance.toFixed(2)}
+                    {totalStats.totalBalance.toFixed(2)}
                   </div>
                 </CardContent>
               </Card>
@@ -619,15 +640,15 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                 <CardContent className="p-4">
                   <div className="text-sm text-gray-600 mb-1 font-light">交易额</div>
                   <div className="text-xl font-normal text-blue-600">
-                    ${walletData.reduce((sum, w) => sum + (w.transactionData?.totalBoughtValue || 0), 0).toFixed(2)}
+                    {walletData.reduce((sum, w) => sum + (w.transactionData?.totalBoughtValue || 0), 0).toFixed(2)}
                   </div>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="p-4">
-                  <div className="text-sm text-gray-600 mb-1 font-light">总磨损(USDT)</div>
+                  <div className="text-sm text-gray-600 mb-1 font-light">总磨损</div>
                   <div className="text-xl font-normal text-red-500">
-                    ${walletData.reduce((sum, w) => sum + Math.abs(w.transactionData?.allTransactionLossValue || 0), 0).toFixed(2)}
+                    {walletData.reduce((sum, w) => sum + Math.abs(w.transactionData?.allTransactionLossValue || 0) + Math.abs(w.transactionData?.allGasLossValue || 0), 0).toFixed(2)}
                   </div>
                 </CardContent>
               </Card>
@@ -650,8 +671,8 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
               <Loader2 className="w-12 h-12 animate-spin text-green-500" />
               <h3 className="text-xl font-normal text-gray-700">正在查询钱包数据...</h3>
               <p className="text-gray-500">
-              正在分析 {wallets.length} 个钱包在 {selectedDate} 的余额数据，请稍候
-            </p>
+                正在分析 {wallets.length} 个钱包在 {selectedDate} 的余额数据，请稍候
+              </p>
             </div>
           </div>
         )}
@@ -724,7 +745,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
               </div>
             </div>
 
-          {/* 表格视图 */}
+            {/* 表格视图 */}
             {viewMode === "table" ? (
               <Card>
                 <CardContent className="p-0">
@@ -732,38 +753,38 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                     <table className="w-full">
                       <thead className="bg-gray-50">
                         <tr>
-                          <th className="text-left py-3 px-4 font-normal text-gray-700">钱包地址</th>
-                          <th className="text-left py-3 px-4 font-normal text-gray-700">备注</th>
-                          <th 
-                            className="text-left py-3 px-4 font-normal text-gray-700 cursor-pointer hover:bg-gray-100"
+                          <th className="text-center py-3 px-4 font-normal text-gray-700">钱包地址</th>
+                          <th className="text-center py-3 px-4 font-normal text-gray-700">备注</th>
+                          <th
+                            className="text-center py-3 px-4 font-normal text-gray-700 cursor-pointer hover:bg-gray-100"
                             onClick={() => handleSort("balance")}
                           >
-                            <div className="flex items-center gap-1">
-                              当天余额 (USDT)
+                            <div className="flex items-center justify-center gap-1">
+                              当天余额
                               <ArrowUpDown className="h-4 w-4" />
                               {sortBy === "balance" && (
                                 <span className="text-blue-500">{sortDirection === "asc" ? "↑" : "↓"}</span>
                               )}
                             </div>
                           </th>
-                          <th 
-                            className="text-left py-3 px-4 font-normal text-gray-700 cursor-pointer hover:bg-gray-100"
+                          <th
+                            className="text-center py-3 px-4 font-normal text-gray-700 cursor-pointer hover:bg-gray-100"
                             onClick={() => handleSort("volume")}
                           >
-                            <div className="flex items-center gap-1">
-                              交易额 (USDT)
+                            <div className="flex items-center justify-center gap-1">
+                              交易额
                               <ArrowUpDown className="h-4 w-4" />
                               {sortBy === "volume" && (
                                 <span className="text-blue-500">{sortDirection === "asc" ? "↑" : "↓"}</span>
                               )}
                             </div>
                           </th>
-                          <th className="text-left py-3 px-4 font-normal text-gray-700">有效交易次数</th>
-                          <th 
-                            className="text-left py-3 px-4 font-normal text-gray-700 cursor-pointer hover:bg-gray-100"
+                          <th className="text-center py-3 px-4 font-normal text-gray-700">距下一级所需交易量</th>
+                          <th
+                            className="text-center py-3 px-4 font-normal text-gray-700 cursor-pointer hover:bg-gray-100"
                             onClick={() => handleSort("points")}
                           >
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center justify-center gap-1">
                               预估总积分
                               <ArrowUpDown className="h-4 w-4" />
                               {sortBy === "points" && (
@@ -771,26 +792,26 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                               )}
                             </div>
                           </th>
-                          <th 
-                            className="text-left py-3 px-4 font-normal text-gray-700 cursor-pointer hover:bg-gray-100"
+                          <th
+                            className="text-center py-3 px-4 font-normal text-gray-700 cursor-pointer hover:bg-gray-100"
                             onClick={() => handleSort("loss")}
                           >
-                            <div className="flex items-center gap-1">
-                              磨损明细 (USDT)
+                            <div className="flex items-center justify-center gap-1">
+                              磨损明细
                               <ArrowUpDown className="h-4 w-4" />
                               {sortBy === "loss" && (
                                 <span className="text-blue-500">{sortDirection === "asc" ? "↑" : "↓"}</span>
                               )}
                             </div>
                           </th>
-                          <th className="text-left py-3 px-4 font-normal text-gray-700">操作</th>
+                          <th className="text-center py-3 px-4 font-normal text-gray-700">操作</th>
                         </tr>
                       </thead>
                       <tbody>
                         {sortedWallets.map((wallet) => (
                           <tr key={wallet.address} className="border-b hover:bg-gray-50">
-                            <td className="py-3 px-4">
-                              <div className="flex items-center gap-2">
+                            <td className="py-3 px-4 text-center">
+                              <div className="flex items-center justify-center gap-2">
                                 <span className="font-mono text-sm font-light">{truncateAddress(wallet.address)}</span>
                                 <Button
                                   variant="ghost"
@@ -807,41 +828,66 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                                 </Button>
                               </div>
                             </td>
-                            <td className="py-3 px-4 text-sm font-light">{wallet.note || '-'}</td>
-                            <td className="py-3 px-4">
+                            <td className="py-3 px-4 text-sm font-light text-center">{wallet.note || '-'}</td>
+                            <td className="py-3 px-4 text-center">
                               <span className="text-green-600 font-normal">
-                                ${wallet.tokensValue.toFixed(2)}
+                                {wallet.tokensValue.toFixed(2)}
                               </span>
                             </td>
-                            <td className="py-3 px-4">
-                              <span className="text-blue-600 font-normal">
-                                ${wallet.transactionData?.totalBoughtValue.toFixed(2) || "0.00"}
-                              </span>
+                            <td className="py-3 px-4 text-center">
+                              <div className="flex flex-col items-center">
+                                <span className="text-blue-600 font-normal text-base">
+                                  {wallet.transactionData?.totalBoughtValue.toFixed(2) || "0.00"}
+                                </span>
+                                <div className="text-xs text-gray-500 mt-1">
+                                  有效交易: {wallet.transactionData?.buyTransactionsCount || 0}次
+                                </div>
+                              </div>
                             </td>
-                            <td className="py-3 px-4 font-light">
-                              {wallet.transactionData?.buyTransactionsCount || 0}
+                            <td className="py-3 px-4 text-center">
+                              {(() => {
+                                const currentVolume = wallet.transactionData?.totalBoughtValue || 0
+                                const remainingVolume = Points.calculateRemainingVolumeForNextLevel(currentVolume)
+                                const nextLevelThreshold = Points.getNextLevelThreshold(currentVolume)
+
+                                // BSC链有2倍加成，所以BSC链需要的交易量是总需求的一半
+                                const bscNeeded = Math.ceil(remainingVolume / 2)
+                                const otherChainNeeded = Math.ceil(remainingVolume)
+                                const nextLevel = Math.ceil(nextLevelThreshold)
+
+                                return (
+                                  <div className="flex flex-col items-center">
+                                    <div className="text-base font-medium text-gray-800">
+                                      BSC: {bscNeeded} | 其他: {otherChainNeeded}
+                                    </div>
+                                    <div className="text-xs text-gray-500 mt-1">
+                                      下一级: {nextLevel}
+                                    </div>
+                                  </div>
+                                )
+                              })()}
                             </td>
-                            <td className="py-3 px-4">
-                              <div className="flex flex-col">
-                                <span className="text-purple-600 font-normal text-lg">{wallet.points || 0}分</span>
+                            <td className="py-3 px-4 text-center">
+                              <div className="flex flex-col items-center">
+                                <span className="text-purple-600 font-normal text-base">{wallet.points || 0}分</span>
                                 <div className="text-xs text-gray-500 mt-1">
                                   <div>余额积分: {wallet.balancePoints || 0}分</div>
                                   <div>交易积分: {wallet.volumePoints || 0}分</div>
                                 </div>
                               </div>
                             </td>
-                            <td className="py-3 px-4">
-                              <div className="flex flex-col">
-                                <span className="text-red-500 font-normal">
-                                  ${(Math.abs(wallet.transactionData?.allTransactionLossValue || 0) + Math.abs(wallet.transactionData?.allGasLossValue || 0)).toFixed(2)}
+                            <td className="py-3 px-4 text-center">
+                              <div className="flex flex-col items-center">
+                                <span className="text-red-500 font-normal text-base">
+                                  {(Math.abs(wallet.transactionData?.allTransactionLossValue || 0) + Math.abs(wallet.transactionData?.allGasLossValue || 0)).toFixed(2)}
                                 </span>
                                 <div className="text-xs text-gray-500 mt-1">
-                                  <div>交易磨损: ${Math.abs(wallet.transactionData?.allTransactionLossValue || 0).toFixed(2)}</div>
-                                  <div>Gas磨损: ${Math.abs(wallet.transactionData?.allGasLossValue || 0).toFixed(2)}</div>
+                                  <div>交易磨损: {Math.abs(wallet.transactionData?.allTransactionLossValue || 0).toFixed(2)}</div>
+                                  <div>Gas磨损: {Math.abs(wallet.transactionData?.allGasLossValue || 0).toFixed(2)}</div>
                                 </div>
                               </div>
                             </td>
-                            <td className="py-3 px-4">
+                            <td className="py-3 px-4 text-center">
                               {wallet.error ? (
                                 <Button
                                   size="sm"
@@ -901,19 +947,40 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                           <div>
                             <div className="text-gray-600 font-light">当天余额</div>
                             <div className="text-green-600 font-normal">
-                              ${wallet.tokensValue.toFixed(2)}
+                              {wallet.tokensValue.toFixed(2)}
                             </div>
                           </div>
                           <div>
                             <div className="text-gray-600 font-light">交易额</div>
-                            <div className="text-blue-600 font-normal">${wallet.transactionData?.totalBoughtValue.toFixed(2) || "0.00"}</div>
+                            <div className="text-blue-600 font-normal">{wallet.transactionData?.totalBoughtValue.toFixed(2) || "0.00"}</div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              有效交易: {wallet.transactionData?.buyTransactionsCount || 0}次
+                            </div>
                           </div>
                         </div>
 
                         <div className="grid grid-cols-3 gap-3">
                           <div>
-                            <div className="text-gray-600 font-light">有效交易</div>
-                            <div className="font-normal">{wallet.transactionData?.buyTransactionsCount || 0}</div>
+                            <div className="text-gray-600 font-light">距下一级所需交易量</div>
+                            {(() => {
+                              const currentVolume = wallet.transactionData?.totalBoughtValue || 0
+                              const remainingVolume = Points.calculateRemainingVolumeForNextLevel(currentVolume)
+                              const nextLevelThreshold = Points.getNextLevelThreshold(currentVolume)
+                              const bscNeeded = Math.ceil(remainingVolume / 2)
+                              const otherChainNeeded = Math.ceil(remainingVolume)
+                              const nextLevel = Math.ceil(nextLevelThreshold)
+
+                              return (
+                                <div>
+                                  <div className="text-sm font-medium text-gray-800">
+                                    BSC: {bscNeeded} | 其他: {otherChainNeeded}
+                                  </div>
+                                  <div className="text-xs text-gray-500 mt-1">
+                                    下一级: {nextLevel}
+                                  </div>
+                                </div>
+                              )
+                            })()}
                           </div>
                           <div>
                             <div className="text-gray-600 font-light">预估总积分</div>
@@ -926,11 +993,11 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                           <div>
                             <div className="text-gray-600 font-light">磨损明细</div>
                             <div className="text-red-500 font-normal">
-                              ${(Math.abs(wallet.transactionData?.allTransactionLossValue || 0) + Math.abs(wallet.transactionData?.allGasLossValue || 0)).toFixed(2)}
+                              {(Math.abs(wallet.transactionData?.allTransactionLossValue || 0) + Math.abs(wallet.transactionData?.allGasLossValue || 0)).toFixed(2)}
                             </div>
                             <div className="text-xs text-gray-500">
-                              <div>交易磨损: ${Math.abs(wallet.transactionData?.allTransactionLossValue || 0).toFixed(2)}</div>
-                              <div>Gas磨损: ${Math.abs(wallet.transactionData?.allGasLossValue || 0).toFixed(2)}</div>
+                              <div>交易磨损: {Math.abs(wallet.transactionData?.allTransactionLossValue || 0).toFixed(2)}</div>
+                              <div>Gas磨损: {Math.abs(wallet.transactionData?.allGasLossValue || 0).toFixed(2)}</div>
                             </div>
                           </div>
                         </div>
@@ -1139,6 +1206,172 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
 
 
 
+        {/* 交易统计规则说明弹窗 */}
+        <Dialog open={rulesModalOpen} onOpenChange={setRulesModalOpen}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-normal">交易统计规则说明</DialogTitle>
+            </DialogHeader>
+
+            <div className="space-y-6 text-sm">
+              {/* 概述 */}
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h3 className="font-medium text-blue-800 mb-2">📊 统计概述</h3>
+                <p className="text-blue-700">
+                  本系统基于币安Alpha项目的积分规则，对钱包的代币余额、交易活动进行分析，
+                  计算预估积分并提供升级指导。所有金额均以USDT计价。
+                </p>
+              </div>
+
+              {/* 有效交易识别 */}
+              <div>
+                <h3 className="font-medium text-gray-800 mb-3">🔍 有效交易识别规则</h3>
+                <div className="space-y-3">
+                  <div className="bg-gray-50 p-3 rounded">
+                    <h4 className="font-medium text-gray-700 mb-2">1. 交易对过滤</h4>
+                    <p className="text-gray-600 mb-2">只统计以下交易对的交易：</p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-1 ml-4">
+                      <li>USDT ↔ ZKJ</li>
+                      <li>USDT ↔ KOGE</li>
+                      <li>ZKJ ↔ KOGE</li>
+                      <li>其他配置中指定的交易对</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-gray-50 p-3 rounded">
+                    <h4 className="font-medium text-gray-700 mb-2">2. 交易方向识别</h4>
+                    <p className="text-gray-600 mb-2">
+                      <span className="font-medium text-green-600">只有买入交易</span> 被计入有效交易统计：
+                    </p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-1 ml-4">
+                      <li>买入交易：使用USDT购买代币，或用一种代币换取另一种代币</li>
+                      <li>卖出交易：将代币换回USDT（不计入有效交易）</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-gray-50 p-3 rounded">
+                    <h4 className="font-medium text-gray-700 mb-2">3. 未完成交易处理</h4>
+                    <p className="text-gray-600 mb-2">系统智能识别未完成的交易：</p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-1 ml-4">
+                      <li>如果最后一笔是买入交易，且买入笔数 大于 卖出笔数</li>
+                      <li>则忽略最后一笔买入交易（视为未完成的交易对）</li>
+                      <li>只计算完整配对的交易磨损</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* 交易量计算 */}
+              <div>
+                <h3 className="font-medium text-gray-800 mb-3">💰 交易量计算规则</h3>
+                <div className="space-y-3">
+                  <div className="bg-yellow-50 p-3 rounded border border-yellow-200">
+                    <h4 className="font-medium text-yellow-800 mb-2">基础计算公式</h4>
+                    <p className="text-yellow-700 font-mono text-sm bg-yellow-100 p-2 rounded">
+                      有效交易量 = 买入交易的USDT价值 × 链加成倍数
+                    </p>
+                  </div>
+
+                  <div className="bg-orange-50 p-3 rounded border border-orange-200">
+                    <h4 className="font-medium text-orange-800 mb-2">BSC链加成规则</h4>
+                    <ul className="list-disc list-inside text-orange-700 space-y-1 ml-4">
+                      <li><span className="font-medium">BSC链：2倍加成</span> - 每1USDT交易量计为2USDT</li>
+                      <li><span className="font-medium">其他链：1倍</span> - 按实际交易量计算</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* 积分计算 */}
+              <div>
+                <h3 className="font-medium text-gray-800 mb-3">🏆 积分计算规则</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-green-50 p-3 rounded border border-green-200">
+                    <h4 className="font-medium text-green-800 mb-2">余额积分</h4>
+                    <div className="text-green-700 space-y-1">
+                      <p>基于当天代币总价值（USDT）：</p>
+                      <ul className="list-disc list-inside ml-4 text-sm">
+                        <li>≥100,000: 4分</li>
+                        <li>10,000-99,999: 3分</li>
+                        <li>1,000-9,999: 2分</li>
+                        <li>100-999: 1分</li>
+                        <li>&lt;100: 0分</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="bg-purple-50 p-3 rounded border border-purple-200">
+                    <h4 className="font-medium text-purple-800 mb-2">交易积分</h4>
+                    <div className="text-purple-700 space-y-1">
+                      <p>基于有效交易量（含BSC加成）：</p>
+                      <ul className="list-disc list-inside ml-4 text-sm">
+                        <li>使用对数计算：log₂(交易量)</li>
+                        <li>2USDT→1分, 4USDT→2分</li>
+                        <li>8USDT→3分, 16USDT→4分</li>
+                        <li>BSC链自动享受2倍加成</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 磨损计算 */}
+              <div>
+                <h3 className="font-medium text-gray-800 mb-3">📉 磨损计算规则</h3>
+                <div className="space-y-3">
+                  <div className="bg-red-50 p-3 rounded border border-red-200">
+                    <h4 className="font-medium text-red-800 mb-2">交易磨损</h4>
+                    <p className="text-red-700 mb-2">基于实际USDT流入流出计算：</p>
+                    <p className="text-red-700 font-mono text-sm bg-red-100 p-2 rounded">
+                      交易磨损 = 花费的USDT - 得到的USDT
+                    </p>
+                    <ul className="list-disc list-inside text-red-700 text-sm mt-2 ml-4">
+                      <li>买入时花费的USDT（sold.usdAmount的绝对值）</li>
+                      <li>卖出时得到的USDT（bought.usdAmount）</li>
+                      <li>忽略未完成交易的买入部分</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-orange-50 p-3 rounded border border-orange-200">
+                    <h4 className="font-medium text-orange-800 mb-2">Gas费磨损</h4>
+                    <p className="text-orange-700 font-mono text-sm bg-orange-100 p-2 rounded">
+                      Gas磨损 = 交易笔数 × 平均Gas费（USDT）
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 升级指导 */}
+              <div>
+                <h3 className="font-medium text-gray-800 mb-3">🎯 升级指导说明</h3>
+                <div className="bg-indigo-50 p-3 rounded border border-indigo-200">
+                  <h4 className="font-medium text-indigo-800 mb-2">距下一级所需交易量</h4>
+                  <div className="text-indigo-700 space-y-2">
+                    <p><span className="font-medium">BSC链需求</span>：由于有2倍加成，实际需要的交易量是显示值的一半</p>
+                    <p><span className="font-medium">其他链需求</span>：需要完整的交易量，无加成</p>
+                    <p><span className="font-medium">下一级门槛</span>：达到下个积分等级需要的总交易量</p>
+                    <p className="text-sm bg-indigo-100 p-2 rounded">
+                      💡 建议：优先在BSC链上交易，可以用一半的成本达到相同的积分效果
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 注意事项 */}
+              <div className="bg-gray-50 p-4 rounded border">
+                <h3 className="font-medium text-gray-800 mb-2">⚠️ 重要说明</h3>
+                <ul className="list-disc list-inside text-gray-600 space-y-1">
+                  <li>所有计算基于查询日期当天的数据快照</li>
+                  <li>积分计算仅供参考，实际积分以官方为准</li>
+                  <li>交易时间按UTC+8（北京时间）显示</li>
+                  <li>系统会自动过滤无效和测试交易</li>
+                  <li>数据更新可能有延迟，建议定期重新查询</li>
+                </ul>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         {/* 交易详情弹窗 */}
         <Dialog open={transactionModalOpen} onOpenChange={setTransactionModalOpen}>
           <DialogContent className="max-w-5xl">
@@ -1192,7 +1425,7 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                       <td className="p-3 font-mono text-sm text-center">
                         {Number(Math.abs(Number(tx.sellAmount))).toFixed(2)} {tx.sellSymbol} → {Number(tx.buyAmount).toFixed(2)} {tx.buySymbol}
                       </td>
-                      <td className="p-3 font-mono text-sm text-center">${tx.totalValueUsd.toFixed(2)}</td>
+                      <td className="p-3 font-mono text-sm text-center">{tx.totalValueUsd.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>

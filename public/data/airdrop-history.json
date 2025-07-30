@@ -1051,31 +1051,31 @@
     "currentPrice": "1.2",
     "phase1Points": "233",
     "phase2Points": "200",
-    "startTime": "2025-07-29 20:00",
-    "phase1EndTime": "2025-07-30 14:00",
-    "phase2EndTime": "2025-07-30 20:00",
     "type": "alpha"
   },
   {
     "date": "2025年07月30日",
     "token": "GAIA",
     "participants": null,
-    "amount": "-",
+    "amount": "500",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-07-30",
+    "currentPrice": "0.1",
+    "phase1Points": "233",
+    "phase2Points": "200",
+    "startTime": "2025-07-30 16:00",
+    "phase1EndTime": "2025-07-31 10:00",
+    "phase2EndTime": "2025-07-31 16:00",
     "type": "alpha"
   },
   {
     "date": "2025年07月30日",
     "token": "RHEA",
     "participants": null,
-    "amount": "-",
+    "amount": "1000",
     "supplementaryToken": 0,
     "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-07-30",
+    "points": "200",
+    "startTime": "2025-07-30 21:30",
     "type": "alpha"
   },
   {
@@ -1098,6 +1098,17 @@
     "currentPrice": "-",
     "points": "-",
     "startTime": "2025-07-31 20:00",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年08月05日",
+    "token": "TOWNS",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-07-05",
     "type": "alpha"
   }
 ]

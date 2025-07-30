@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ArrowUpDown, ArrowUp, ArrowDown, Eye, RefreshCw, Copy, Loader2 } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Points } from "@/lib/features/points"
 import type { WalletData } from "@/types"
 
 interface DataTableProps {
@@ -22,7 +23,7 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
   const [searchQuery, setSearchQuery] = useState("")
   const [viewMode, setViewMode] = useState("table")
-  
+
   // 复制成功提示状态
   const [copyToast, setCopyToast] = useState<{
     show: boolean;
@@ -78,14 +79,14 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
 
   // 格式化数字
   const formatNumber = (num: number, decimals = 2) => {
-    return num.toLocaleString('en-US', { 
-      minimumFractionDigits: decimals, 
-      maximumFractionDigits: decimals 
+    return num.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
     })
   }
 
   // 搜索过滤
-  const filteredData = walletData.filter(wallet => 
+  const filteredData = walletData.filter(wallet =>
     wallet.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
     wallet.note?.toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -144,15 +145,31 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
     totalVolume: filteredData.reduce((sum, w) => sum + (w.tradingVolume || 0), 0),
     totalPoints: filteredData.reduce((sum, w) => sum + (w.estimatedPoints || 0), 0),
     totalTransactions: filteredData.reduce((sum, w) => sum + (w.transactionCount || 0), 0),
-    totalRevenue: filteredData.reduce((sum, w) => sum + (w.tradingLoss || w.revenue || 0), 0),
-    totalGas: filteredData.reduce((sum, w) => sum + (w.gasLoss || w.gasUsed || 0), 0),
+    totalRevenue: filteredData.reduce((sum, w) => sum + (w.tradingLoss || 0), 0),
+    totalGas: filteredData.reduce((sum, w) => sum + (w.gasLoss || 0), 0),
+    // 总磨损 = 各钱包磨损明细相加（每个钱包的磨损明细已经是交易磨损+Gas磨损）
+    totalLoss: filteredData.reduce((sum, w) => sum + ((w.tradingLoss || 0) + (w.gasLoss || 0)), 0),
   }
+
+  // 调试信息
+  console.log('磨损计算调试:', {
+    钱包数量: filteredData.length,
+    总交易磨损: totalStats.totalRevenue,
+    总Gas磨损: totalStats.totalGas,
+    总磨损: totalStats.totalLoss,
+    钱包详情: filteredData.map(w => ({
+      地址: w.address.slice(0, 10),
+      交易磨损: w.tradingLoss || w.revenue || 0,
+      Gas磨损: w.gasLoss || w.gasUsed || 0,
+      单个总磨损: (w.tradingLoss || w.revenue || 0) + (w.gasLoss || w.gasUsed || 0)
+    }))
+  })
 
   // 获取排序图标
   const getSortIcon = (column: string) => {
     if (sortBy !== column) return <ArrowUpDown className="w-3 h-3" />
-    return sortDirection === "asc" ? 
-      <ArrowUp className="w-3 h-3" /> : 
+    return sortDirection === "asc" ?
+      <ArrowUp className="w-3 h-3" /> :
       <ArrowDown className="w-3 h-3" />
   }
 
@@ -210,7 +227,7 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              
+
               {/* 排序选择 */}
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">排序:</span>
@@ -271,8 +288,8 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                 <div className="font-semibold">{totalStats.totalTransactions}次</div>
               </div>
               <div className="text-center">
-                <div className="text-sm text-gray-600">交易磨损</div>
-                <div className="font-semibold text-red-600">${formatNumber(totalStats.totalRevenue)}</div>
+                <div className="text-sm text-gray-600">总磨损</div>
+                <div className="font-semibold text-red-600">${formatNumber(totalStats.totalLoss)}</div>
               </div>
               <div className="text-center">
                 <div className="text-sm text-gray-600">Gas磨损</div>
@@ -289,9 +306,9 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                       <TableHead>钱包地址</TableHead>
                       <TableHead>备注</TableHead>
                       <TableHead>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           onClick={() => handleSort("balance")}
                           className="h-8 p-1"
                         >
@@ -299,9 +316,9 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                         </Button>
                       </TableHead>
                       <TableHead>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           onClick={() => handleSort("volume")}
                           className="h-8 p-1"
                         >
@@ -309,9 +326,9 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                         </Button>
                       </TableHead>
                       <TableHead>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           onClick={() => handleSort("transactions")}
                           className="h-8 p-1"
                         >
@@ -319,9 +336,9 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                         </Button>
                       </TableHead>
                       <TableHead>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           onClick={() => handleSort("points")}
                           className="h-8 p-1"
                         >
@@ -329,15 +346,16 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                         </Button>
                       </TableHead>
                       <TableHead>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           onClick={() => handleSort("revenue")}
                           className="h-8 p-1"
                         >
                           磨损明细 {getSortIcon("revenue")}
                         </Button>
                       </TableHead>
+                      <TableHead>距离期望 (USDT)</TableHead>
                       <TableHead>操作</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -397,6 +415,29 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                           </div>
                         </TableCell>
                         <TableCell>
+                          {(() => {
+                            const currentVolume = wallet.tradingVolume || 0
+                            const remainingVolume = Points.calculateRemainingVolumeForNextLevel(currentVolume)
+
+                            return (
+                              <div className="text-right">
+                                {remainingVolume > 0 ? (
+                                  <>
+                                    <div className="font-medium text-orange-600">
+                                      ${formatNumber(remainingVolume)}
+                                    </div>
+                                    <div className="text-xs text-gray-500">
+                                      还需交易量
+                                    </div>
+                                  </>
+                                ) : (
+                                  <div className="font-medium text-green-600">已达到</div>
+                                )}
+                              </div>
+                            )
+                          })()}
+                        </TableCell>
+                        <TableCell>
                           <div className="flex gap-1">
                             {wallet.error ? (
                               <div className="flex items-center gap-2">
@@ -454,7 +495,7 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                           </div>
                           <Badge variant="outline">{wallet.note}</Badge>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-2 text-sm">
                           <div>
                             <div className="text-gray-600">余额</div>
@@ -473,6 +514,25 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
                             <div className="font-medium text-red-600">
                               ${formatNumber((wallet.tradingLoss || wallet.revenue || 0) + (wallet.gasLoss || wallet.gasUsed || 0))}
                             </div>
+                          </div>
+                          <div>
+                            <div className="text-gray-600">距离期望</div>
+                            {(() => {
+                              const currentVolume = wallet.tradingVolume || 0
+                              const remainingVolume = Points.calculateRemainingVolumeForNextLevel(currentVolume)
+
+                              return remainingVolume > 0 ? (
+                                <div className="font-medium text-orange-600">
+                                  ${formatNumber(remainingVolume)}
+                                </div>
+                              ) : (
+                                <div className="font-medium text-green-600">已达到</div>
+                              )
+                            })()}
+                          </div>
+                          <div>
+                            <div className="text-gray-600">有效交易</div>
+                            <div className="font-medium">{wallet.transactionCount || 0}次</div>
                           </div>
                         </div>
 
@@ -526,10 +586,9 @@ export function DataTable({ walletData, onViewTransactions, onRetryWallet, isQue
 
       {/* 复制成功提示 */}
       {copyToast.show && (
-        <div 
-          className={`fixed z-[9999] px-3 py-2 rounded-md shadow-lg text-white text-sm font-medium transition-all duration-300 pointer-events-none ${
-            copyToast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-          }`}
+        <div
+          className={`fixed z-[9999] px-3 py-2 rounded-md shadow-lg text-white text-sm font-medium transition-all duration-300 pointer-events-none ${copyToast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            }`}
           style={{
             left: `${copyToast.position.x}px`,
             top: `${copyToast.position.y}px`,
