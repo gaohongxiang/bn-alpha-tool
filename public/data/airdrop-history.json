@@ -1088,11 +1088,14 @@
     "date": "2025年07月31日",
     "token": "NAORIS",
     "participants": null,
-    "amount": "-",
+    "amount": "500",
     "supplementaryToken": 0,
     "currentPrice": "-",
-    "points": "-",
+    "phase1Points": "228",
+    "phase2Points": "200",
     "startTime": "2025-07-31 20:00",
+    "phase1EndTime": "2025-08-01 14:00",
+    "phase2EndTime": "2025-08-01 20:00",
     "type": "alpha"
   },
   {
