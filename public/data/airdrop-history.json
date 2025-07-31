@@ -1062,9 +1062,6 @@
     "currentPrice": "0.1",
     "phase1Points": "233",
     "phase2Points": "200",
-    "startTime": "2025-07-30 16:00",
-    "phase1EndTime": "2025-07-31 10:00",
-    "phase2EndTime": "2025-07-31 16:00",
     "type": "alpha"
   },
   {
@@ -1081,11 +1078,10 @@
     "date": "2025年07月31日",
     "token": "PLAY",
     "participants": null,
-    "amount": "-",
+    "amount": "1600",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-07-31 16:00",
+    "currentPrice": "0.033",
+    "points": "200",
     "type": "alpha"
   },
   {
@@ -1097,6 +1093,17 @@
     "currentPrice": "-",
     "points": "-",
     "startTime": "2025-07-31 20:00",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年08月02日",
+    "token": "AIO",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-08-02",
     "type": "alpha"
   },
   {
