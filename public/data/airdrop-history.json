@@ -1090,12 +1090,29 @@
     "participants": null,
     "amount": "500",
     "supplementaryToken": 0,
-    "currentPrice": "-",
+    "currentPrice": "0.1",
     "phase1Points": "228",
     "phase2Points": "200",
-    "startTime": "2025-07-31 20:00",
-    "phase1EndTime": "2025-08-01 14:00",
-    "phase2EndTime": "2025-08-01 20:00",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年08月01日",
+    "token": "MIA",
+    "participants": null,
+    "amount": "500",
+    "supplementaryToken": 0,
+    "currentPrice": "0.06",
+    "points": "200",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年08月01日",
+    "token": "TOSHI",
+    "participants": null,
+    "amount": "69349",
+    "supplementaryToken": 0,
+    "currentPrice": "0.0005",
+    "points": "200",
     "type": "alpha"
   },
   {
@@ -1107,6 +1124,17 @@
     "currentPrice": "-",
     "points": "-",
     "startTime": "2025-08-02",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年08月03日",
+    "token": "MM",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-08-03",
     "type": "alpha"
   },
   {
