@@ -1129,11 +1129,10 @@
     "date": "2025年08月03日",
     "token": "MM",
     "participants": null,
-    "amount": "-",
+    "amount": "24000",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-08-03",
+    "currentPrice": "$0.00148",
+    "points": "200",
     "type": "alpha"
   },
   {
