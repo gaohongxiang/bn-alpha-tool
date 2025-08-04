@@ -1139,22 +1139,20 @@
     "date": "2025年08月04日",
     "token": "CYC",
     "participants": null,
-    "amount": "-",
+    "amount": "800",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-08-04",
+    "currentPrice": "$0.06",
+    "points": "200",
     "type": "alpha"
   },
   {
     "date": "2025年08月04日",
-    "token": "DARK",
+    "token": "DARKSTAR",
     "participants": null,
-    "amount": "-",
+    "amount": "1000",
     "supplementaryToken": 0,
-    "currentPrice": "-",
-    "points": "-",
-    "startTime": "2025-08-04",
+    "currentPrice": "$0.056",
+    "points": "200",
     "type": "alpha"
   },
   {
@@ -1166,6 +1164,28 @@
     "currentPrice": "-",
     "points": "-",
     "startTime": "2025-08-05",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年08月05日",
+    "token": "PROVE",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-08-05",
+    "type": "alpha"
+  },
+  {
+    "date": "2025年08月06日",
+    "token": "FIR",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-08-06",
     "type": "alpha"
   }
 ]
