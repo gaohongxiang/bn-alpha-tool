@@ -1178,6 +1178,17 @@
     "type": "alpha"
   },
   {
+    "date": "2025年08月05日",
+    "token": "SUP",
+    "participants": null,
+    "amount": "-",
+    "supplementaryToken": 0,
+    "currentPrice": "-",
+    "points": "-",
+    "startTime": "2025-08-05",
+    "type": "alpha"
+  },
+  {
     "date": "2025年08月06日",
     "token": "FIR",
     "participants": null,
