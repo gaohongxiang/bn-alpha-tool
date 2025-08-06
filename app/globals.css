@@ -82,6 +82,18 @@
     line-height: 1.4;
     letter-spacing: -0.01em;
   }
+
+  /* 优化 placeholder 颜色，让它更淡 */
+  input::placeholder,
+  textarea::placeholder {
+    color: hsl(var(--muted-foreground) / 0.5);
+  }
+
+  /* 确保在深色模式下也有合适的 placeholder 颜色 */
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: hsl(var(--muted-foreground) / 0.4);
+  }
 }
 
 /* Toast动画 */

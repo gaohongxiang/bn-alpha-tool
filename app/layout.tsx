@@ -1,4 +1,5 @@
 import { ErrorBoundary } from '@/components/layout/error-boundary'
+import { Toaster } from '@/components/ui/toaster'
 import { Metadata } from 'next'
 import './globals.css'
 
@@ -89,6 +90,7 @@ export default function RootLayout({
         <ErrorBoundary>
           {children}
         </ErrorBoundary>
+        <Toaster />
       </body>
     </html>
   )
