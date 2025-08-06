@@ -7,7 +7,7 @@ import { CurrentAirdrops } from "./current-airdrops"
 import { HistoryChart } from "./history-chart"
 import { HistoryTable } from "./history-table"
 import type { AirdropItem, AirdropHistoryItem, CurrentAirdropItem } from "@/types/airdrop"
-import { calculateCurrentValue, calculateRevenue, normalizeNumericField } from "@/lib/features/airdrop"
+import { calculateCurrentValue, calculateRevenue, normalizeNumericField, parseUTC8Time } from "@/lib/features/airdrop"
 
 export function AirdropHistory() {
   const [activeView, setActiveView] = useState("chart") // 默认显示历史曲线
@@ -56,9 +56,16 @@ export function AirdropHistory() {
   }, [loadAirdropData])
 
   // 从合并的数据中分离当前空投和历史数据
-  const currentAirdrops: CurrentAirdropItem[] = useMemo(() =>
-    allData.filter(item => item.startTime) as CurrentAirdropItem[]
-    , [allData])
+  const currentAirdrops: CurrentAirdropItem[] = useMemo(() => {
+    return allData
+      .filter(item => item.startTime) as CurrentAirdropItem[]
+      .sort((a, b) => {
+        // 使用现有的parseUTC8Time函数解析时间，早的在前面
+        const timeA = parseUTC8Time(a.startTime)
+        const timeB = parseUTC8Time(b.startTime)
+        return timeA.getTime() - timeB.getTime() // 升序：早的在前面
+      })
+  }, [allData])
 
   const historyRawData: AirdropItem[] = useMemo(() =>
     allData.filter(item => !item.startTime)
