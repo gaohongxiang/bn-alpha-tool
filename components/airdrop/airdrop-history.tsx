@@ -21,7 +21,7 @@ export function AirdropHistory() {
       setLoading(true)
       setError(null)
 
-      const response = await fetch('/api/airdrop')
+      const response = await fetch(`/api/airdrop?t=${Date.now()}`)
       const result = await response.json()
 
       if (result.success && result.data) {
@@ -97,7 +97,21 @@ export function AirdropHistory() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* 当前空投信息 */}
-        <CurrentAirdrops currentAirdrops={currentAirdrops} />
+        <CurrentAirdrops
+          currentAirdrops={currentAirdrops}
+          onRefresh={loadAirdropData}
+          loading={loading}
+        />
+
+        {/* 错误提示 */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+            <div className="flex items-center gap-2">
+              <span>⚠️</span>
+              <span>{error}</span>
+            </div>
+          </div>
+        )}
 
         <Card className="shadow-2xl border border-purple-100/50 bg-gradient-to-br from-white via-purple-50/30 to-pink-50/20 backdrop-blur-sm">
           <CardHeader className="p-0">

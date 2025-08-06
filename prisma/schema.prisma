@@ -11,29 +11,35 @@ datasource db {
 }
 
 // 空投数据模型
+// 注意：Prisma目前在schema中不直接支持CHECK约束的表示，
+// 但可以通过Prisma Migrate添加自定义SQL来实现数据库层面的约束
 model Airdrop {
   id                  Int      @id @default(autoincrement())
+  
+  // 核心字段 - 按指定顺序排列
   date                String   // 空投日期，如 "2025年04月28日"
   token               String   @unique // 代币名称，如 "SIGN"
-  points              Int      // 积分门槛
-  participants        Int?     // 参与人数，可为空
   amount              Float    // 空投数量
-  supplementaryToken  Float    // 补充代币数量
   currentPrice        String?  // 当前价格，如 "$0.063"
+  
+  // 积分字段 - 互斥关系：要么使用 points，要么使用 phase1Points + phase2Points
+  // 注意：字段互斥需要在应用层验证或通过自定义迁移添加CHECK约束
+  points              Int?     // 单阶段积分门槛（与 phase1Points/phase2Points 互斥）
+  phase1Points        Int?     // 优先获取阶段积分门槛（与 points 互斥）
+  phase2Points        Int?     // 先到先得阶段积分门槛（与 points 互斥）
+  
+  // 时间字段 - 互斥关系：要么使用 startTime + endTime，要么使用 startTime + phase1EndTime + phase2EndTime
+  startTime           String?  // 开始时间，格式: "2025-06-19 20:00 (UTC+8)"
+  endTime             String?  // 单阶段结束时间（与 phase1EndTime/phase2EndTime 互斥）
+  phase1EndTime       String?  // 优先获取阶段结束时间（与 endTime 互斥）
+  phase2EndTime       String?  // 先到先得阶段结束时间（与 endTime 互斥）
+  
+  // 其他字段
+  supplementaryToken  Float    // 补充代币数量
+  participants        Int?     // 参与人数，可为空
   type                AirdropType // 空投类型：alpha 或 tge
   cost                Float?   // TGE项目的成本（可选）
   pointsConsumed      Boolean  @default(true) // 是否消耗积分，默认为true
-
-  // 时间字段（仅当status为current或upcoming时需要）
-  startTime           String?  // 开始时间，格式: "2025-06-19 20:00 (UTC+8)"
-  endTime             String?  // 结束时间，格式: "2025-06-12 10:00 (UTC+8)"
-
-  // 两阶段空投字段
-  phase1Points        Int?     // 优先获取阶段积分门槛
-  phase2Points        Int?     // 先到先得阶段积分门槛
-  phase1EndTime       String?  // 优先获取阶段结束时间
-  phase2EndTime       String?  // 先到先得阶段结束时间
-
   description         String?  // 描述信息
 
   // 时间戳

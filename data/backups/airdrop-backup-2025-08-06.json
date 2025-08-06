@@ -515,7 +515,6 @@
     "amount": 16,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 243,
     "participants": 28646,
     "currentPrice": "$3.5",
     "phase1Points": 243,
@@ -527,7 +526,6 @@
     "amount": 2667,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 243,
     "participants": 49061,
     "currentPrice": "$0.026",
     "phase1Points": 243,
@@ -549,7 +547,6 @@
     "amount": 900,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 251,
     "currentPrice": "$0.03",
     "phase1Points": 251,
     "phase2Points": 226
@@ -560,7 +557,6 @@
     "amount": 750,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 247,
     "participants": 24400,
     "currentPrice": "$0.06",
     "phase1Points": 247,
@@ -572,7 +568,6 @@
     "amount": 250,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 247,
     "participants": 39528,
     "currentPrice": "$0.23",
     "phase1Points": 247,
@@ -594,7 +589,6 @@
     "amount": 4800,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 248,
     "currentPrice": "$0.007",
     "phase1Points": 248,
     "phase2Points": 210
@@ -605,7 +599,6 @@
     "amount": 125,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 241,
     "participants": 60000,
     "currentPrice": "$0.46",
     "phase1Points": 241,
@@ -617,7 +610,6 @@
     "amount": 1600,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 230,
     "participants": 75000,
     "currentPrice": "$0.05",
     "phase1Points": 230,
@@ -639,7 +631,6 @@
     "amount": 3125,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 239,
     "currentPrice": "$0.01",
     "phase1Points": 239,
     "phase2Points": 198
@@ -650,7 +641,6 @@
     "amount": 1000,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 223,
     "participants": 74950,
     "currentPrice": "$0.14",
     "phase1Points": 223,
@@ -698,7 +688,6 @@
     "amount": 7360,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 210,
     "currentPrice": "$0.006",
     "phase1Points": 210,
     "phase2Points": 170
@@ -718,7 +707,6 @@
     "amount": 1000,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 214,
     "currentPrice": "$0.05",
     "phase1Points": 214,
     "phase2Points": 140
@@ -729,7 +717,6 @@
     "amount": 100,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 214,
     "currentPrice": "$0.035",
     "phase1Points": 214,
     "phase2Points": 140
@@ -805,7 +792,6 @@
     "amount": 8000,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 210,
     "currentPrice": "$0.0055",
     "phase1Points": 210,
     "phase2Points": 120
@@ -835,7 +821,6 @@
     "amount": 643,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 234,
     "currentPrice": "$0.075",
     "phase1Points": 234,
     "phase2Points": 180
@@ -855,7 +840,6 @@
     "amount": 1875,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 224,
     "currentPrice": "$0.03",
     "phase1Points": 224,
     "phase2Points": 140
@@ -886,7 +870,6 @@
     "amount": 150,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 224,
     "currentPrice": "$1",
     "phase1Points": 224,
     "phase2Points": 140
@@ -952,7 +935,6 @@
     "amount": 200,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 238,
     "currentPrice": "$0.35",
     "phase1Points": 238,
     "phase2Points": 200
@@ -972,7 +954,6 @@
     "amount": 125,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 225,
     "currentPrice": "$0.54",
     "phase1Points": 225,
     "phase2Points": 200
@@ -1020,7 +1001,6 @@
     "amount": 100,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 233,
     "currentPrice": "$1.2",
     "phase1Points": 233,
     "phase2Points": 200
@@ -1031,7 +1011,6 @@
     "amount": 500,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 233,
     "currentPrice": "$0.1",
     "phase1Points": 233,
     "phase2Points": 200
@@ -1060,7 +1039,6 @@
     "amount": 500,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 228,
     "currentPrice": "$0.1",
     "phase1Points": 228,
     "phase2Points": 200
@@ -1117,7 +1095,7 @@
     "supplementaryToken": 0,
     "type": "alpha",
     "points": 200,
-    "currentPrice": "$0.07"
+    "currentPrice": "$0.056"
   },
   {
     "date": "2025年08月05日",
@@ -1126,9 +1104,7 @@
     "supplementaryToken": 0,
     "type": "alpha",
     "points": 200,
-    "currentPrice": "-",
-    "startTime": "2025-08-05 18:00",
-    "endTime": "2025-08-06 18:00"
+    "currentPrice": "$0.085"
   },
   {
     "date": "2025年08月05日",
@@ -1136,21 +1112,22 @@
     "amount": 1359,
     "supplementaryToken": 0,
     "type": "alpha",
-    "points": 230,
-    "currentPrice": "-",
-    "startTime": "2025-08-05 20:30",
+    "currentPrice": "$0.07",
     "phase1Points": 230,
-    "phase2Points": 200,
-    "phase1EndTime": "2025-08-06 14:30",
-    "phase2EndTime": "2025-08-06 20:30"
+    "phase2Points": 200
   },
   {
     "date": "2025年08月05日",
     "token": "PROVE",
-    "amount": 0,
+    "amount": 100,
     "supplementaryToken": 0,
     "type": "alpha",
-    "startTime": "2025-08-05"
+    "currentPrice": "$0.07",
+    "startTime": "2025-08-05 23:00",
+    "phase1Points": 241,
+    "phase2Points": 200,
+    "phase1EndTime": "2025-08-06 17:00",
+    "phase2EndTime": "2025-08-06 23:00"
   },
   {
     "date": "2025年08月06日",
