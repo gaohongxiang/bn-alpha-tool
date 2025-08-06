@@ -57,8 +57,7 @@ export function AirdropHistory() {
 
   // 从合并的数据中分离当前空投和历史数据
   const currentAirdrops: CurrentAirdropItem[] = useMemo(() => {
-    return allData
-      .filter(item => item.startTime) as CurrentAirdropItem[]
+    return (allData.filter(item => item.startTime) as CurrentAirdropItem[])
       .sort((a, b) => {
         // 使用现有的parseUTC8Time函数解析时间，早的在前面
         const timeA = parseUTC8Time(a.startTime)
