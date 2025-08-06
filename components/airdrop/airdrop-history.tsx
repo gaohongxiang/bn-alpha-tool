@@ -1,25 +1,54 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import airdropAllData from "@/public/data/airdrop-history.json"
 import { CurrentAirdrops } from "./current-airdrops"
-import { HistoryTable } from "./history-table"
+
 import { HistoryChart } from "./history-chart"
+import { HistoryTable } from "./history-table"
 import type { AirdropItem, AirdropHistoryItem, CurrentAirdropItem } from "@/types/airdrop"
 import { calculateCurrentValue, calculateRevenue, normalizeNumericField } from "@/lib/features/airdrop"
 
 export function AirdropHistory() {
   const [activeView, setActiveView] = useState("chart") // 默认显示历史曲线
+  const [allData, setAllData] = useState<AirdropItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // 从API加载空投数据
+  const loadAirdropData = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      const response = await fetch('/api/airdrop')
+      const result = await response.json()
+
+      if (result.success && result.data) {
+        setAllData(result.data)
+      } else {
+        setError(result.error || '加载空投数据失败')
+      }
+    } catch (err) {
+      setError('网络错误，无法加载空投数据')
+      console.error('加载空投数据失败:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadAirdropData()
+  }, [loadAirdropData])
 
   // 从合并的数据中分离当前空投和历史数据
-  const allData = airdropAllData as AirdropItem[]
-  const currentAirdrops: CurrentAirdropItem[] = allData.filter(item =>
-    item.startTime // 有startTime字段的为当前空投
-  ) as CurrentAirdropItem[]
-  const historyRawData: AirdropItem[] = allData.filter(item =>
-    !item.startTime // 没有startTime字段的为历史数据
-  )
+  const currentAirdrops: CurrentAirdropItem[] = useMemo(() =>
+    allData.filter(item => item.startTime) as CurrentAirdropItem[]
+    , [allData])
+
+  const historyRawData: AirdropItem[] = useMemo(() =>
+    allData.filter(item => !item.startTime)
+    , [allData])
 
   // 使用 useMemo 处理数据，添加revenue计算字段
   const airdropHistoryData: AirdropHistoryItem[] = useMemo(() => {
@@ -32,6 +61,21 @@ export function AirdropHistory() {
         currentValue: calculateCurrentValue(item.amount, item.supplementaryToken, item.currentPrice!),
         revenue: calculateRevenue(item.amount, item.supplementaryToken, item.currentPrice!, item.cost)
       }))
+      .sort((a, b) => {
+        // 按日期排序（从早到晚：4月在左边，8月在右边）
+        const parseDate = (dateStr: string) => {
+          const match = dateStr.match(/(\d{4})年(\d{2})月(\d{2})日/)
+          if (match) {
+            const [, year, month, day] = match
+            return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+          }
+          return new Date(dateStr) // 备用解析
+        }
+
+        const dateA = parseDate(a.date)
+        const dateB = parseDate(b.date)
+        return dateA.getTime() - dateB.getTime() // 升序：早的在左边
+      })
   }, [historyRawData])
 
   // 计算平均值用于显示在图表中
@@ -61,8 +105,8 @@ export function AirdropHistory() {
               <button
                 onClick={() => setActiveView("table")}
                 className={`flex-1 py-4 px-6 text-center font-medium transition-all duration-200 relative ${activeView === "table"
-                    ? "bg-white text-blue-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  ? "bg-white text-blue-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   }`}
               >
                 <span className="relative z-10">📊 数据表格</span>
@@ -73,8 +117,8 @@ export function AirdropHistory() {
               <button
                 onClick={() => setActiveView("chart")}
                 className={`flex-1 py-4 px-6 text-center font-medium transition-all duration-200 relative ${activeView === "chart"
-                    ? "bg-white text-blue-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  ? "bg-white text-blue-600 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   }`}
               >
                 <span className="relative z-10">📈 历史曲线</span>
@@ -82,11 +126,14 @@ export function AirdropHistory() {
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-blue-500 rounded-t-full"></div>
                 )}
               </button>
+
             </div>
           </CardHeader>
           <CardContent className="pt-6">
             {activeView === "table" ? (
-              <HistoryTable airdropHistoryData={airdropHistoryData} />
+              <HistoryTable
+                airdropHistoryData={airdropHistoryData}
+              />
             ) : (
               <HistoryChart
                 airdropHistoryData={airdropHistoryData}

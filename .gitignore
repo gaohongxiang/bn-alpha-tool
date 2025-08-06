@@ -133,3 +133,4 @@ dist
 # Project specific
 data/exports/
 data/log/
+/lib/generated/prisma

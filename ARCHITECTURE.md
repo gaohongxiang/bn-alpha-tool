@@ -1,16 +1,16 @@
-# 🏗️ BN Alpha Tool 项目架构文档
+# 🏗️ BN Alpha Tool 架构文档 v4.0 (Prisma Studio版)
 
 ## 📋 架构概览
 
-BN Alpha Tool 是一个基于 **Next.js 14** 和 **Moralis API** 构建的现代化区块链数据分析工具，采用**分层架构**和**类型安全**设计，实现高性能的钱包收益分析和空投数据管理。
+BN Alpha Tool 是一个基于 **Next.js 14**、**Supabase** 和 **Prisma Studio** 构建的简洁高效的区块链数据分析工具，专注于**数据展示分析**和**零维护数据管理**。
 
-### 🎯 核心技术价值
+### 🎯 核心价值
 
-- **🚀 高性能**: Moralis API + 多实例负载均衡，查询速度提升
-- **🔒 高可用**: 多API密钥轮换 + 智能重试，成功率高
-- **🛡️ 类型安全**: 统一TypeScript类型系统，零运行时类型错误
-- **⚡ 智能缓存**: 多层缓存策略，减少重复API调用
-- **🔧 易维护**: 模块化架构 + 配置驱动，代码可维护性极高
+- **📊 专注数据展示**: 前端专注于数据可视化和用户体验
+- **🛠️ 零维护管理**: 使用 Prisma Studio 进行数据管理，无需维护前端管理界面
+- **⚡ 架构简洁**: 只读API + 成熟工具，最小化代码复杂度
+- **🛡️ 类型安全**: 全栈 TypeScript + Prisma 类型生成
+- **🔧 开箱即用**: 无需复杂配置，专注核心功能
 
 ## 📁 项目目录结构
 
@@ -18,6 +18,8 @@ BN Alpha Tool 是一个基于 **Next.js 14** 和 **Moralis API** 构建的现代
 bn-alpha-tool/
 ├── app/                          # Next.js 14 App Router
 │   ├── api/                     # 服务端API路由
+│   │   ├── airdrop/             # 空投数据只读API
+│   │   │   └── route.ts         # GET 获取所有空投数据
 │   │   ├── revenue/analyze/     # 收益分析API
 │   │   ├── export-data/         # 数据导出API
 │   │   └── save-log/            # 日志保存API
@@ -28,26 +30,83 @@ bn-alpha-tool/
 │   ├── ui/                      # 基础UI组件 (shadcn/ui)
 │   ├── revenue/                 # 收益分析组件
 │   ├── points/                  # 积分计算组件
-│   ├── airdrop/                 # 空投管理组件
+│   ├── airdrop/                 # 空投展示组件
+│   │   ├── airdrop-history.tsx  # 空投历史页面
+│   │   ├── history-table.tsx    # 历史数据表格
+│   │   ├── history-chart.tsx    # 历史数据图表
+│   │   └── current-airdrops.tsx # 当前空投展示
 │   └── layout/                  # 布局组件
 ├── lib/                         # 核心库
 │   ├── core/                    # 核心模块
 │   │   ├── api/                 # API系统
-│   │   ├── config-manager.ts    # 智能动态配置管理
+│   │   ├── config-manager.ts    # 配置管理
 │   │   ├── token-manager.ts     # 代币管理
 │   │   ├── logger/              # 日志系统
 │   │   └── utils.ts             # 工具函数
+│   ├── prisma.ts                # Prisma 客户端实例
 │   └── features/                # 业务功能模块
 │       ├── revenue/             # 收益分析
 │       ├── points/              # 积分计算
-│       └── airdrop/             # 空投管理
+│       └── airdrop/             # 空投数据处理
+├── prisma/                      # 数据库相关
+│   └── schema.prisma            # 数据库模型定义
+├── scripts/                     # 工具脚本
+│   ├── check-duplicates.ts      # 数据重复检查
+│   └── test-db.ts               # 数据库连接测试
 ├── types/                       # TypeScript类型定义
 │   ├── index.ts                 # 统一导出
 │   ├── api.ts                   # API类型
 │   ├── wallet.ts                # 钱包类型
+│   ├── airdrop.ts               # 空投数据类型
 │   ├── ui.ts                    # UI组件类型
 │   ├── business.ts              # 业务逻辑类型
 │   └── common.ts                # 通用类型
+├── public/                      # 静态资源
+│   ├── config/                  # 公开配置
+│   │   └── tokens.json          # 代币配置
+│   └── data/                    # 静态数据
+└── docs/                        # 文档
+    ├── deployment-guide.md      # 部署指南
+    └── ARCHITECTURE.md          # 架构文档 (本文件)
+```
+
+## 🚀 核心功能
+
+### 空投数据管理架构
+
+#### 数据展示与管理分离
+```typescript
+// 前端：只读API端点
+GET /api/airdrop          // 获取所有空投数据用于展示
+
+// 后端：Prisma Studio管理
+npm run db:studio         // 启动数据管理界面
+http://localhost:5555     // 访问管理界面
+```
+
+#### 架构优势
+- **职责分离**: 前端专注数据展示，后端使用成熟工具管理数据
+- **零维护**: 无需维护复杂的前端管理界面
+- **类型安全**: Prisma Studio 基于 schema 提供完整的类型验证
+- **开箱即用**: 无需额外配置，直接使用 Prisma 生态工具
+
+#### 数据库设计
+```sql
+-- 空投数据表 (简化版)
+CREATE TABLE airdrops (
+  id SERIAL PRIMARY KEY,
+  token VARCHAR UNIQUE NOT NULL,  -- 代币名称 (唯一约束)
+  date VARCHAR NOT NULL,          -- 空投日期
+  type airdrop_type NOT NULL,     -- alpha | tge
+  amount DECIMAL NOT NULL,        -- 空投数量
+  points INTEGER,                 -- 先到先得积分门槛
+  phase1_points INTEGER,          -- 两阶段：优先获取积分
+  phase2_points INTEGER,          -- 两阶段：先到先得积分
+  -- 其他字段...
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+```
 
 ├── public/                      # 静态资源
 │   ├── config/                  # 公开配置
@@ -793,27 +852,27 @@ export interface BatchQueryConfig {
 
 ## 📈 架构优势总结
 
-### **🌟 核心技术突破**
+### **🌟 Prisma Studio 架构优势**
 
-1. **🎯 零配置智能系统**: 全球首创的零配置动态优化，无需手动调整任何参数
-2. **🚀 超高性能**: Moralis API + 智能负载均衡，查询速度提升200%+
-3. **🧠 自适应优化**: 根据API密钥数量和分析规模自动调整所有参数
-4. **🔒 高可用性**: 多重容错机制 + 智能故障恢复，系统可用性99.5%+
-5. **🛡️ 类型安全**: 统一TypeScript类型系统，零运行时错误
-6. **⚡ 智能缓存**: 多层缓存策略，减少90%重复调用
+1. **📊 专注数据展示**: 前端专注于用户体验和数据可视化
+2. **🛠️ 零维护管理**: 使用 Prisma Studio 进行数据管理，无需维护复杂的前端管理界面
+3. **🔒 类型安全**: Prisma Studio 基于 schema 提供完整的类型验证和约束
+4. **⚡ 架构简洁**: 只读API + 成熟工具，最小化代码复杂度
+5. **🚀 开箱即用**: 无需复杂配置，专注核心功能开发
+6. **🔧 易于维护**: 减少前端管理代码，降低维护成本
 
-### **🎉 开发体验革命**
+### **🎉 开发体验优化**
 
-- **📁 配置文件**: 从5个配置文件减少到0个
-- **🔧 维护成本**: 降低80%的配置维护工作
-- **⚡ 开发效率**: 开箱即用，无需学习复杂配置
-- **🚀 性能优化**: 系统自动选择最佳参数，无需手动调优
-- **�️ 错误处理**: 智能错误恢复，减少99%的配置相关错误
+- **📁 代码简洁**: 删除所有前端管理相关代码，项目更加简洁
+- **🔧 维护成本**: 无需维护复杂的表单验证和管理界面
+- **⚡ 开发效率**: 专注于数据展示功能，提升开发效率
+- **🛡️ 数据安全**: Prisma Studio 提供完整的数据验证和约束
+- **🎯 职责分离**: 前端负责展示，后端工具负责管理
 
-### **🏆 技术创新价值**
+### **🏆 架构创新价值**
 
-这个**零配置智能架构**为BN Alpha Tool带来了革命性的技术优势：
-- ✅ **开发者友好**: 真正的零配置，开箱即用
-- ✅ **性能卓越**: 自动优化，性能始终保持最佳状态
-- ✅ **维护简单**: 无配置文件，无维护负担
-- ✅ **扩展性强**: 智能适配，支持任意规模的数据分析
+这个 **Prisma Studio 架构** 为 BN Alpha Tool 带来了显著的技术优势：
+- ✅ **简洁高效**: 专注核心功能，避免过度工程化
+- ✅ **成熟稳定**: 使用 Prisma 生态的成熟工具
+- ✅ **易于扩展**: 基于标准的数据库操作，易于扩展
+- ✅ **开发友好**: 减少学习成本，专注业务逻辑

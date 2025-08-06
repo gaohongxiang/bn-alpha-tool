@@ -1,11 +1,12 @@
 // 定义统一的空投数据类型
 export interface AirdropItem {
+  id?: number  // 数据库ID，新增时可选
   date: string
   token: string
   points: number
   participants: number | null
-  amount: number | string  // 支持字符串和数字类型
-  supplementaryToken: number | string  // 支持字符串和数字类型 | string
+  amount: number  // 统一为数字类型
+  supplementaryToken: number  // 统一为数字类型
   currentPrice: string | null
   type: "alpha" | "tge"
 
@@ -21,6 +22,10 @@ export interface AirdropItem {
   // 兼容旧格式的结束时间
   endTime?: string   // 格式: "2025-06-12 10:00 (UTC+8)"
   description?: string
+  
+  // 数据库时间戳
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 // 历史数据类型（带计算字段）
