@@ -16,19 +16,26 @@ export function AirdropHistory() {
   const [error, setError] = useState<string | null>(null)
 
   // 从API加载空投数据
-  const loadAirdropData = useCallback(async () => {
+  const loadAirdropData = useCallback(async (forceRefresh = false) => {
     try {
       setLoading(true)
       setError(null)
 
-      const response = await fetch(`/api/airdrop?t=${Date.now()}`, {
+      const timestamp = Date.now()
+      const method = forceRefresh ? 'POST' : 'GET'
+      const url = `/api/airdrop?t=${timestamp}`
+
+      const response = await fetch(url, {
+        method,
         cache: 'no-store',
         headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0'
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store',
+          'X-Cache-Bust': timestamp.toString(),
+          'X-Timestamp': timestamp.toString()
         }
       })
+
       const result = await response.json()
 
       if (result.success && result.data) {
@@ -106,7 +113,7 @@ export function AirdropHistory() {
         {/* 当前空投信息 */}
         <CurrentAirdrops
           currentAirdrops={currentAirdrops}
-          onRefresh={loadAirdropData}
+          onRefresh={() => loadAirdropData(true)}
           loading={loading}
         />
 

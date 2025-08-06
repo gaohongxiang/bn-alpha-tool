@@ -1,19 +1,24 @@
 {
+  "functions": {
+    "app/api/airdrop/route.ts": {
+      "maxDuration": 10
+    }
+  },
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/airdrop",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
+          "value": "no-store, max-age=0"
         },
         {
-          "key": "Pragma",
-          "value": "no-cache"
+          "key": "CDN-Cache-Control",
+          "value": "no-store"
         },
         {
-          "key": "Expires",
-          "value": "0"
+          "key": "Vercel-CDN-Cache-Control",
+          "value": "no-store"
         }
       ]
     }

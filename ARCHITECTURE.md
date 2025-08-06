@@ -876,3 +876,118 @@ export interface BatchQueryConfig {
 - ✅ **成熟稳定**: 使用 Prisma 生态的成熟工具
 - ✅ **易于扩展**: 基于标准的数据库操作，易于扩展
 - ✅ **开发友好**: 减少学习成本，专注业务逻辑
+
+---
+
+## 🔧 Vercel 部署环境数据刷新解决方案
+
+### 问题背景
+
+在将项目从固定JSON文件数据源迁移到Supabase数据库后，发现部署在Vercel上的网站存在数据刷新问题：
+- 数据库更新后，点击刷新按钮或刷新网页无法获取最新数据
+- 本地开发环境正常，仅在Vercel生产环境出现此问题
+
+### 根本原因
+
+**Vercel的多层缓存机制**：
+1. **Edge Cache (CDN层)**：Vercel的全球CDN缓存
+2. **Function Cache (Serverless函数层)**：Next.js API路由缓存
+3. **Browser Cache (浏览器层)**：客户端浏览器缓存
+
+### 最优解决方案
+
+#### 1. 统一API路由设计
+**文件**: `app/api/airdrop/route.ts`
+
+```typescript
+// 支持GET和POST两种方法的统一API
+export async function GET(request: NextRequest) {
+  // 正常数据获取，优雅缓存控制
+  response.headers.set('Cache-Control', 'no-store, max-age=0')
+  response.headers.set('CDN-Cache-Control', 'no-store')
+  response.headers.set('Vercel-CDN-Cache-Control', 'no-store')
+}
+
+export async function POST(request: NextRequest) {
+  // 强制刷新数据获取，绕过所有缓存
+}
+```
+
+#### 2. Next.js配置优化
+**文件**: `next.config.mjs`
+
+```javascript
+experimental: {
+  isrMemoryCacheSize: 0, // 禁用ISR内存缓存
+}
+```
+
+#### 3. Vercel部署配置
+**文件**: `vercel.json`
+
+```json
+{
+  "functions": {
+    "app/api/airdrop/route.ts": {
+      "maxDuration": 10
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/airdrop",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        },
+        {
+          "key": "CDN-Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Vercel-CDN-Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### 4. 前端请求优化
+**文件**: `components/airdrop/airdrop-history.tsx`
+
+```typescript
+const loadAirdropData = useCallback(async (forceRefresh = false) => {
+  const timestamp = Date.now()
+  const method = forceRefresh ? 'POST' : 'GET'
+  const url = `/api/airdrop?t=${timestamp}`
+
+  const response = await fetch(url, {
+    method,
+    cache: 'no-store',
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-store',
+      'X-Cache-Bust': timestamp.toString(),
+      'X-Timestamp': timestamp.toString()
+    }
+  })
+}, [])
+```
+
+### 技术优势
+
+1. **架构简洁性**：删除冗余API路由，统一设计模式
+2. **缓存控制精准性**：针对Vercel平台的专用优化
+3. **性能优化**：正常访问使用GET，强制刷新使用POST
+4. **可维护性**：清晰的代码结构，统一的错误处理
+
+### 最佳实践
+
+1. **针对平台优化**：使用平台专用的缓存控制头
+2. **分层缓存策略**：区分正常访问和强制刷新场景
+3. **配置集中管理**：在vercel.json中统一配置缓存策略
+4. **代码简洁性**：避免过度复杂的缓存控制逻辑
+
+这个解决方案从根本上解决了Vercel环境下的数据刷新问题，同时保持了代码的简洁性和可维护性。
