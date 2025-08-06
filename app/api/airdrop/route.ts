@@ -18,10 +18,12 @@ export async function GET(request: NextRequest) {
       data: airdrops
     })
 
-    // 设置缓存控制头，确保数据实时更新
-    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate')
+    // 设置强制不缓存的头部
+    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0')
     response.headers.set('Pragma', 'no-cache')
     response.headers.set('Expires', '0')
+    response.headers.set('Last-Modified', new Date().toUTCString())
+    response.headers.set('ETag', `"${Date.now()}"`)
 
     return response
   } catch (error) {

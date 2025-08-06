@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/api/airdrop",
+      "source": "/api/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

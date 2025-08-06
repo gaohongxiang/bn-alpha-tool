@@ -21,7 +21,14 @@ export function AirdropHistory() {
       setLoading(true)
       setError(null)
 
-      const response = await fetch(`/api/airdrop?t=${Date.now()}`)
+      const response = await fetch(`/api/airdrop?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      })
       const result = await response.json()
 
       if (result.success && result.data) {
