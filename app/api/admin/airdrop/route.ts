@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 import { validateAirdropData, sanitizeAirdropData, validateTokenUniqueness } from '@/lib/features/airdrop/validation'
 import type { AirdropItem } from '@/types/airdrop'
-
-const prisma = new PrismaClient()
 
 // 简单的管理员验证
 function verifyAdminAccess(request: NextRequest): boolean {

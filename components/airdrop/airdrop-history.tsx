@@ -15,37 +15,50 @@ export function AirdropHistory() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // 从API加载空投数据
+  // 优化的数据加载函数，简化重试逻辑
   const loadAirdropData = useCallback(async (forceRefresh = false) => {
     try {
       setLoading(true)
       setError(null)
 
-      const timestamp = Date.now()
       const method = forceRefresh ? 'POST' : 'GET'
-      const url = `/api/airdrop?t=${timestamp}`
+      const url = '/api/airdrop'
 
       const response = await fetch(url, {
         method,
-        cache: 'no-store',
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'no-store',
-          'X-Cache-Bust': timestamp.toString(),
-          'X-Timestamp': timestamp.toString()
-        }
+        },
+        // 设置合理的超时时间
+        signal: AbortSignal.timeout(12000) // 12秒超时，给后端足够时间
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
 
       const result = await response.json()
 
       if (result.success && result.data) {
         setAllData(result.data)
+        console.log(`✅ 成功加载 ${result.count || 0} 条空投数据`)
       } else {
-        setError(result.error || '加载空投数据失败')
+        setError(result.error || '服务器返回异常数据')
       }
     } catch (err) {
-      setError('网络错误，无法加载空投数据')
       console.error('加载空投数据失败:', err)
+
+      if (err instanceof Error) {
+        if (err.name === 'AbortError') {
+          setError('请求超时，请检查网络连接后重试')
+        } else if (err.message.includes('Failed to fetch')) {
+          setError('网络连接失败，请检查网络状态')
+        } else {
+          setError(err.message || '加载数据时发生未知错误')
+        }
+      } else {
+        setError('加载数据时发生未知错误')
+      }
     } finally {
       setLoading(false)
     }

@@ -1,7 +1,10 @@
 {
   "functions": {
     "app/api/airdrop/route.ts": {
-      "maxDuration": 10
+      "maxDuration": 15
+    },
+    "app/api/admin/airdrop/route.ts": {
+      "maxDuration": 15
     }
   },
   "headers": [
