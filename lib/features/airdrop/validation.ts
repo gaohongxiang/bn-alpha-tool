@@ -119,7 +119,7 @@ export function validateAirdropData(data: Partial<AirdropItem>): ValidationResul
 
   // 7. 价格格式验证
   if (data.currentPrice?.trim() && !isValidPriceFormat(data.currentPrice)) {
-    errors.push({ field: 'currentPrice', message: '价格格式不正确，请使用 "$0.123" 格式' })
+    errors.push({ field: 'currentPrice', message: '价格格式不正确，请输入数字（如：0.095）' })
   }
 
   return {
@@ -145,13 +145,18 @@ function isValidTimeFormat(timeStr: string): boolean {
 
 /**
  * 验证价格格式是否正确
+ * 支持纯数字格式，程序会自动添加 $ 符号
  */
 function isValidPriceFormat(priceStr: string): boolean {
   if (!priceStr) return true // 价格是可选的
   
-  // 支持格式：$0.123, $1.23, $12.34
-  const pricePattern = /^\$\d+(\.\d+)?$/
-  return pricePattern.test(priceStr.trim())
+  // 支持格式：0.123, 1.23, 12.34 (纯数字)
+  // 也支持：$0.123, $1.23, $12.34 (带$符号)
+  const numericPattern = /^\d+(\.\d+)?$/
+  const dollarPattern = /^\$\d+(\.\d+)?$/
+  
+  const trimmed = priceStr.trim()
+  return numericPattern.test(trimmed) || dollarPattern.test(trimmed)
 }
 
 /**
@@ -163,7 +168,15 @@ export function sanitizeAirdropData(data: Partial<AirdropItem>): Partial<Airdrop
   // 清理字符串字段
   if (sanitized.date) sanitized.date = sanitized.date.trim()
   if (sanitized.token) sanitized.token = sanitized.token.trim().toUpperCase()
-  if (sanitized.currentPrice) sanitized.currentPrice = sanitized.currentPrice.trim()
+  if (sanitized.currentPrice) {
+    const trimmed = sanitized.currentPrice.trim()
+    // 如果是纯数字，自动添加 $ 符号
+    if (/^\d+(\.\d+)?$/.test(trimmed)) {
+      sanitized.currentPrice = `$${trimmed}`
+    } else {
+      sanitized.currentPrice = trimmed
+    }
+  }
   if (sanitized.description) sanitized.description = sanitized.description.trim()
   if (sanitized.startTime) sanitized.startTime = sanitized.startTime.trim()
   if (sanitized.endTime) sanitized.endTime = sanitized.endTime.trim()
