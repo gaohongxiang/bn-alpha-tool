@@ -3,16 +3,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { AlertTriangle, X, CheckCircle, Trash2 } from 'lucide-react'
+import { AlertTriangle, X, CheckCircle, Trash2, Loader2 } from 'lucide-react'
 import type { AirdropItem } from '@/types/airdrop'
 
 interface DeleteConfirmDialogProps {
   item: AirdropItem
   onConfirm: () => void
   onCancel: () => void
+  isDeleting?: boolean
 }
 
-export function DeleteConfirmDialog({ item, onConfirm, onCancel }: DeleteConfirmDialogProps) {
+export function DeleteConfirmDialog({ item, onConfirm, onCancel, isDeleting = false }: DeleteConfirmDialogProps) {
   // 格式化积分显示
   const formatPoints = (item: AirdropItem) => {
     if (item.phase1Points && item.phase2Points) {
@@ -144,17 +145,28 @@ export function DeleteConfirmDialog({ item, onConfirm, onCancel }: DeleteConfirm
             <Button 
               variant="outline" 
               onClick={onCancel}
-              className="border-green-200 text-green-700 hover:bg-green-50"
+              disabled={isDeleting}
+              className="border-green-200 text-green-700 hover:bg-green-50 disabled:opacity-50"
             >
               取消
             </Button>
             <Button 
               variant="destructive" 
               onClick={onConfirm}
-              className="bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700"
+              disabled={isDeleting}
+              className="bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 disabled:opacity-50"
             >
-              <CheckCircle className="h-4 w-4 mr-2" />
-              确认删除
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  删除中...
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  确认删除
+                </>
+              )}
             </Button>
           </div>
         </CardContent>

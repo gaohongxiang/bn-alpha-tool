@@ -253,25 +253,25 @@ export function CurrentAirdrops({ currentAirdrops, onRefresh, loading }: Current
                       )}
                       <div className="space-y-1">
                         <div className="text-gray-600 text-sm">
-                          {airdrop.type === "tge" ? "分配数量" : "空投数量"}（枚）：
-                          <span className="text-blue-600 font-medium">{airdrop.amount}</span>
+                          {airdrop.type === "tge" ? "分配数量" : "空投数量"}：
+                          <span className="text-blue-600 font-medium">{airdrop.amount || '-'} 枚</span>
                         </div>
 
                         {/* 积分门槛信息 */}
                         {airdrop.phase1Points ? (
                           <>
                             <div className="text-gray-600 text-sm">
-                              优先获取积分门槛：<span className="text-blue-600 font-medium">{airdrop.phase1Points}分</span>
+                              优先获取积分门槛：<span className="text-blue-600 font-medium">{airdrop.phase1Points || '-'} 分</span>
                             </div>
                             {airdrop.phase2Points && (
                               <div className="text-gray-600 text-sm">
-                                先到先得积分门槛：<span className="text-orange-600 font-medium">{airdrop.phase2Points}分</span>
+                                先到先得积分门槛：<span className="text-orange-600 font-medium">{airdrop.phase2Points || '-'} 分</span>
                               </div>
                             )}
                           </>
                         ) : (
                           <div className="text-gray-600 text-sm">
-                            积分门槛：<span className="text-blue-600 font-medium">{airdrop.points}分</span>
+                            积分门槛：<span className="text-blue-600 font-medium">{airdrop.points || '-'} 分</span>
                           </div>
                         )}
                       </div>

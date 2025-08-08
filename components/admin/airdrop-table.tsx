@@ -19,20 +19,50 @@ export function AirdropTable({ data, onEdit, onDelete }: AirdropTableProps) {
   const [typeFilter, setTypeFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
 
-  // 过滤数据
-  const filteredData = data.filter(item => {
-    const matchesSearch = !searchTerm || 
-      item.token.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.date.toLowerCase().includes(searchTerm.toLowerCase())
-    
-    const matchesType = typeFilter === 'all' || item.type === typeFilter
-    
-    const matchesStatus = statusFilter === 'all' || 
-      (statusFilter === 'current' && item.startTime) ||
-      (statusFilter === 'history' && !item.startTime)
-    
-    return matchesSearch && matchesType && matchesStatus
-  })
+  // 过滤和排序数据
+  const filteredData = data
+    .filter(item => {
+      const matchesSearch = !searchTerm || 
+        item.token.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.date.toLowerCase().includes(searchTerm.toLowerCase())
+      
+      const matchesType = typeFilter === 'all' || item.type === typeFilter
+      
+      const matchesStatus = statusFilter === 'all' || 
+        (statusFilter === 'current' && item.startTime) ||
+        (statusFilter === 'history' && !item.startTime)
+      
+      return matchesSearch && matchesType && matchesStatus
+    })
+    .sort((a, b) => {
+      // 1. 当前空投永远在历史空投前面
+      const aIsCurrent = !!a.startTime
+      const bIsCurrent = !!b.startTime
+      
+      if (aIsCurrent && !bIsCurrent) return -1  // a是当前，b是历史 -> a在前
+      if (!aIsCurrent && bIsCurrent) return 1   // a是历史，b是当前 -> b在前
+      
+      // 2. 同类型内按日期排序：最新的在前面
+      const parseDate = (dateStr: string) => {
+        // 支持多种日期格式
+        if (dateStr.includes('年')) {
+          // 格式：2025年08月09日
+          const match = dateStr.match(/(\d{4})年(\d{2})月(\d{2})日/)
+          if (match) {
+            const [, year, month, day] = match
+            return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+          }
+        }
+        // 格式：2025-08-09
+        return new Date(dateStr)
+      }
+
+      const dateA = parseDate(a.date)
+      const dateB = parseDate(b.date)
+      
+      // 降序排序：最新的在前面
+      return dateB.getTime() - dateA.getTime()
+    })
 
   // 格式化价格显示
   const formatPrice = (price: string | null) => {

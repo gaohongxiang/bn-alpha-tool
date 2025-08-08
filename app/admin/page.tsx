@@ -27,6 +27,7 @@ export default function AdminPage() {
   
   // 删除确认状态
   const [deleteItem, setDeleteItem] = useState<AirdropItem | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // 验证管理员权限
   const verifyAdmin = async (key: string) => {
@@ -150,6 +151,7 @@ export default function AdminPage() {
   // 处理删除
   const handleDelete = async (item: AirdropItem) => {
     try {
+      setIsDeleting(true)
       const adminKeyToUse = localStorage.getItem('admin-key') || adminKey
       
       const response = await fetch(`/api/admin/airdrop?id=${item.id}`, {
@@ -170,6 +172,7 @@ export default function AdminPage() {
         })
         
         setDeleteItem(null)
+        setIsDeleting(false)
         refreshAirdrops() // 静默刷新数据，不显示加载状态
       } else {
         // 显示错误消息
@@ -178,6 +181,7 @@ export default function AdminPage() {
           title: "删除失败",
           description: result.error || '删除失败，请重试',
         })
+        setIsDeleting(false)
       }
     } catch (err) {
       toast({
@@ -185,6 +189,7 @@ export default function AdminPage() {
         title: "网络错误",
         description: '网络错误，删除失败',
       })
+      setIsDeleting(false)
     }
   }
 
@@ -367,6 +372,7 @@ export default function AdminPage() {
             item={deleteItem}
             onConfirm={() => handleDelete(deleteItem)}
             onCancel={() => setDeleteItem(null)}
+            isDeleting={isDeleting}
           />
         )}
       </div>

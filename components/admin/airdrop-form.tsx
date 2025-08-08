@@ -9,14 +9,14 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useToast } from '@/hooks/use-toast'
-import { X, Save, AlertCircle, CheckCircle } from 'lucide-react'
+import { X, Save, AlertCircle, CheckCircle, Loader2 } from 'lucide-react'
 import { validateAirdropData, sanitizeAirdropData } from '@/lib/features/airdrop/validation'
 import type { AirdropItem } from '@/types/airdrop'
 import type { ValidationError } from '@/lib/features/airdrop/validation'
 
 interface AirdropFormProps {
   item?: AirdropItem | null
-  onSubmit: (data: Partial<AirdropItem>) => void
+  onSubmit: (data: Partial<AirdropItem>) => Promise<void>
   onCancel: () => void
 }
 
@@ -559,12 +559,26 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
 
             {/* 操作按钮 */}
             <div className="flex items-center justify-end gap-3 pt-4 border-t">
-              <Button type="button" variant="outline" onClick={onCancel}>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={onCancel}
+                disabled={isSubmitting}
+              >
                 取消
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                <Save className="h-4 w-4 mr-1" />
-                {isEditing ? '更新' : '创建'}
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                    {isEditing ? '更新中...' : '创建中...'}
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-1" />
+                    {isEditing ? '更新' : '创建'}
+                  </>
+                )}
               </Button>
             </div>
           </form>
