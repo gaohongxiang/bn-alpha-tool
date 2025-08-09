@@ -33,8 +33,8 @@ export function DeleteConfirmDialog({ item, onConfirm, onCancel, isDeleting = fa
   // 获取类型标签
   const getTypeBadge = (type: string) => {
     return (
-      <Badge variant={type === 'alpha' ? 'default' : 'outline'} 
-             className={type === 'alpha' ? 'bg-green-600 text-white' : 'border-green-300 text-green-700'}>
+      <Badge variant={type === 'alpha' ? 'default' : 'outline'}
+        className={type === 'alpha' ? 'bg-green-600 text-white' : 'border-green-300 text-green-700'}>
         {type.toUpperCase()}
       </Badge>
     )
@@ -54,7 +54,7 @@ export function DeleteConfirmDialog({ item, onConfirm, onCancel, isDeleting = fa
             </Button>
           </div>
         </CardHeader>
-        
+
         <CardContent className="space-y-4 bg-green-50/30">
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
@@ -75,7 +75,7 @@ export function DeleteConfirmDialog({ item, onConfirm, onCancel, isDeleting = fa
               {getStatusBadge(item)}
               {getTypeBadge(item.type)}
             </div>
-            
+
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <span className="text-gray-500">日期:</span>
@@ -142,16 +142,16 @@ export function DeleteConfirmDialog({ item, onConfirm, onCancel, isDeleting = fa
 
           {/* 操作按钮 */}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-green-100">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={onCancel}
               disabled={isDeleting}
               className="border-green-200 text-green-700 hover:bg-green-50 disabled:opacity-50"
             >
               取消
             </Button>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               onClick={onConfirm}
               disabled={isDeleting}
               className="bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 disabled:opacity-50"

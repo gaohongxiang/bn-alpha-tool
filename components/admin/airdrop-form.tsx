@@ -52,11 +52,30 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
   const [errors, setErrors] = useState<ValidationError[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // 日期格式转换：从 "YYYY年MM月DD日" 转换为 "YYYY-MM-DD"
+  const convertDateForInput = (dateStr: string): string => {
+    if (!dateStr) return ''
+    
+    // 如果已经是 YYYY-MM-DD 格式，直接返回
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return dateStr
+    }
+    
+    // 转换 "YYYY年MM月DD日" 格式为 "YYYY-MM-DD"
+    const match = dateStr.match(/(\d{4})年(\d{2})月(\d{2})日/)
+    if (match) {
+      const [, year, month, day] = match
+      return `${year}-${month}-${day}`
+    }
+    
+    return dateStr
+  }
+
   // 初始化表单数据
   useEffect(() => {
     if (item) {
       setFormData({
-        date: item.date || '',
+        date: convertDateForInput(item.date || ''),
         token: item.token || '',
         amount: item.amount || undefined,
         supplementaryToken: item.supplementaryToken || undefined,
@@ -130,12 +149,7 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
     e.preventDefault()
 
     if (!validateForm()) {
-      // 显示验证错误的 toast
-      toast({
-        variant: "destructive",
-        title: "表单验证失败",
-        description: "请检查并修正表单中的错误信息",
-      })
+      // 验证失败时不显示 toast，只显示字段错误
       return
     }
 
@@ -149,7 +163,7 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
     } catch (error) {
       console.error('提交失败:', error)
 
-      // 只在失败时显示 toast
+      // 只在网络错误等异常情况下显示 toast
       toast({
         variant: "destructive",
         title: "操作失败",
@@ -542,20 +556,7 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
               />
             </div>
 
-            {/* 表单错误汇总 */}
-            {errors.length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div className="flex items-center gap-2 text-red-800 font-medium mb-2">
-                  <AlertCircle className="h-4 w-4" />
-                  请修正以下错误：
-                </div>
-                <ul className="text-red-700 text-sm space-y-1">
-                  {errors.map((error, index) => (
-                    <li key={index}>• {error.message}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+
 
             {/* 操作按钮 */}
             <div className="flex items-center justify-end gap-3 pt-4 border-t">
