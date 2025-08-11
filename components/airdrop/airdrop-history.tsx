@@ -7,7 +7,7 @@ import { CurrentAirdrops } from "./current-airdrops"
 import { HistoryChart } from "./history-chart"
 import { HistoryTable } from "./history-table"
 import type { AirdropItem, AirdropHistoryItem, CurrentAirdropItem } from "@/types/airdrop"
-import { calculateCurrentValue, calculateRevenue, normalizeNumericField, parseUTC8Time } from "@/lib/features/airdrop"
+import { calculateCurrentValue, calculateRevenue, normalizeNumericField, parseUTC8Time, isDateOnlyFormat } from "@/lib/features/airdrop"
 
 export function AirdropHistory() {
   const [activeView, setActiveView] = useState("chart") // 默认显示历史曲线
@@ -72,10 +72,26 @@ export function AirdropHistory() {
   const currentAirdrops: CurrentAirdropItem[] = useMemo(() => {
     return (allData.filter(item => item.startTime) as CurrentAirdropItem[])
       .sort((a, b) => {
-        // 使用现有的parseUTC8Time函数解析时间，早的在前面
         const timeA = parseUTC8Time(a.startTime)
         const timeB = parseUTC8Time(b.startTime)
-        return timeA.getTime() - timeB.getTime() // 升序：早的在前面
+        
+        // 1. 按开始时间升序排序：离开始最近的在前
+        const dateA = new Date(timeA.getFullYear(), timeA.getMonth(), timeA.getDate())
+        const dateB = new Date(timeB.getFullYear(), timeB.getMonth(), timeB.getDate())
+        
+        if (dateA.getTime() !== dateB.getTime()) {
+          return dateA.getTime() - dateB.getTime() // 升序：早开始的日期在前
+        }
+        
+        // 2. 同一天内，有具体时间的排在前面
+        const hasTimeA = !isDateOnlyFormat(a.startTime)
+        const hasTimeB = !isDateOnlyFormat(b.startTime)
+        
+        if (hasTimeA && !hasTimeB) return -1  // A有时间，B只有日期 -> A在前
+        if (!hasTimeA && hasTimeB) return 1   // A只有日期，B有时间 -> B在前
+        
+        // 3. 都有时间或都只有日期时，按时间排序
+        return timeA.getTime() - timeB.getTime() // 升序：早的时间在前
       })
   }, [allData])
 
