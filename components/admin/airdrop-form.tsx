@@ -71,6 +71,20 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
     return dateStr
   }
 
+  // 价格格式转换：从 "$0.07" 转换为 "0.07"
+  const convertPriceForInput = (priceStr: string): string => {
+    if (!priceStr) return ''
+    
+    // 如果已经是纯数字格式，直接返回
+    if (/^\d+(\.\d+)?$/.test(priceStr)) {
+      return priceStr
+    }
+    
+    // 移除 $ 符号和其他非数字字符，但保留小数点
+    const cleanPrice = priceStr.replace(/[^0-9.]/g, '')
+    return cleanPrice
+  }
+
   // 初始化表单数据
   useEffect(() => {
     if (item) {
@@ -80,7 +94,7 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
         amount: item.amount || undefined,
         supplementaryToken: item.supplementaryToken || undefined,
         type: item.type || 'alpha',
-        currentPrice: item.currentPrice || '',
+        currentPrice: convertPriceForInput(item.currentPrice || ''),
         points: item.points || undefined,
         phase1Points: item.phase1Points || undefined,
         phase2Points: item.phase2Points || undefined,
