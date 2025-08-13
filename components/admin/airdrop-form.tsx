@@ -55,31 +55,31 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
   // 日期格式转换：从 "YYYY年MM月DD日" 转换为 "YYYY-MM-DD"
   const convertDateForInput = (dateStr: string): string => {
     if (!dateStr) return ''
-    
+
     // 如果已经是 YYYY-MM-DD 格式，直接返回
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
       return dateStr
     }
-    
+
     // 转换 "YYYY年MM月DD日" 格式为 "YYYY-MM-DD"
     const match = dateStr.match(/(\d{4})年(\d{2})月(\d{2})日/)
     if (match) {
       const [, year, month, day] = match
       return `${year}-${month}-${day}`
     }
-    
+
     return dateStr
   }
 
   // 价格格式转换：从 "$0.07" 转换为 "0.07"
   const convertPriceForInput = (priceStr: string): string => {
     if (!priceStr) return ''
-    
+
     // 如果已经是纯数字格式，直接返回
     if (/^\d+(\.\d+)?$/.test(priceStr)) {
       return priceStr
     }
-    
+
     // 移除 $ 符号和其他非数字字符，但保留小数点
     const cleanPrice = priceStr.replace(/[^0-9.]/g, '')
     return cleanPrice
@@ -114,6 +114,8 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
       setAirdropMode((hasPhasePoints || hasPhaseTime) ? 'phase' : 'single')
     }
   }, [item])
+
+
 
   // 更新表单字段
   const updateField = (field: keyof AirdropItem, value: any) => {
@@ -249,7 +251,15 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
 
                 <div className="space-y-2">
                   <Label htmlFor="type">空投类型</Label>
-                  <Select value={formData.type} onValueChange={(value) => updateField('type', value)}>
+
+                  <Select
+                    value={formData.type || 'alpha'}
+                    onValueChange={(value) => {
+                      if (value && (value === 'alpha' || value === 'tge')) {
+                        updateField('type', value);
+                      }
+                    }}
+                  >
                     <SelectTrigger className={getFieldError('type') ? 'border-red-500' : ''}>
                       <SelectValue placeholder="选择空投类型" />
                     </SelectTrigger>
@@ -574,9 +584,9 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
 
             {/* 操作按钮 */}
             <div className="flex items-center justify-end gap-3 pt-4 border-t">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={onCancel}
                 disabled={isSubmitting}
               >
