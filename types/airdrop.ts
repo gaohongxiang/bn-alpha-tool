@@ -8,7 +8,7 @@ export interface AirdropItem {
   amount: number  // 统一为数字类型
   supplementaryToken: number  // 统一为数字类型
   currentPrice: string | null
-  type: "alpha" | "tge"
+  type: "alpha" | "tge" | "preTge"
 
   cost?: number  // TGE项目的成本（可选）
   pointsConsumed?: boolean  // 可选字段，默认为true

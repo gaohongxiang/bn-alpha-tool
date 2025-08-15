@@ -255,7 +255,7 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
                   <Select
                     value={formData.type || 'alpha'}
                     onValueChange={(value) => {
-                      if (value && (value === 'alpha' || value === 'tge')) {
+                      if (value && (value === 'alpha' || value === 'tge' || value === 'pre-tge')) {
                         updateField('type', value);
                       }
                     }}
@@ -266,6 +266,7 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
                     <SelectContent>
                       <SelectItem value="alpha">Alpha</SelectItem>
                       <SelectItem value="tge">TGE</SelectItem>
+                      <SelectItem value="preTge">Pre-TGE</SelectItem>
                     </SelectContent>
                   </Select>
                   {getFieldError('type') && (
@@ -501,7 +502,7 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
             {/* 最后一行：成本、参与人数、补发数量 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="cost">成本 (TGE项目)</Label>
+                <Label htmlFor="cost">成本 (TGE/Pre-TGE项目)</Label>
                 <Input
                   id="cost"
                   type="number"

@@ -37,8 +37,8 @@ model Airdrop {
   // 其他字段
   supplementaryToken  Float    // 补充代币数量
   participants        Int?     // 参与人数，可为空
-  type                AirdropType // 空投类型：alpha 或 tge
-  cost                Float?   // TGE项目的成本（可选）
+  type                AirdropType // 空投类型：alpha、tge 或 pre-tge
+  cost                Float?   // TGE/Pre-TGE项目的成本（可选）
   pointsConsumed      Boolean  @default(true) // 是否消耗积分，默认为true
   description         String?  // 描述信息
 
@@ -53,4 +53,5 @@ model Airdrop {
 enum AirdropType {
   alpha
   tge
+  preTge
 }

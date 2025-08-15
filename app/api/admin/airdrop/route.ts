@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { validateAirdropData, sanitizeAirdropData, validateTokenUniqueness } from '@/lib/features/airdrop/validation'
-import type { AirdropItem } from '@/types/airdrop'
 
 // 简单的管理员验证
 function verifyAdminAccess(request: NextRequest): boolean {
@@ -84,7 +83,7 @@ export async function POST(request: NextRequest) {
         token: sanitizedData.token!,
         amount: sanitizedData.amount || 0,
         supplementaryToken: sanitizedData.supplementaryToken || 0,
-        type: sanitizedData.type || 'alpha',
+        type: (sanitizedData.type || 'alpha') as any,
         currentPrice: sanitizedData.currentPrice || null,
         points: sanitizedData.points || null,
         phase1Points: sanitizedData.phase1Points || null,
@@ -193,7 +192,7 @@ export async function PUT(request: NextRequest) {
         token: sanitizedData.token!,
         amount: sanitizedData.amount || 0,
         supplementaryToken: sanitizedData.supplementaryToken || 0,
-        type: sanitizedData.type || 'alpha',
+        type: (sanitizedData.type || 'alpha') as any,
         currentPrice: sanitizedData.currentPrice || null,
         points: sanitizedData.points || null,
         phase1Points: sanitizedData.phase1Points || null,

@@ -17,7 +17,7 @@ interface JsonAirdropItem {
   amount: number | string
   supplementaryToken: number
   currentPrice?: string
-  type: 'alpha' | 'tge'
+  type: 'alpha' | 'tge' | 'preTge'
   cost?: number | string
   pointsConsumed?: boolean
   startTime?: string
@@ -155,7 +155,7 @@ async function importData() {
 
         // 插入新记录
         await prisma.airdrop.create({
-          data: item
+          data: item as any
         })
 
         console.log(`✅ 插入成功: ${item.token} (${item.date})`)

@@ -620,7 +620,7 @@
     "token": "XNY",
     "amount": 11356,
     "supplementaryToken": 0,
-    "type": "tge",
+    "type": "preTge",
     "points": 218,
     "currentPrice": "$0.0075",
     "cost": 6
@@ -1099,6 +1099,26 @@
   },
   {
     "date": "2025年08月05日",
+    "token": "PROVE",
+    "amount": 100,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "phase1Points": 241,
+    "phase2Points": 200,
+    "currentPrice": "$1.2"
+  },
+  {
+    "date": "2025年08月05日",
+    "token": "TOWNS",
+    "amount": 1359,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "phase1Points": 230,
+    "phase2Points": 200,
+    "currentPrice": "$0.07"
+  },
+  {
+    "date": "2025年08月05日",
     "token": "SUP",
     "amount": 500,
     "supplementaryToken": 0,
@@ -1107,34 +1127,147 @@
     "currentPrice": "$0.085"
   },
   {
-    "date": "2025年08月05日",
-    "token": "TOWNS",
-    "amount": 1359,
-    "supplementaryToken": 0,
-    "type": "alpha",
-    "currentPrice": "$0.07",
-    "phase1Points": 230,
-    "phase2Points": 200
-  },
-  {
-    "date": "2025年08月05日",
-    "token": "PROVE",
-    "amount": 100,
-    "supplementaryToken": 0,
-    "type": "alpha",
-    "currentPrice": "$0.07",
-    "startTime": "2025-08-05 23:00",
-    "phase1Points": 241,
-    "phase2Points": 200,
-    "phase1EndTime": "2025-08-06 17:00",
-    "phase2EndTime": "2025-08-06 23:00"
-  },
-  {
     "date": "2025年08月06日",
     "token": "FIR",
-    "amount": 0,
+    "amount": 1000,
     "supplementaryToken": 0,
     "type": "alpha",
-    "startTime": "2025-08-06"
+    "points": 200,
+    "currentPrice": "$0.07"
+  },
+  {
+    "date": "2025年08月07日",
+    "token": "IN",
+    "amount": 500,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "points": 200,
+    "currentPrice": "$0.095"
+  },
+  {
+    "date": "2025年08月07日",
+    "token": "X",
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "points": 200,
+    "currentPrice": "$0.055"
+  },
+  {
+    "date": "2025年08月08日",
+    "token": "K",
+    "amount": 250,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "phase1Points": 233,
+    "phase2Points": 200,
+    "currentPrice": "$0.4"
+  },
+  {
+    "date": "2025年08月09日",
+    "token": "BSU",
+    "amount": 510,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "points": 200,
+    "currentPrice": "$0.07"
+  },
+  {
+    "date": "2025年08月10日",
+    "token": "GAME",
+    "amount": 10200,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "phase1Points": 237,
+    "phase2Points": 200,
+    "currentPrice": "$0.0045"
+  },
+  {
+    "date": "2025年08月11日",
+    "token": "XCX",
+    "amount": 800,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "points": 200,
+    "currentPrice": "$0.07"
+  },
+  {
+    "date": "2025年08月11日",
+    "token": "SLAY",
+    "amount": 525,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "phase1Points": 227,
+    "phase2Points": 200,
+    "currentPrice": "$0.095"
+  },
+  {
+    "date": "2025年08月12日",
+    "token": "WAI",
+    "amount": 800,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "points": 200,
+    "currentPrice": "$0.05"
+  },
+  {
+    "date": "2025年08月13日",
+    "token": "BTR",
+    "amount": 1322,
+    "supplementaryToken": 0,
+    "type": "preTge",
+    "points": 222,
+    "currentPrice": "$0"
+  },
+  {
+    "date": "2025年08月14日",
+    "token": "OVL",
+    "amount": 111,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "points": 200,
+    "currentPrice": "$0.45"
+  },
+  {
+    "date": "2025年08月14日",
+    "token": "AIBOT",
+    "amount": 1666,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 224,
+    "currentPrice": "$0.039"
+  },
+  {
+    "date": "2025年08月14日",
+    "token": "REVA",
+    "amount": 0,
+    "supplementaryToken": 0,
+    "type": "preTge",
+    "points": 224,
+    "currentPrice": "$0"
+  },
+  {
+    "date": "2025年08月15日",
+    "token": "PUBLIC",
+    "amount": 430,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "phase1Points": 240,
+    "phase2Points": 200,
+    "startTime": "2025-08-15 15:30 (UTC+8)",
+    "phase1EndTime": "2025-08-16 09:30 (UTC+8)",
+    "phase2EndTime": "2025-08-16 15:30 (UTC+8)",
+    "currentPrice": "$0.09"
+  },
+  {
+    "date": "2025年08月15日",
+    "token": "TCMO",
+    "amount": 600,
+    "supplementaryToken": 0,
+    "type": "alpha",
+    "points": 200,
+    "startTime": "2025-08-15 20:00 (UTC+8)",
+    "endTime": "2025-08-16 20:00 (UTC+8)",
+    "currentPrice": "$0"
   }
 ]
