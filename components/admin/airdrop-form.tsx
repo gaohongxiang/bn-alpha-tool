@@ -30,7 +30,7 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
     token: '',
     amount: undefined,
     supplementaryToken: undefined,
-    type: 'alpha',
+    type: 'airdrop',
     currentPrice: '',
     points: undefined,
     phase1Points: undefined,
@@ -93,7 +93,7 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
         token: item.token || '',
         amount: item.amount || undefined,
         supplementaryToken: item.supplementaryToken || undefined,
-        type: item.type || 'alpha',
+        type: item.type || 'airdrop',
         currentPrice: convertPriceForInput(item.currentPrice || ''),
         points: item.points || undefined,
         phase1Points: item.phase1Points || undefined,
@@ -253,9 +253,9 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
                   <Label htmlFor="type">空投类型</Label>
 
                   <Select
-                    value={formData.type || 'alpha'}
+                    value={formData.type || 'airdrop'}
                     onValueChange={(value) => {
-                      if (value && (value === 'alpha' || value === 'tge' || value === 'pre-tge')) {
+                      if (value && (value === 'airdrop' || value === 'tge' || value === 'preTge' || value === 'bondingCurveTge')) {
                         updateField('type', value);
                       }
                     }}
@@ -264,9 +264,10 @@ export function AirdropForm({ item, onSubmit, onCancel }: AirdropFormProps) {
                       <SelectValue placeholder="选择空投类型" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="alpha">Alpha</SelectItem>
-                      <SelectItem value="tge">TGE</SelectItem>
-                      <SelectItem value="preTge">Pre-TGE</SelectItem>
+                      <SelectItem value="airdrop">airdrop</SelectItem>
+                      <SelectItem value="tge">tge</SelectItem>
+                      <SelectItem value="preTge">preTge</SelectItem>
+                      <SelectItem value="bondingCurveTge">bondingCurveTge</SelectItem>
                     </SelectContent>
                   </Select>
                   {getFieldError('type') && (

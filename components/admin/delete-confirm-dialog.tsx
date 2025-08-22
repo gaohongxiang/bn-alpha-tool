@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { AlertTriangle, X, CheckCircle, Trash2, Loader2 } from 'lucide-react'
 import type { AirdropItem } from '@/types/airdrop'
+import { TypeBadge } from '@/components/ui/type-badge'
 
 interface DeleteConfirmDialogProps {
   item: AirdropItem
@@ -32,12 +33,7 @@ export function DeleteConfirmDialog({ item, onConfirm, onCancel, isDeleting = fa
 
   // 获取类型标签
   const getTypeBadge = (type: string) => {
-    return (
-      <Badge variant={type === 'alpha' ? 'default' : 'outline'}
-        className={type === 'alpha' ? 'bg-green-600 text-white' : 'border-green-300 text-green-700'}>
-        {type.toUpperCase()}
-      </Badge>
-    )
+    return <TypeBadge type={type} />
   }
 
   return (

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Clock } from "lucide-react"
 import type { CurrentAirdropItem, AirdropStatusInfo } from "@/types/airdrop"
 import { parseUTC8Time, formatTimeRemaining, isDateOnlyFormat } from "@/lib/features/airdrop"
+import { TypeBadge } from "@/components/ui/type-badge"
 
 interface CurrentAirdropsProps {
   currentAirdrops: CurrentAirdropItem[]
@@ -232,12 +233,7 @@ export function CurrentAirdrops({ currentAirdrops, onRefresh, loading }: Current
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <div className="text-lg font-bold text-gray-800">{airdrop.token}</div>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${airdrop.type === "alpha" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"
-                            }`}
-                        >
-                          {airdrop.type.toUpperCase()}
-                        </span>
+                        <TypeBadge type={airdrop.type} />
                         {statusInfo.currentPhase && (
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusInfo.phase === "phase1" ? "bg-blue-100 text-blue-800" : "bg-orange-100 text-orange-800"
                             }`}>

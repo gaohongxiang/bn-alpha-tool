@@ -1,6 +1,7 @@
 "use client"
 
 import type { AirdropHistoryItem } from "@/types/airdrop"
+import { TypeBadge } from "@/components/ui/type-badge"
 
 interface HistoryTableProps {
     airdropHistoryData: AirdropHistoryItem[]
@@ -86,12 +87,7 @@ export function HistoryTable({ airdropHistoryData }: HistoryTableProps) {
                                 <td className="py-3 px-4 font-light text-center">{item.currentPrice}</td>
                                 <td className="py-3 px-4 text-green-600 font-normal text-center">${item.revenue.toFixed(2)}</td>
                                 <td className="py-3 px-4 text-center">
-                                    <span
-                                        className={`px-2 py-1 rounded-full text-xs font-medium ${item.type === "alpha" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"
-                                            }`}
-                                    >
-                                        {item.type}
-                                    </span>
+                                    <TypeBadge type={item.type} />
                                 </td>
                             </tr>
                         ))}

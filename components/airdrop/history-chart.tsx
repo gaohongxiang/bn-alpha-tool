@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import type { AirdropHistoryItem } from "@/types/airdrop"
 import { normalizeNumericField } from "@/lib/features/airdrop"
+import { TypeBadge } from "@/components/ui/type-badge"
 
 interface HistoryChartProps {
   airdropHistoryData: AirdropHistoryItem[]
@@ -274,10 +275,8 @@ export function HistoryChart({ airdropHistoryData, averagePoints, averageRevenue
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-500">类型:</span>
-                  <span
-                    className={`text-xs font-medium ${hoveredPoint.data.type === "alpha" ? "text-blue-600" : "text-purple-600"}`}
-                  >
-                    {hoveredPoint.data.type}
+                  <span className="text-xs font-medium">
+                    <TypeBadge type={hoveredPoint.data.type} />
                   </span>
                 </div>
               </div>

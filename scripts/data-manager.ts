@@ -17,7 +17,7 @@ interface JsonAirdropItem {
   amount: number | string
   supplementaryToken: number
   currentPrice?: string
-  type: 'alpha' | 'tge' | 'preTge'
+  type: 'airdrop' | 'tge' | 'preTge' | 'bondingCurveTge'
   cost?: number | string
   pointsConsumed?: boolean
   startTime?: string

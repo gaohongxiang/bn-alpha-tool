@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Edit, Trash2, Search, Filter, Clock, Calendar } from 'lucide-react'
 import type { AirdropItem } from '@/types/airdrop'
+import { TypeBadge } from '@/components/ui/type-badge'
 
 interface AirdropTableProps {
   data: AirdropItem[]
@@ -114,11 +115,7 @@ export function AirdropTable({ data, onEdit, onDelete }: AirdropTableProps) {
 
   // 获取类型标签
   const getTypeBadge = (type: string) => {
-    return (
-      <Badge variant={type === 'alpha' ? 'default' : 'outline'}>
-        {type.toUpperCase()}
-      </Badge>
-    )
+    return <TypeBadge type={type} />
   }
 
   return (
@@ -141,8 +138,10 @@ export function AirdropTable({ data, onEdit, onDelete }: AirdropTableProps) {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">全部类型</SelectItem>
-            <SelectItem value="alpha">Alpha</SelectItem>
-            <SelectItem value="tge">TGE</SelectItem>
+            <SelectItem value="airdrop">airdrop</SelectItem>
+            <SelectItem value="tge">tge</SelectItem>
+            <SelectItem value="preTge">preTge</SelectItem>
+            <SelectItem value="bondingCurveTge">bondingCurveTge</SelectItem>
           </SelectContent>
         </Select>
         

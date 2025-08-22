@@ -64,7 +64,7 @@ export interface AirdropData {
   amount: number
   supplementaryToken: number
   currentPrice: string
-  type: 'alpha' | 'megadrop'
+  type: 'airdrop' | 'tge' | 'preTge' | 'bondingCurveTge'
   startTime?: string
   endTime?: string
   phase1EndTime?: string

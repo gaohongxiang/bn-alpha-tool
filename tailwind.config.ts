@@ -8,6 +8,15 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "*.{js,ts,jsx,tsx,mdx}"
   ],
+  safelist: [
+    // 确保类型标签的颜色类被包含
+    'bg-blue-100', 'text-blue-800', 'bg-blue-500', 'text-white', 'hover:bg-blue-600',
+    'bg-purple-100', 'text-purple-800', 'bg-purple-500', 'hover:bg-purple-600',
+    'bg-pink-100', 'text-pink-800', 'bg-pink-500', 'hover:bg-pink-600',
+    'bg-orange-100', 'text-orange-800', 'bg-orange-500', 'hover:bg-orange-600',
+    'bg-gray-100', 'text-gray-800', 'bg-gray-500', 'hover:bg-gray-600',
+    'border-transparent'
+  ],
   theme: {
   	extend: {
   		colors: {

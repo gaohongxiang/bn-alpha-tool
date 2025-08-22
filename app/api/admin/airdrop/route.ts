@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
         token: sanitizedData.token!,
         amount: sanitizedData.amount || 0,
         supplementaryToken: sanitizedData.supplementaryToken || 0,
-        type: (sanitizedData.type || 'alpha') as any,
+        type: (sanitizedData.type || 'airdrop') as any,
         currentPrice: sanitizedData.currentPrice || null,
         points: sanitizedData.points || null,
         phase1Points: sanitizedData.phase1Points || null,

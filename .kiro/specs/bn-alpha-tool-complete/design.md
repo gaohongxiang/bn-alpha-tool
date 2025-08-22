@@ -271,7 +271,7 @@ interface AirdropItem {
   amount: number | string
   supplementaryToken: number | string
   currentPrice: string | null
-  type: "alpha" | "tge"
+  type: "airdrop" | "tge" | "preTge" | "bondingCurveTge"
   cost?: number
   pointsConsumed?: boolean
   
