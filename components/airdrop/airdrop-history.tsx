@@ -10,7 +10,7 @@ import type { AirdropItem, AirdropHistoryItem, CurrentAirdropItem } from "@/type
 import { calculateCurrentValue, calculateRevenue, normalizeNumericField, parseUTC8Time, isDateOnlyFormat } from "@/lib/features/airdrop"
 
 export function AirdropHistory() {
-  const [activeView, setActiveView] = useState("chart") // 默认显示历史曲线
+  const [activeView, setActiveView] = useState("table") // 默认显示数据表格
   const [allData, setAllData] = useState<AirdropItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
