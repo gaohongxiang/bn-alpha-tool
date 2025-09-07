@@ -1,0 +1,1607 @@
+[
+  {
+    "date": "2025年04月28日",
+    "token": "SIGN",
+    "amount": 1500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 65,
+    "participants": 33333,
+    "currentPrice": "$0.063"
+  },
+  {
+    "date": "2025年04月29日",
+    "token": "MILK",
+    "amount": 760,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 75,
+    "participants": 27276,
+    "currentPrice": "$0.125"
+  },
+  {
+    "date": "2025年04月29日",
+    "token": "HAEDAL",
+    "amount": 356,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 80,
+    "participants": 21111,
+    "currentPrice": "$0.267"
+  },
+  {
+    "date": "2025年04月30日",
+    "token": "B2",
+    "amount": 138,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 82,
+    "participants": 31311,
+    "currentPrice": "$0.689"
+  },
+  {
+    "date": "2025年05月05日",
+    "token": "BOOP",
+    "amount": 291,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 137,
+    "participants": 25726,
+    "currentPrice": "$0.327"
+  },
+  {
+    "date": "2025年05月07日",
+    "token": "ZKJ",
+    "amount": 50,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 142,
+    "participants": 49161,
+    "currentPrice": "$1.901"
+  },
+  {
+    "date": "2025年05月07日",
+    "token": "OBOL",
+    "amount": 165,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 153,
+    "participants": 30355,
+    "currentPrice": "$0.576"
+  },
+  {
+    "date": "2025年05月09日",
+    "token": "DOOD",
+    "amount": 9873,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 168,
+    "participants": 30271,
+    "currentPrice": "$0.010"
+  },
+  {
+    "date": "2025年05月12日",
+    "token": "PUFFER",
+    "amount": 362,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 186,
+    "participants": 34415,
+    "currentPrice": "$0.263"
+  },
+  {
+    "date": "2025年05月13日",
+    "token": "RDAC",
+    "amount": 1382,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 205,
+    "participants": 15532,
+    "currentPrice": "$0.069"
+  },
+  {
+    "date": "2025年05月14日",
+    "token": "PRAI",
+    "amount": 940,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 198,
+    "participants": 21512,
+    "currentPrice": "$0.101"
+  },
+  {
+    "date": "2025年05月15日",
+    "token": "NXPC",
+    "amount": 198,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 187,
+    "participants": 50280,
+    "currentPrice": "$2.625"
+  },
+  {
+    "date": "2025年05月16日",
+    "token": "AGT",
+    "amount": 5627,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 186,
+    "participants": 17878,
+    "currentPrice": "$0.017"
+  },
+  {
+    "date": "2025年05月17日",
+    "token": "REX",
+    "amount": 3935,
+    "supplementaryToken": 3860,
+    "type": "airdrop",
+    "points": 196,
+    "participants": 7606,
+    "currentPrice": "$0.025"
+  },
+  {
+    "date": "2025年05月19日",
+    "token": "XTER",
+    "amount": 294,
+    "supplementaryToken": 157,
+    "type": "airdrop",
+    "points": 194,
+    "participants": 33948,
+    "currentPrice": "$0.451"
+  },
+  {
+    "date": "2025年05月20日",
+    "token": "MERL",
+    "amount": 1000,
+    "supplementaryToken": 530,
+    "type": "airdrop",
+    "points": 193,
+    "participants": 31414,
+    "currentPrice": "$0.153"
+  },
+  {
+    "date": "2025年05月21日",
+    "token": "TGT",
+    "amount": 500,
+    "supplementaryToken": 440,
+    "type": "airdrop",
+    "points": 199,
+    "participants": 19925,
+    "currentPrice": "$0.188"
+  },
+  {
+    "date": "2025年05月22日",
+    "token": "RWA",
+    "amount": 13570,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 195,
+    "participants": 14827,
+    "currentPrice": "$0.007"
+  },
+  {
+    "date": "2025年05月23日",
+    "token": "SOON",
+    "amount": 180,
+    "supplementaryToken": 50,
+    "type": "airdrop",
+    "points": 190,
+    "participants": 83135,
+    "currentPrice": "$0.483"
+  },
+  {
+    "date": "2025年05月24日",
+    "token": "OBT",
+    "amount": 8000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "participants": 22445,
+    "currentPrice": "$0.011"
+  },
+  {
+    "date": "2025年05月26日",
+    "token": "HUMA",
+    "amount": 1250,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "participants": 47899,
+    "currentPrice": "$0.075"
+  },
+  {
+    "date": "2025年05月27日",
+    "token": "ELDE",
+    "amount": 417,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 198,
+    "participants": 19184,
+    "currentPrice": "$0.195"
+  },
+  {
+    "date": "2025年05月27日",
+    "token": "PFVS",
+    "amount": 875,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 204,
+    "participants": 19951,
+    "currentPrice": "$0.092"
+  },
+  {
+    "date": "2025年05月28日",
+    "token": "SOPH",
+    "amount": 1250,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 195,
+    "participants": 79795,
+    "currentPrice": "$0.102"
+  },
+  {
+    "date": "2025年05月29日",
+    "token": "RDO",
+    "amount": 7796,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 193,
+    "participants": 25893,
+    "currentPrice": "$0.012"
+  },
+  {
+    "date": "2025年05月30日",
+    "token": "ASHR",
+    "amount": 133,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 207,
+    "participants": 22458,
+    "currentPrice": "$0.708"
+  },
+  {
+    "date": "2025年05月31日",
+    "token": "TAIKO",
+    "amount": 130,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 205,
+    "participants": 84653,
+    "currentPrice": "$0.637"
+  },
+  {
+    "date": "2025年06月02日",
+    "token": "SOD",
+    "amount": 424,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 210,
+    "participants": 70239,
+    "currentPrice": "$0.215"
+  },
+  {
+    "date": "2025年06月02日",
+    "token": "EDGEN",
+    "amount": 1111,
+    "supplementaryToken": 1860,
+    "type": "airdrop",
+    "points": 223,
+    "participants": 26732,
+    "currentPrice": "$0.024"
+  },
+  {
+    "date": "2025年06月03日",
+    "token": "BDXN",
+    "amount": 900,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 213,
+    "participants": 33000,
+    "currentPrice": "$0.073"
+  },
+  {
+    "date": "2025年06月03日",
+    "token": "ZRC",
+    "amount": 2666,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 211,
+    "participants": 66841,
+    "currentPrice": "$0.030"
+  },
+  {
+    "date": "2025年06月04日",
+    "token": "LA",
+    "amount": 160,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 215,
+    "participants": 30937,
+    "currentPrice": "$0.418"
+  },
+  {
+    "date": "2025年06月05日",
+    "token": "CUDIS",
+    "amount": 1124,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 210,
+    "participants": 18005,
+    "currentPrice": "$0.087"
+  },
+  {
+    "date": "2025年06月06日",
+    "token": "FLY",
+    "amount": 88,
+    "supplementaryToken": 164,
+    "type": "airdrop",
+    "points": 223,
+    "participants": 33750,
+    "currentPrice": "$0.415"
+  },
+  {
+    "date": "2025年06月07日",
+    "token": "AB",
+    "amount": 9882,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 225,
+    "participants": 49501,
+    "currentPrice": "$0.010"
+  },
+  {
+    "date": "2025年06月08日",
+    "token": "OL",
+    "amount": 1836,
+    "supplementaryToken": 989,
+    "type": "airdrop",
+    "points": 233,
+    "participants": 24864,
+    "currentPrice": "$0.045"
+  },
+  {
+    "date": "2025年06月09日",
+    "token": "SKATE",
+    "amount": 800,
+    "supplementaryToken": 409,
+    "type": "airdrop",
+    "points": 236,
+    "participants": 43312,
+    "currentPrice": "$0.073"
+  },
+  {
+    "date": "2025年06月09日",
+    "token": "SERAPH",
+    "amount": 61,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 198,
+    "participants": 202868,
+    "currentPrice": "$0.156",
+    "pointsConsumed": false
+  },
+  {
+    "date": "2025年06月10日",
+    "token": "RESOLV",
+    "amount": 400,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 239,
+    "participants": 24750,
+    "currentPrice": "$0.217"
+  },
+  {
+    "date": "2025年06月10日",
+    "token": "HOME",
+    "amount": 2500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 236,
+    "participants": 32000,
+    "currentPrice": "$0.024"
+  },
+  {
+    "date": "2025年06月11日",
+    "token": "IDOL",
+    "amount": 4993,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 229,
+    "participants": 19959,
+    "currentPrice": "$0.017"
+  },
+  {
+    "date": "2025年06月12日",
+    "token": "PUNDIAI",
+    "amount": 8,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 237,
+    "participants": 23750,
+    "currentPrice": "$8.4"
+  },
+  {
+    "date": "2025年06月13日",
+    "token": "SGC",
+    "amount": 9886,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 240,
+    "currentPrice": "$0.0065",
+    "cost": 10
+  },
+  {
+    "date": "2025年06月13日",
+    "token": "ROAM",
+    "amount": 372,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 247,
+    "currentPrice": "$0.173"
+  },
+  {
+    "date": "2025年06月14日",
+    "token": "DEGEN",
+    "amount": 13862,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 245,
+    "currentPrice": "$0.0038"
+  },
+  {
+    "date": "2025年06月15日",
+    "token": "F",
+    "amount": 5000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 241,
+    "currentPrice": "$0.01"
+  },
+  {
+    "date": "2025年06月16日",
+    "token": "VELO",
+    "amount": 5000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 242,
+    "participants": 71199,
+    "currentPrice": "$0.01"
+  },
+  {
+    "date": "2025年06月17日",
+    "token": "ULTI",
+    "amount": 2543,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 242,
+    "participants": 77860,
+    "currentPrice": "$0.0018",
+    "pointsConsumed": false
+  },
+  {
+    "date": "2025年06月17日",
+    "token": "BOMB",
+    "amount": 7620,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 238,
+    "participants": 26701,
+    "currentPrice": "$0.005",
+    "cost": 10
+  },
+  {
+    "date": "2025年06月17日",
+    "token": "SPK",
+    "amount": 2000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 240,
+    "participants": 61500,
+    "currentPrice": "$0.07"
+  },
+  {
+    "date": "2025年06月18日",
+    "token": "BEE",
+    "amount": 2067,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 234,
+    "currentPrice": "$0.02",
+    "cost": 10
+  },
+  {
+    "date": "2025年06月19日",
+    "token": "MAT",
+    "amount": 16,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "participants": 28646,
+    "currentPrice": "$3.5",
+    "phase1Points": 243,
+    "phase2Points": 210
+  },
+  {
+    "date": "2025年06月20日",
+    "token": "AVAIL",
+    "amount": 2667,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "participants": 49061,
+    "currentPrice": "$0.026",
+    "phase1Points": 243,
+    "phase2Points": 199
+  },
+  {
+    "date": "2025年06月20日",
+    "token": "LOT",
+    "amount": 2047,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 238,
+    "currentPrice": "$0.02",
+    "cost": 10
+  },
+  {
+    "date": "2025年06月21日",
+    "token": "BRIC",
+    "amount": 900,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.03",
+    "phase1Points": 251,
+    "phase2Points": 226
+  },
+  {
+    "date": "2025年06月22日",
+    "token": "BULLA",
+    "amount": 750,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "participants": 24400,
+    "currentPrice": "$0.06",
+    "phase1Points": 247,
+    "phase2Points": 186
+  },
+  {
+    "date": "2025年06月23日",
+    "token": "CARV",
+    "amount": 250,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "participants": 39528,
+    "currentPrice": "$0.23",
+    "phase1Points": 247,
+    "phase2Points": 198
+  },
+  {
+    "date": "2025年06月24日",
+    "token": "MGO",
+    "amount": 1666,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 210,
+    "participants": 16873,
+    "currentPrice": "$0.017"
+  },
+  {
+    "date": "2025年06月24日",
+    "token": "DMC",
+    "amount": 4800,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.007",
+    "phase1Points": 248,
+    "phase2Points": 210
+  },
+  {
+    "date": "2025年06月24日",
+    "token": "NEWT",
+    "amount": 125,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "participants": 60000,
+    "currentPrice": "$0.46",
+    "phase1Points": 241,
+    "phase2Points": 180
+  },
+  {
+    "date": "2025年06月25日",
+    "token": "H",
+    "amount": 1600,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "participants": 75000,
+    "currentPrice": "$0.05",
+    "phase1Points": 230,
+    "phase2Points": 180
+  },
+  {
+    "date": "2025年06月25日",
+    "token": "XNY",
+    "amount": 11356,
+    "supplementaryToken": 0,
+    "type": "preTge",
+    "points": 218,
+    "currentPrice": "$0.0075",
+    "cost": 6
+  },
+  {
+    "date": "2025年06月26日",
+    "token": "XO",
+    "amount": 3125,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.01",
+    "phase1Points": 239,
+    "phase2Points": 198
+  },
+  {
+    "date": "2025年06月26日",
+    "token": "SAHARA",
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "participants": 74950,
+    "currentPrice": "$0.14",
+    "phase1Points": 223,
+    "phase2Points": 180
+  },
+  {
+    "date": "2025年06月27日",
+    "token": "CESS",
+    "amount": 10000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 170,
+    "currentPrice": "$0.0028"
+  },
+  {
+    "date": "2025年06月27日",
+    "token": "MORE",
+    "amount": 400,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 170,
+    "currentPrice": "$0.05"
+  },
+  {
+    "date": "2025年06月28日",
+    "token": "REKT",
+    "amount": 140230000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 170,
+    "currentPrice": "$0.00000025"
+  },
+  {
+    "date": "2025年06月29日",
+    "token": "FUEL",
+    "amount": 5550,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 170,
+    "currentPrice": "$0.007"
+  },
+  {
+    "date": "2025年07月01日",
+    "token": "BGSC",
+    "amount": 7360,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.006",
+    "phase1Points": 210,
+    "phase2Points": 170
+  },
+  {
+    "date": "2025年07月02日",
+    "token": "ECHO",
+    "amount": 625,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 170,
+    "currentPrice": "$0.03"
+  },
+  {
+    "date": "2025年07月03日",
+    "token": "M",
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.05",
+    "phase1Points": 214,
+    "phase2Points": 140
+  },
+  {
+    "date": "2025年07月03日",
+    "token": "ICNT",
+    "amount": 100,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.35",
+    "phase1Points": 214,
+    "phase2Points": 140
+  },
+  {
+    "date": "2025年07月04日",
+    "token": "CROSS",
+    "amount": 500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 140,
+    "currentPrice": "$0.075"
+  },
+  {
+    "date": "2025年07月05日",
+    "token": "AIN",
+    "amount": 600,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 140,
+    "currentPrice": "$0.045"
+  },
+  {
+    "date": "2025年07月06日",
+    "token": "MPLX",
+    "amount": 400,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 140,
+    "currentPrice": "$0.1"
+  },
+  {
+    "date": "2025年07月07日",
+    "token": "PAL",
+    "amount": 1709,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 202,
+    "currentPrice": "$0.027",
+    "cost": 10
+  },
+  {
+    "date": "2025年07月08日",
+    "token": "BOOM",
+    "amount": 1560,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 200,
+    "currentPrice": "$0.045",
+    "cost": 10
+  },
+  {
+    "date": "2025年07月08日",
+    "token": "OIK",
+    "amount": 750,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 140,
+    "currentPrice": "$0.06"
+  },
+  {
+    "date": "2025年07月09日",
+    "token": "TANSSI",
+    "amount": 750,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 140,
+    "currentPrice": "$0.047"
+  },
+  {
+    "date": "2025年07月09日",
+    "token": "RCADE",
+    "amount": 8000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.0055",
+    "phase1Points": 210,
+    "phase2Points": 120
+  },
+  {
+    "date": "2025年07月10日",
+    "token": "VELVET",
+    "amount": 1288,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 200,
+    "currentPrice": "$0.035",
+    "cost": 6.7
+  },
+  {
+    "date": "2025年07月11日",
+    "token": "TALE",
+    "amount": 500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 190,
+    "currentPrice": "$0.11"
+  },
+  {
+    "date": "2025年07月12日",
+    "token": "PEAQ",
+    "amount": 643,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.075",
+    "phase1Points": 234,
+    "phase2Points": 180
+  },
+  {
+    "date": "2025年07月14日",
+    "token": "C",
+    "amount": 750,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 160,
+    "currentPrice": "$0.07"
+  },
+  {
+    "date": "2025年07月15日",
+    "token": "TAC",
+    "amount": 1875,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.03",
+    "phase1Points": 224,
+    "phase2Points": 140
+  },
+  {
+    "date": "2025年07月16日",
+    "token": "RION",
+    "amount": 500,
+    "supplementaryToken": 0,
+    "type": "bondingCurveTge",
+    "points": 211,
+    "currentPrice": "$1",
+    "cost": 100
+  },
+  {
+    "date": "2025年07月17日",
+    "token": "BAS",
+    "amount": 14348,
+    "supplementaryToken": 0,
+    "type": "preTge",
+    "points": 213,
+    "currentPrice": "$0.005",
+    "cost": 15
+  },
+  {
+    "date": "2025年07月17日",
+    "token": "REA",
+    "amount": 150,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$1",
+    "phase1Points": 224,
+    "phase2Points": 140
+  },
+  {
+    "date": "2025年07月18日",
+    "token": "TAKER",
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 165,
+    "currentPrice": "$0.072"
+  },
+  {
+    "date": "2025年07月18日",
+    "token": "G",
+    "amount": 88000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 165,
+    "currentPrice": "$0.0011"
+  },
+  {
+    "date": "2025年07月19日",
+    "token": "ESPORTS",
+    "amount": 900,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 160,
+    "currentPrice": "$0.06"
+  },
+  {
+    "date": "2025年07月20日",
+    "token": "UPTOP",
+    "amount": 1500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 180,
+    "currentPrice": "$0.03"
+  },
+  {
+    "date": "2025年07月21日",
+    "token": "TA",
+    "amount": 750,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 210,
+    "currentPrice": "$0.14"
+  },
+  {
+    "date": "2025年07月22日",
+    "token": "ZKWASM",
+    "amount": 899,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 225,
+    "currentPrice": "$0.075",
+    "cost": 9
+  },
+  {
+    "date": "2025年07月22日",
+    "token": "YALA",
+    "amount": 200,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.35",
+    "phase1Points": 238,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年07月23日",
+    "token": "COA",
+    "amount": 1500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.028"
+  },
+  {
+    "date": "2025年07月24日",
+    "token": "ASP",
+    "amount": 125,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.54",
+    "phase1Points": 225,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年07月25日",
+    "token": "LN",
+    "amount": 600,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.055"
+  },
+  {
+    "date": "2025年07月26日",
+    "token": "PHY",
+    "amount": 750,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.06"
+  },
+  {
+    "date": "2025年07月27日",
+    "token": "VRA",
+    "amount": 32238,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.0011"
+  },
+  {
+    "date": "2025年07月28日",
+    "token": "DELABS",
+    "amount": 3217,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 218,
+    "currentPrice": "$0.017",
+    "cost": 11
+  },
+  {
+    "date": "2025年07月29日",
+    "token": "TREE",
+    "amount": 100,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$1.2",
+    "phase1Points": 233,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年07月30日",
+    "token": "GAIA",
+    "amount": 500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.1",
+    "phase1Points": 233,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年07月30日",
+    "token": "RHEA",
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.05"
+  },
+  {
+    "date": "2025年07月31日",
+    "token": "PLAY",
+    "amount": 1600,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.033"
+  },
+  {
+    "date": "2025年07月31日",
+    "token": "NAORIS",
+    "amount": 500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.1",
+    "phase1Points": 228,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年08月01日",
+    "token": "MIA",
+    "amount": 500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.06"
+  },
+  {
+    "date": "2025年08月01日",
+    "token": "TOSHI",
+    "amount": 69349,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.0005"
+  },
+  {
+    "date": "2025年08月02日",
+    "token": "AIO",
+    "amount": 750,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.045"
+  },
+  {
+    "date": "2025年08月03日",
+    "token": "MM",
+    "amount": 24000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.00148"
+  },
+  {
+    "date": "2025年08月04日",
+    "token": "CYC",
+    "amount": 800,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.06"
+  },
+  {
+    "date": "2025年08月04日",
+    "token": "DARKSTAR",
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.056"
+  },
+  {
+    "date": "2025年08月05日",
+    "token": "SUP",
+    "amount": 500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.085"
+  },
+  {
+    "date": "2025年08月05日",
+    "token": "TOWNS",
+    "amount": 1359,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.07",
+    "phase1Points": 230,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年08月05日",
+    "token": "PROVE",
+    "amount": 100,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$1.2",
+    "phase1Points": 241,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年08月06日",
+    "token": "FIR",
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.07"
+  },
+  {
+    "date": "2025年08月07日",
+    "token": "IN",
+    "amount": 500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.095"
+  },
+  {
+    "date": "2025年08月07日",
+    "token": "X",
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.055"
+  },
+  {
+    "date": "2025年08月08日",
+    "token": "K",
+    "amount": 250,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.4",
+    "phase1Points": 233,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年08月09日",
+    "token": "BSU",
+    "amount": 510,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.07"
+  },
+  {
+    "date": "2025年08月10日",
+    "token": "GAME",
+    "amount": 10200,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.0045",
+    "phase1Points": 237,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年08月11日",
+    "token": "XCX",
+    "amount": 800,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.07"
+  },
+  {
+    "date": "2025年08月11日",
+    "token": "SLAY",
+    "amount": 525,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.095",
+    "phase1Points": 227,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年08月12日",
+    "token": "WAI",
+    "amount": 800,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.05"
+  },
+  {
+    "date": "2025年08月13日",
+    "token": "BTR",
+    "amount": 1322,
+    "supplementaryToken": 0,
+    "type": "preTge",
+    "points": 222,
+    "currentPrice": "$0.15",
+    "cost": 25
+  },
+  {
+    "date": "2025年08月14日",
+    "token": "OVL",
+    "amount": 111,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.45"
+  },
+  {
+    "date": "2025年08月14日",
+    "token": "AIBOT",
+    "amount": 1666,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 224,
+    "currentPrice": "$0.039"
+  },
+  {
+    "date": "2025年08月14日",
+    "token": "REVA",
+    "amount": 0,
+    "supplementaryToken": 0,
+    "type": "preTge",
+    "points": 224,
+    "currentPrice": "$0"
+  },
+  {
+    "date": "2025年08月15日",
+    "token": "PUBLIC",
+    "amount": 430,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.09",
+    "phase1Points": 240,
+    "phase2Points": 200
+  },
+  {
+    "date": "2025年08月15日",
+    "token": "TCMO",
+    "amount": 600,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.08"
+  },
+  {
+    "date": "2025年08月18日",
+    "token": "RICE",
+    "amount": 1359,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 230,
+    "currentPrice": "$0.06",
+    "cost": 7
+  },
+  {
+    "date": "2025年08月18日",
+    "token": "DAM",
+    "amount": 320,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.135"
+  },
+  {
+    "date": "2025年08月16日",
+    "token": "MLK",
+    "amount": 245,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.14"
+  },
+  {
+    "date": "2025年08月17日",
+    "token": "WILD",
+    "amount": 100,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.45"
+  },
+  {
+    "date": "2025年08月20日",
+    "token": "DGC",
+    "amount": 500000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.000055"
+  },
+  {
+    "date": "2025年08月21日",
+    "token": "ARIA",
+    "amount": 625,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.052"
+  },
+  {
+    "date": "2025年08月21日",
+    "token": "SAPIEN",
+    "amount": 200,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.23"
+  },
+  {
+    "date": "2025年08月21日",
+    "token": "AKE",
+    "amount": 100000,
+    "supplementaryToken": 0,
+    "type": "bondingCurveTge",
+    "points": 238,
+    "currentPrice": "$0.00069",
+    "cost": 2
+  },
+  {
+    "date": "2025年08月22日",
+    "token": "XPIN",
+    "amount": 80000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.00055"
+  },
+  {
+    "date": "2025年08月22日",
+    "token": "HEMI",
+    "amount": 4704,
+    "supplementaryToken": 0,
+    "type": "preTge",
+    "points": 240,
+    "currentPrice": "$0.017",
+    "cost": 7
+  },
+  {
+    "date": "2025年08月24日",
+    "token": "FST",
+    "amount": 800,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.05"
+  },
+  {
+    "date": "2025年08月25日",
+    "token": "MTP",
+    "amount": 750,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.055"
+  },
+  {
+    "date": "2025年08月23日",
+    "token": "DORA",
+    "amount": 140,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.24"
+  },
+  {
+    "date": "2025年08月26日",
+    "token": "TOWN",
+    "amount": 1600,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 200,
+    "currentPrice": "$0.022"
+  },
+  {
+    "date": "2025年08月25日",
+    "token": "TAKE",
+    "amount": 2000,
+    "supplementaryToken": 0,
+    "type": "bondingCurveTge",
+    "points": 241,
+    "currentPrice": "$0.05",
+    "cost": 20
+  },
+  {
+    "date": "2025年08月29日",
+    "token": "CELB",
+    "amount": 3200,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 220,
+    "currentPrice": "$0.013"
+  },
+  {
+    "date": "2025年08月28日",
+    "token": "MITO",
+    "amount": 386,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 248,
+    "currentPrice": "$0.11",
+    "cost": 5
+  },
+  {
+    "date": "2025年08月29日",
+    "token": "XLAB",
+    "amount": 1500000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.00002",
+    "phase1Points": 254,
+    "phase2Points": 230
+  },
+  {
+    "date": "2025年08月27日",
+    "token": "DOLO",
+    "amount": 166,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.29",
+    "phase1Points": 260,
+    "phase2Points": 230
+  },
+  {
+    "date": "2025年08月28日",
+    "token": "BLUM",
+    "amount": 700,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 230,
+    "currentPrice": "$0.042"
+  },
+  {
+    "date": "2025年09月03日",
+    "token": "PTB",
+    "amount": 1320,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.03",
+    "phase1Points": 245,
+    "phase2Points": 220
+  },
+  {
+    "date": "2025年09月01日",
+    "token": "FOREST",
+    "amount": 878,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 240,
+    "currentPrice": "$0.045",
+    "cost": 4.5
+  },
+  {
+    "date": "2025年08月30日",
+    "token": "ZENT",
+    "amount": 4000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 230,
+    "currentPrice": "$0.0072"
+  },
+  {
+    "date": "2025年09月02日",
+    "token": "Q",
+    "amount": 5000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 220,
+    "currentPrice": "$0.009"
+  },
+  {
+    "date": "2025年08月31日",
+    "token": "WOD",
+    "amount": 750,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 220,
+    "currentPrice": "$0.056"
+  },
+  {
+    "date": "2025年09月03日",
+    "token": "MCH",
+    "amount": 1000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 220,
+    "currentPrice": "$0.06"
+  },
+  {
+    "date": "2025年09月02日",
+    "token": "SOMI",
+    "amount": 100,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.6",
+    "phase1Points": 235,
+    "phase2Points": 220
+  },
+  {
+    "date": "2025年09月02日",
+    "token": "HOLO",
+    "amount": 849,
+    "supplementaryToken": 0,
+    "type": "preTge",
+    "points": 240,
+    "currentPrice": "$0",
+    "cost": 8
+  },
+  {
+    "date": "2025年09月03日",
+    "token": "BOT",
+    "amount": 2000,
+    "supplementaryToken": 0,
+    "type": "bondingCurveTge",
+    "points": 231,
+    "currentPrice": "$0.033",
+    "cost": 10
+  },
+  {
+    "date": "2025年09月04日",
+    "token": "U",
+    "amount": 2700,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 220,
+    "currentPrice": "$0.015"
+  },
+  {
+    "date": "2025年09月04日",
+    "token": "TRADOOR",
+    "amount": 50,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 220,
+    "currentPrice": "$0.55"
+  },
+  {
+    "date": "2025年09月04日",
+    "token": "GATA",
+    "amount": 500,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 220,
+    "currentPrice": "$0.066"
+  },
+  {
+    "date": "2025年09月05日",
+    "token": "SHARDS",
+    "amount": 4000,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 220,
+    "currentPrice": "$0.025"
+  },
+  {
+    "date": "2025年09月05日",
+    "token": "BOOST",
+    "amount": 640,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "points": 220,
+    "currentPrice": "$0.05"
+  },
+  {
+    "date": "2025年09月06日",
+    "token": "STAR",
+    "amount": 774,
+    "supplementaryToken": 0,
+    "type": "tge",
+    "points": 224,
+    "currentPrice": "$0.065",
+    "cost": 8
+  },
+  {
+    "date": "2025年09月07日",
+    "token": "SAROS",
+    "amount": 100,
+    "supplementaryToken": 0,
+    "type": "airdrop",
+    "currentPrice": "$0.36",
+    "phase1Points": 238,
+    "phase2Points": 220
+  }
+]
