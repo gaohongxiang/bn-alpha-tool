@@ -171,12 +171,11 @@ export function RulesExplanation() {
                     <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
                       <h4 className="font-semibold text-orange-700 mb-2 flex items-center gap-1">
                         <Zap className="w-4 h-4" />
-                        BSC 链加成
+                        Alpha 窗口加成
                       </h4>
                       <ul className="text-sm space-y-1">
-                        <li>• 交易量享受 <strong>2倍计算</strong></li>
-                        <li>• $32 → 按 $64 计算</li>
-                        <li>• 获得 6分 而不是 5分</li>
+                        <li>• <strong>BSC(30天内) 4×</strong>、<strong>其他链(30天内) 2×</strong>、<strong>非alpha活动代币或30天外 1×</strong></li>
+                        <li>• 示例：$32（BSC）→ 按 $128 计算；$32（其他链）→ 按 $64 计算；$32（非alpha活动代币或30天外）→ 按 $32 计算</li>
                       </ul>
                     </div>
                   </div>
@@ -196,31 +195,24 @@ export function RulesExplanation() {
                       <tr>
                         <th className="text-left py-4 px-6 font-semibold text-purple-800">每日Alpha代币交易量</th>
                         <th className="text-left py-4 px-6 font-semibold text-purple-800">每日积分</th>
-                        <th className="text-left py-4 px-6 font-semibold text-purple-800">BSC链加成后</th>
                       </tr>
                     </thead>
                     <tbody>
                       {[
-                        { amount: '$2', points: 1, bscPoints: 1 },
-                        { amount: '$4', points: 2, bscPoints: 2 },
-                        { amount: '$8', points: 3, bscPoints: 4 },
-                        { amount: '$16', points: 4, bscPoints: 5 },
-                        { amount: '$32', points: 5, bscPoints: 6 },
-                        { amount: '$64', points: 6, bscPoints: 7 },
-                        { amount: '$128', points: 7, bscPoints: 8 },
-                        { amount: '$256', points: 8, bscPoints: 9 },
-                        { amount: '$512', points: 9, bscPoints: 10 },
+                        { range: '$2 / 4 / 8 / 16 / 32 / 64', points: '1 / 2 / 3 / 4 / 5 / 6' },
+                        { range: '$128 / 256 / 512', points: '7 / 8 / 9' },
+                        { range: '$1024 / 2048', points: '10 / 11' },
+                        { range: '$4096', points: '12' },
+                        { range: '$8192', points: '13' },
+                        { range: '$16384', points: '14' },
+                        { range: '$32768', points: '15' },
+                        { range: '$65536', points: '16' },
                       ].map((row, index) => (
                         <tr key={index} className="border-b hover:bg-purple-50 transition-colors">
-                          <td className="py-4 px-6 font-medium">{row.amount}</td>
-                          <td className="py-4 px-6">
+                          <td className="py-3 px-6 font-medium">{row.range}</td>
+                          <td className="py-3 px-6">
                             <Badge variant="outline" className="bg-purple-100 border-purple-300 text-purple-800">
-                              {row.points}积分
-                            </Badge>
-                          </td>
-                          <td className="py-4 px-6">
-                            <Badge variant="outline" className="bg-orange-100 border-orange-300 text-orange-800">
-                              {row.bscPoints}积分
+                              {row.points} 积分
                             </Badge>
                           </td>
                         </tr>
@@ -228,7 +220,6 @@ export function RulesExplanation() {
                       <tr className="hover:bg-purple-50 transition-colors">
                         <td className="py-4 px-6 font-medium">以此类推...</td>
                         <td className="py-4 px-6 text-gray-600">每翻倍+1积分</td>
-                        <td className="py-4 px-6 text-gray-600">享受2倍加成</td>
                       </tr>
                     </tbody>
                   </table>
@@ -328,9 +319,9 @@ export function RulesExplanation() {
                     <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg border border-orange-200">
                       <div className="flex items-center gap-2">
                         <Zap className="w-3 h-3 text-orange-500" />
-                        <span className="text-sm">交易量翻倍</span>
+                        <span className="text-sm">窗口加成（BSC 4×）</span>
                       </div>
-                      <span className="text-sm text-orange-700">$32 → $64</span>
+                      <span className="text-sm text-orange-700">$32 → $128</span>
                     </div>
                     
                     <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg border border-purple-200">
@@ -338,7 +329,7 @@ export function RulesExplanation() {
                         <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
                         <span className="text-sm">交易量积分</span>
                       </div>
-                      <Badge variant="outline" className="bg-purple-100 text-purple-800">6分</Badge>
+                      <Badge variant="outline" className="bg-purple-100 text-purple-800">7分</Badge>
                     </div>
                     
                     <div className="flex items-center justify-between p-3 bg-orange-100 rounded-lg border border-orange-300">
@@ -346,7 +337,7 @@ export function RulesExplanation() {
                         <Award className="w-4 h-4 text-orange-600" />
                         <span className="font-semibold">当日总积分</span>
                       </div>
-                      <Badge className="bg-orange-600 text-white">8分</Badge>
+                      <Badge className="bg-orange-600 text-white">9分</Badge>
                     </div>
                     
                     <div className="flex items-center justify-between p-3 bg-orange-200 rounded-lg border border-orange-400">
@@ -354,7 +345,7 @@ export function RulesExplanation() {
                         <TrendingUp className="w-4 h-4 text-orange-700" />
                         <span className="font-semibold">15日累计</span>
                       </div>
-                      <Badge className="bg-orange-700 text-white">120分</Badge>
+                      <Badge className="bg-orange-700 text-white">135分</Badge>
                     </div>
                   </div>
                 </div>

@@ -11,11 +11,11 @@ import { Points } from "@/lib/features/points"
 export function PointsCalculator() {
   // 状态管理
   const [balance, setBalance] = useState([1000])
-  const [dailyTradingVolume, setDailyTradingVolume] = useState([32768])
+  const [dailyTradingVolume, setDailyTradingVolume] = useState([8192])
   const [isBscChain, setIsBscChain] = useState(true)
-  const [airdropThreshold, setAirdropThreshold] = useState([240])
-  const [airdropValue, setAirdropValue] = useState([80])
-  const [dailyWearValue, setDailyWearValue] = useState([5])
+  const [airdropThreshold, setAirdropThreshold] = useState([220])
+  const [airdropValue, setAirdropValue] = useState([40])
+  const [dailyWearValue, setDailyWearValue] = useState([2])
 
   // 编辑状态
   const [editingBalance, setEditingBalance] = useState(false)
@@ -33,7 +33,7 @@ export function PointsCalculator() {
 
   // 预设值
   const balancePresets = [100, 1000, 10000, 100000, 1000000]
-  const tradingVolumePresets = [16384, 32768, 65536, 131072, 262144, 524288]
+  const tradingVolumePresets = [8192, 16384, 32768, 65536, 131072, 262144]
   const thresholdPresets = [50, 150, 250, 350, 500]
   const airdropValuePresets = [10, 50, 100, 200, 500]
   const wearValuePresets = [0, 5, 15, 30, 50]
@@ -60,7 +60,8 @@ export function PointsCalculator() {
   // 计算结果
   const calculations = useMemo(() => {
     const balancePoints = Points.balancePoints(balance[0])
-    const effectiveVolume = isBscChain ? dailyTradingVolume[0] * 2 : dailyTradingVolume[0]
+    // 新规：Alpha窗口内加成 - BSC 4×，其他链 2×（演示工具默认按Alpha窗口内计算）
+    const effectiveVolume = isBscChain ? dailyTradingVolume[0] * 4 : dailyTradingVolume[0] * 2
     const tradingVolumePoints = Points.tradingVolumePoints(effectiveVolume)
     const dailyTotalPoints = balancePoints + tradingVolumePoints
     const cycleTotalPoints = dailyTotalPoints * 15
@@ -322,7 +323,7 @@ export function PointsCalculator() {
                   <div className="flex items-center space-x-2">
                     <Checkbox id="bsc-chain" checked={isBscChain} onCheckedChange={handleBscChainChange} />
                     <Label htmlFor="bsc-chain" className="font-light">
-                      BSC链交易 (交易量翻倍)
+                      BSC链交易 (Alpha窗口内4倍)
                     </Label>
                   </div>
                   <div className="text-sm text-green-600 font-light">

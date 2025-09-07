@@ -26,7 +26,7 @@ export function RulesModal({ open, onOpenChange }: RulesModalProps) {
             <div className="text-gray-700 space-y-2">
               <p>• <strong>时间范围：</strong>每天从早上8:00到第二天早上8:00算1天（UTC+8北京时间）</p>
               <p>• <strong>统计目标：</strong>分析BSC链上的钱包余额、有效交易和磨损情况</p>
-              <p>• <strong>积分计算：</strong>余额积分 + 交易积分（BSC链2倍加成）</p>
+              <p>• <strong>积分计算：</strong>余额积分 + 交易积分（Alpha窗口：BSC 4×，其他 2×；非窗口 1×）</p>
             </div>
           </div>
 
@@ -148,8 +148,9 @@ export function RulesModal({ open, onOpenChange }: RulesModalProps) {
                 <h4 className="font-semibold text-purple-700 mb-3">📊 交易量积分</h4>
                 <div className="space-y-2 text-sm">
                   <div>• 基础交易额：实际USDT交易量</div>
-                  <div>• <span className="font-semibold text-orange-600">BSC链加成：交易额 × 2</span></div>
-                  <div>• 积分转换：按加成后金额对照积分表</div>
+                  <div>• <span className="font-semibold text-orange-600">Alpha窗口加成</span>：BSC ×4，其他链 ×2；非窗口 ×1</div>
+                  <div>• 判定：代币 Alpha（空投/TGE）开始后 30 天内买入的交易</div>
+                  <div>• 积分转换：按加成后的有效交易量换算积分</div>
                 </div>
               </div>
             </div>

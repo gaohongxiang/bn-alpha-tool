@@ -14,6 +14,8 @@ interface RawTokenConfig {
   address: string
   decimals?: number
   description?: string
+  // Alpha 上线日期（仅日期，按北京时间 08:00 起算），可选
+  alphaStartDate?: string
 }
 
 interface RawPairsConfig {
@@ -27,7 +29,9 @@ interface RawNetworkConfig {
   nativeToken: RawTokenConfig
   pairs: RawPairsConfig
   rules: {
-    volumeMultiplier: number
+    baseMultiplier: number
+    alphaBonusMultiplier: number
+    alphaWindowDays: number
   }
 }
 
@@ -43,6 +47,8 @@ export interface TokenInfo {
   address: string
   decimals?: number
   price?: number
+  // Alpha 开始日期（仅日期，格式 YYYY-MM-DD）
+  alphaStartDate?: string
 }
 
 // 区块范围信息接口
@@ -58,7 +64,11 @@ export interface TokenDataOfNetwork {
   network: string
   chainId: string
   chainIdHex: string
-  volumeMultiplier: number
+  rules: {
+    baseMultiplier: number
+    alphaBonusMultiplier: number
+    alphaWindowDays: number
+  }
   
   // 代币数据
   nativeToken: TokenInfo
@@ -175,7 +185,8 @@ class TokenManager {
       const baseToken = rawNetwork.pairs.baseToken
       const baseTokenInfo: TokenInfo = {
         symbol: baseToken.symbol,
-        address: baseToken.address.toLowerCase()
+        address: baseToken.address.toLowerCase(),
+        alphaStartDate: baseToken.alphaStartDate,
       }
       erc20Tokens[baseToken.symbol] = baseTokenInfo
 
@@ -183,7 +194,8 @@ class TokenManager {
       rawNetwork.pairs.targetTokens.forEach(token => {
         const tokenInfo: TokenInfo = {
           symbol: token.symbol,
-          address: token.address.toLowerCase()
+          address: token.address.toLowerCase(),
+          alphaStartDate: token.alphaStartDate,
         }
         erc20Tokens[token.symbol] = tokenInfo
       })
@@ -204,7 +216,11 @@ class TokenManager {
         network: networkId,
         chainId: rawNetwork.chainId.toString(),
         chainIdHex: `0x${rawNetwork.chainId.toString(16)}`,
-        volumeMultiplier: rawNetwork.rules.volumeMultiplier,
+        rules: {
+          baseMultiplier: rawNetwork.rules.baseMultiplier,
+          alphaBonusMultiplier: rawNetwork.rules.alphaBonusMultiplier,
+          alphaWindowDays: rawNetwork.rules.alphaWindowDays
+        },
         nativeToken,
         erc20Tokens,
         pairs

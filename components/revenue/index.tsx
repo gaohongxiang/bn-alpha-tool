@@ -850,18 +850,25 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                                 const remainingVolume = Points.calculateRemainingVolumeForNextLevel(currentVolume)
                                 const nextLevelThreshold = Points.getNextLevelThreshold(currentVolume)
 
-                                // BSC链有2倍加成，所以BSC链需要的交易量是总需求的一半
-                                const bscNeeded = Math.ceil(remainingVolume / 2)
-                                const otherChainNeeded = Math.ceil(remainingVolume)
+                                // 三种情况：BSC(30天内)4×，其他链(30天内)2×，其他 1×
+                                const bscNeeded = Math.ceil(remainingVolume / 4)
+                                const otherChainNeeded = Math.ceil(remainingVolume / 2)
+                                const nonAlphaNeeded = Math.ceil(remainingVolume)
                                 const nextLevel = Math.ceil(nextLevelThreshold)
 
                                 return (
                                   <div className="flex flex-col items-center">
-                                    <div className="text-base font-medium text-gray-800">
-                                      BSC: {bscNeeded} | 其他: {otherChainNeeded}
+                                    <div className="text-xs text-gray-500">
+                                      <span className="text-gray-500">BSC(30天内): </span>
+                                      <span className="text-gray-800 font-medium text-sm">{bscNeeded}</span>
+                                      <span className="text-gray-500"> | 其他链(30天内): </span>
+                                      <span className="text-gray-800 font-medium text-sm">{otherChainNeeded}</span>
+                                      <span className="text-gray-500"> | 其他: </span>
+                                      <span className="text-gray-800 font-medium text-sm">{nonAlphaNeeded}</span>
                                     </div>
                                     <div className="text-xs text-gray-500 mt-1">
-                                      下一级: {nextLevel}
+                                      <span className="text-gray-500">下一级: </span>
+                                      <span className="text-gray-800 font-medium text-sm">{nextLevel}</span>
                                     </div>
                                   </div>
                                 )
@@ -966,17 +973,24 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                               const currentVolume = wallet.transactionData?.totalBoughtValue || 0
                               const remainingVolume = Points.calculateRemainingVolumeForNextLevel(currentVolume)
                               const nextLevelThreshold = Points.getNextLevelThreshold(currentVolume)
-                              const bscNeeded = Math.ceil(remainingVolume / 2)
-                              const otherChainNeeded = Math.ceil(remainingVolume)
+                              const bscNeeded = Math.ceil(remainingVolume / 4)
+                              const otherChainNeeded = Math.ceil(remainingVolume / 2)
+                              const nonAlphaNeeded = Math.ceil(remainingVolume)
                               const nextLevel = Math.ceil(nextLevelThreshold)
 
                               return (
                                 <div>
-                                  <div className="text-sm font-medium text-gray-800">
-                                    BSC: {bscNeeded} | 其他: {otherChainNeeded}
+                                  <div className="text-xs text-gray-500">
+                                    <span className="text-gray-500">BSC(30天内): </span>
+                                    <span className="text-gray-800 font-medium text-sm">{bscNeeded}</span>
+                                    <span className="text-gray-500"> | 其他链(30天内): </span>
+                                    <span className="text-gray-800 font-medium text-sm">{otherChainNeeded}</span>
+                                    <span className="text-gray-500"> | 其他: </span>
+                                    <span className="text-gray-800 font-medium text-sm">{nonAlphaNeeded}</span>
                                   </div>
                                   <div className="text-xs text-gray-500 mt-1">
-                                    下一级: {nextLevel}
+                                    <span className="text-gray-500">下一级: </span>
+                                    <span className="text-gray-800 font-medium text-sm">{nextLevel}</span>
                                   </div>
                                 </div>
                               )
@@ -1231,9 +1245,8 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                     <h4 className="font-medium text-gray-700 mb-2">1. 交易对过滤</h4>
                     <p className="text-gray-600 mb-2">只统计以下交易对的交易：</p>
                     <ul className="list-disc list-inside text-gray-600 space-y-1 ml-4">
-                      <li>USDT ↔ ZKJ</li>
+                      <li>USDT ↔ MCH</li>
                       <li>USDT ↔ KOGE</li>
-                      <li>ZKJ ↔ KOGE</li>
                       <li>其他配置中指定的交易对</li>
                     </ul>
                   </div>
@@ -1273,10 +1286,12 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                   </div>
 
                   <div className="bg-orange-50 p-3 rounded border border-orange-200">
-                    <h4 className="font-medium text-orange-800 mb-2">BSC链加成规则</h4>
+                    <h4 className="font-medium text-orange-800 mb-2">Alpha窗口加成规则</h4>
                     <ul className="list-disc list-inside text-orange-700 space-y-1 ml-4">
-                      <li><span className="font-medium">BSC链：2倍加成</span> - 每1USDT交易量计为2USDT</li>
-                      <li><span className="font-medium">其他链：1倍</span> - 按实际交易量计算</li>
+                      <li><span className="font-medium">窗口判定</span>：代币在 Alpha（空投/TGE）开始后的 <span className="font-medium">30 天内</span> 买入计入加成；超过 30 天或非 Alpha 代币不加成</li>
+                      <li><span className="font-medium">BSC链</span>：窗口内 <span className="font-medium">4×</span></li>
+                      <li><span className="font-medium">其他链</span>：窗口内 <span className="font-medium">2×</span></li>
+                      <li><span className="font-medium">非窗口</span>：<span className="font-medium">1×</span>（按实际交易量）</li>
                     </ul>
                   </div>
                 </div>
@@ -1303,12 +1318,12 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                   <div className="bg-purple-50 p-3 rounded border border-purple-200">
                     <h4 className="font-medium text-purple-800 mb-2">交易积分</h4>
                     <div className="text-purple-700 space-y-1">
-                      <p>基于有效交易量（含BSC加成）：</p>
+                      <p>基于有效交易量（含 Alpha 窗口加成）：</p>
                       <ul className="list-disc list-inside ml-4 text-sm">
                         <li>使用对数计算：log₂(交易量)</li>
                         <li>2USDT→1分, 4USDT→2分</li>
                         <li>8USDT→3分, 16USDT→4分</li>
-                        <li>BSC链自动享受2倍加成</li>
+                        <li>Alpha 窗口内：BSC 4×，其他 2×；非 Alpha 或超过 30 天：1×</li>
                       </ul>
                     </div>
                   </div>
@@ -1347,12 +1362,10 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                 <div className="bg-indigo-50 p-3 rounded border border-indigo-200">
                   <h4 className="font-medium text-indigo-800 mb-2">距下一级所需交易量</h4>
                   <div className="text-indigo-700 space-y-2">
-                    <p><span className="font-medium">BSC链需求</span>：由于有2倍加成，实际需要的交易量是显示值的一半</p>
-                    <p><span className="font-medium">其他链需求</span>：需要完整的交易量，无加成</p>
+                    <p><span className="font-medium">倍数说明</span>：Alpha 窗口内按链别享有加成（BSC 4×、其他 2×），非窗口为 1×</p>
+                    <p><span className="font-medium">提示</span>：距下一级所需交易量基于已加成后的有效交易量计算，实际买入需求会随是否处于 Alpha 窗口而不同</p>
                     <p><span className="font-medium">下一级门槛</span>：达到下个积分等级需要的总交易量</p>
-                    <p className="text-sm bg-indigo-100 p-2 rounded">
-                      💡 建议：优先在BSC链上交易，可以用一半的成本达到相同的积分效果
-                    </p>
+                    <p className="text-sm bg-indigo-100 p-2 rounded">💡 建议：优先在 Alpha 窗口内交易，可显著降低达到同等积分所需的实际买入量</p>
                   </div>
                 </div>
               </div>

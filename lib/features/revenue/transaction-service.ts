@@ -16,6 +16,88 @@ export class TransactionService {
   // 移除 APIKeyManager，使用专门的 Swaps API 路由
 
   /**
+   * 将配置中的 alphaStartDate 解析为北京时间(UTC+8) 起始时间。
+   * 支持两种输入：
+   * 1) YYYY-MM-DD               → 当日 08:00(+08:00)
+   * 2) YYYY-MM-DD HH:mm[[:ss]]  → 当日指定时刻(+08:00)
+   * 若字符串本身已带时区（Z 或 ±HH:MM），则按其自身时区解析。
+   */
+  private static parseAlphaStartAt(alphaStartDate?: string): Date | null {
+    if (!alphaStartDate) return null
+    try {
+      const raw = alphaStartDate.trim()
+
+      const dateOnlyRe = /^\d{4}-\d{2}-\d{2}$/
+      const dateTimeRe = /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(?::\d{2})?$/
+      const hasTZ = /[zZ]$|[+-]\d{2}:\d{2}$/.test(raw)
+
+      let isoLike: string
+
+      if (dateOnlyRe.test(raw)) {
+        // 仅日期：默认 08:00(+08:00)
+        isoLike = `${raw}T08:00:00+08:00`
+      } else if (dateTimeRe.test(raw)) {
+        // 含时间但无时区：默认补 +08:00，并保证有秒
+        let normalized = raw.replace(' ', 'T')
+        if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(normalized)) {
+          normalized += ':00'
+        }
+        isoLike = hasTZ ? normalized : `${normalized}+08:00`
+      } else {
+        // 其它格式：尽量标准化并假定 +08:00（若无时区）
+        let normalized = raw.replace(' ', 'T')
+        isoLike = hasTZ ? normalized : `${normalized}+08:00`
+      }
+
+      const d = new Date(isoLike)
+      if (isNaN(d.getTime())) return null
+      return d
+    } catch {
+      return null
+    }
+  }
+
+  /**
+   * 判定一笔买入交易是否处于 Alpha 窗口
+   */
+  private static isWithinAlphaWindow(txTimestampISO: string, alphaStartDate: string, windowDays: number): boolean {
+    const startAt = TransactionService.parseAlphaStartAt(alphaStartDate)
+    if (!startAt) return false
+    const endAt = new Date(startAt.getTime() + windowDays * 24 * 60 * 60 * 1000)
+    const txTime = new Date(txTimestampISO)
+    return txTime >= startAt && txTime < endAt
+  }
+
+  /**
+   * 获取该笔买入交易应使用的倍数
+   * 规则:
+   * - 若买入的代币配置了 alphaStartDate 且在窗口内: 使用网络的 alphaBonusMultiplier
+   * - 否则: 使用 baseMultiplier (默认 1)
+   */
+  private static getMultiplierForBuyTx(tokenData: TokenDataOfNetwork, tx: any): number {
+    const rules = tokenData.rules
+    const baseMultiplier = rules?.baseMultiplier ?? 1
+
+    const buySymbol = tx?.bought?.symbol
+    if (!buySymbol) return baseMultiplier
+
+    const tokenInfo = tokenData.erc20Tokens?.[buySymbol]
+    const alphaStartDate = tokenInfo?.alphaStartDate
+    if (!alphaStartDate) return baseMultiplier
+
+    const inWindow = TransactionService.isWithinAlphaWindow(tx.blockTimestamp, alphaStartDate, rules.alphaWindowDays)
+    const multiplier = inWindow ? (rules.alphaBonusMultiplier ?? baseMultiplier) : baseMultiplier
+
+    // 记录倍数选择，便于排查
+    try {
+      const reason = inWindow ? 'alpha-window' : 'base'
+      logger.debug('multiplier', `🎚️ ${tokenData.network} ${buySymbol}: m=${multiplier} (${reason}) tx=${tx.transactionHash}`)
+    } catch {}
+
+    return multiplier
+  }
+
+  /**
    * 获取钱包交易汇总数据
    * @param walletAddress 钱包地址
    * @param moralisInstance Moralis 实例
@@ -185,8 +267,12 @@ export class TransactionService {
                   }
                 })
                 .sort((a, b) => b.timestamp - a.timestamp), // 按时间戳降序排列（最新的在前）
-              // 根据配置文件中的volumeMultiplier计算交易量
-              totalBoughtValue: buyFilteredTransactions.reduce((sum: number, tx: any) => sum + tx.bought.usdAmount, 0) * tokenData.volumeMultiplier,
+              // 按逐笔动态倍数计算有效交易量
+              totalBoughtValue: buyFilteredTransactions.reduce((sum: number, tx: any) => {
+                const usd = tx.bought?.usdAmount || 0
+                const m = TransactionService.getMultiplierForBuyTx(tokenData, tx)
+                return sum + usd * m
+              }, 0),
             }
 
             if (buyFilteredTransactions.length > 0) {
