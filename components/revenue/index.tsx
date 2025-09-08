@@ -846,7 +846,9 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                             </td>
                             <td className="py-3 px-4 text-center">
                               {(() => {
-                                const currentVolume = wallet.transactionData?.totalBoughtValue || 0
+                                // 统一按两位小数对齐显示口径，避免 7.999 显示为 8.00 却仍按 7.999 参与计算
+                                const currentVolumeRaw = wallet.transactionData?.totalBoughtValue || 0
+                                const currentVolume = Math.round(currentVolumeRaw * 100) / 100
                                 const remainingVolume = Points.calculateRemainingVolumeForNextLevel(currentVolume)
                                 const nextLevelThreshold = Points.getNextLevelThreshold(currentVolume)
 
@@ -970,7 +972,8 @@ export function RevenueDisplay(props: RevenueDisplayProps = {}) {
                           <div>
                             <div className="text-gray-600 font-light">距下一级所需交易量</div>
                             {(() => {
-                              const currentVolume = wallet.transactionData?.totalBoughtValue || 0
+                              const currentVolumeRaw = wallet.transactionData?.totalBoughtValue || 0
+                              const currentVolume = Math.round(currentVolumeRaw * 100) / 100
                               const remainingVolume = Points.calculateRemainingVolumeForNextLevel(currentVolume)
                               const nextLevelThreshold = Points.getNextLevelThreshold(currentVolume)
                               const bscNeeded = Math.ceil(remainingVolume / 4)
