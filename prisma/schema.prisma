@@ -1,6 +1,3 @@
-// Prisma Schema for BN Alpha Tool
-// 空投数据管理系统数据库模型
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,46 +7,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// 空投数据模型
-// 注意：Prisma目前在schema中不直接支持CHECK约束的表示，
-// 但可以通过Prisma Migrate添加自定义SQL来实现数据库层面的约束
 model Airdrop {
-  id                  Int      @id @default(autoincrement())
-  
-  // 核心字段 - 按指定顺序排列
-  date                String   // 空投日期，如 "2025年04月28日"
-  token               String   @unique // 代币名称，如 "SIGN"
-  amount              Float    // 空投数量
-  currentPrice        String?  // 当前价格，如 "$0.063"
-  
-  // 积分字段 - 互斥关系：要么使用 points，要么使用 phase1Points + phase2Points
-  // 注意：字段互斥需要在应用层验证或通过自定义迁移添加CHECK约束
-  points              Int?     // 单阶段积分门槛（与 phase1Points/phase2Points 互斥）
-  phase1Points        Int?     // 优先获取阶段积分门槛（与 points 互斥）
-  phase2Points        Int?     // 先到先得阶段积分门槛（与 points 互斥）
-  
-  // 时间字段 - 互斥关系：要么使用 startTime + endTime，要么使用 startTime + phase1EndTime + phase2EndTime
-  startTime           String?  // 开始时间，格式: "2025-06-19 20:00 (UTC+8)"
-  endTime             String?  // 单阶段结束时间（与 phase1EndTime/phase2EndTime 互斥）
-  phase1EndTime       String?  // 优先获取阶段结束时间（与 endTime 互斥）
-  phase2EndTime       String?  // 先到先得阶段结束时间（与 endTime 互斥）
-  
-  // 其他字段
-  supplementaryToken  Float    // 补充代币数量
-  participants        Int?     // 参与人数，可为空
-  type                AirdropType // 空投类型：airdrop、tge、preTge 或 bondingCurveTge
-  cost                Float?   // TGE/preTge项目的成本（可选）
-  pointsConsumed      Boolean  @default(true) // 是否消耗积分，默认为true
-  description         String?  // 描述信息
-
-  // 时间戳
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id                 Int         @id @default(autoincrement())
+  date               String
+  token              String
+  amount             Float
+  currentPrice       String?
+  points             Int?
+  phase1Points       Int?
+  phase2Points       Int?
+  startTime          String?
+  endTime            String?
+  phase1EndTime      String?
+  phase2EndTime      String?
+  supplementaryToken Float
+  participants       Int?
+  type               AirdropType
+  cost               Float?
+  pointsConsumed     Boolean     @default(true)
+  description        String?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
 
   @@map("airdrops")
 }
 
-// 空投类型枚举
 enum AirdropType {
   airdrop
   tge

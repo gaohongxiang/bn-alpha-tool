@@ -244,21 +244,9 @@ export function sanitizeAirdropData(data: Partial<AirdropItem>): Partial<Airdrop
 
 /**
  * 检查代币名称是否已存在（用于创建时的唯一性检查）
+ * 注意：现在允许重名，此函数保留但不再执行唯一性检查
  */
 export function validateTokenUniqueness(token: string, existingTokens: string[], currentToken?: string): ValidationError | null {
-  if (!token?.trim()) return null
-
-  const normalizedToken = token.trim().toUpperCase()
-  const normalizedCurrent = currentToken?.trim().toUpperCase()
-
-  // 如果是编辑模式且代币名称没有改变，则不需要检查
-  if (normalizedCurrent && normalizedToken === normalizedCurrent) {
-    return null
-  }
-
-  if (existingTokens.map(t => t.toUpperCase()).includes(normalizedToken)) {
-    return { field: 'token', message: `代币 "${token}" 已存在，请使用其他名称` }
-  }
-
+  // 允许重名，直接返回null表示验证通过
   return null
 }

@@ -60,21 +60,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // 检查代币名称唯一性
-    const existingTokens = await prisma.airdrop.findMany({
-      select: { token: true }
-    })
-    const tokenError = validateTokenUniqueness(
-      sanitizedData.token!,
-      existingTokens.map(item => item.token)
-    )
-    if (tokenError) {
-      return NextResponse.json({
-        success: false,
-        error: tokenError.message,
-        details: [tokenError]
-      }, { status: 400 })
-    }
+    // 代币名称唯一性检查已移除，现在允许重名
 
     // 创建数据
     const newAirdrop = await prisma.airdrop.create({
@@ -107,13 +93,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('创建空投数据失败:', error)
     
-    // 处理数据库唯一约束错误
-    if (error instanceof Error && error.message.includes('Unique constraint')) {
-      return NextResponse.json({
-        success: false,
-        error: '代币名称已存在，请使用其他名称'
-      }, { status: 400 })
-    }
+    // 唯一约束错误处理已移除，现在允许重名
 
     return NextResponse.json(
       { success: false, error: '创建数据失败' },
@@ -166,23 +146,7 @@ export async function PUT(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // 检查代币名称唯一性（排除当前记录）
-    const existingTokens = await prisma.airdrop.findMany({
-      where: { id: { not: parseInt(id) } },
-      select: { token: true }
-    })
-    const tokenError = validateTokenUniqueness(
-      sanitizedData.token!,
-      existingTokens.map(item => item.token),
-      existingRecord.token
-    )
-    if (tokenError) {
-      return NextResponse.json({
-        success: false,
-        error: tokenError.message,
-        details: [tokenError]
-      }, { status: 400 })
-    }
+    // 代币名称唯一性检查已移除，现在允许重名
 
     // 更新数据
     const updatedAirdrop = await prisma.airdrop.update({
@@ -216,13 +180,7 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error('更新空投数据失败:', error)
     
-    // 处理数据库唯一约束错误
-    if (error instanceof Error && error.message.includes('Unique constraint')) {
-      return NextResponse.json({
-        success: false,
-        error: '代币名称已存在，请使用其他名称'
-      }, { status: 400 })
-    }
+    // 唯一约束错误处理已移除，现在允许重名
 
     return NextResponse.json(
       { success: false, error: '更新数据失败' },
