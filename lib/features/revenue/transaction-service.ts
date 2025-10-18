@@ -157,10 +157,30 @@ export class TransactionService {
           if (result.result && Array.isArray(result.result)) {
             // 获取当前网络的可用交易对
             const availablePairs = Object.keys(tokenData.pairs)
-
-            // 过滤符合配置的交易 - 直接比较pairLabel
+            logger.debug('general', `🔍 配置的交易对: ${availablePairs.join(', ')}`)
+            
             allFilteredTransactions = result.result.filter((txData: any) => {
-              return tokenData.pairs.hasOwnProperty(txData.pairLabel)
+              const apiPairLabel = txData.pairLabel
+              if (!apiPairLabel) return false
+              
+              // 检查是否有完全匹配的交易对
+              if (tokenData.pairs.hasOwnProperty(apiPairLabel)) {
+                logger.debug('general', `✅ 完全匹配: ${apiPairLabel}`)
+                return true
+              }
+              
+              // 大小写不敏感匹配
+              const matched = availablePairs.some(configPair => 
+                configPair.toLowerCase() === apiPairLabel.toLowerCase()
+              )
+              
+              if (matched) {
+                logger.debug('general', `✅ 大小写匹配: ${apiPairLabel}`)
+              } else {
+                logger.debug('general', `❌ 不匹配: ${apiPairLabel}`)
+              }
+              
+              return matched
             })
 
             logger.debug('general', `📊 所有交易: ${allFilteredTransactions.length} 笔`)
